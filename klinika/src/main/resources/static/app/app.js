@@ -3,7 +3,7 @@
  */
 const HelloWorld = { template: '<hello-world></hello-world>' }
 const Home = { template: '<home></home>' }
-
+const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
 
 const router = new VueRouter({
 	 mode: 'hash',
@@ -15,6 +15,10 @@ const router = new VueRouter({
 	    {
 	    	path: '/api/greetings', 
 	    	component: HelloWorld 
+	    },
+	    {
+			path: '/izmenaProfila',
+			component: IzmenaProfila
 	    }]
 });
 
