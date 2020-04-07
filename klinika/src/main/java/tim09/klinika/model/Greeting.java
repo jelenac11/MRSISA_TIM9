@@ -1,4 +1,4 @@
-package tim09.klinika;
+package tim09.klinika.model;
 
 public class Greeting {
 	

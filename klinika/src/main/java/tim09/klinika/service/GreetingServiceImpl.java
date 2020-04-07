@@ -1,6 +1,9 @@
-package tim09.klinika;
+package tim09.klinika.service;
 
 import org.springframework.stereotype.Service;
+
+import tim09.klinika.model.Greeting;
+
 
 //osnovni servis, vraca se poruka hello world
 @Service

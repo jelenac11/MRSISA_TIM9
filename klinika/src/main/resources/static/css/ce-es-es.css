@@ -1,0 +1,14 @@
+.nav-link {
+	color: white;
+}
+.nav-link:hover {
+	color: silver;
+}
+.nav-link:active {
+	color: gray;
+}
+
+.nav-pills li {
+    margin-left: 15px; 
+} 
+
