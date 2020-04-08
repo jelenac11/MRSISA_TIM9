@@ -1,17 +1,9 @@
-Vue.component("home", {
+Vue.component("sale", {
 	data : function() {
 		return {
-			ulogovan : {
-	    		email : "",
-	    		lozinka : "",
-	    		ime : "",
-	    		prezime : "",
-	    		adresa : "",
-	    		grad : "",
-	    		drzava : "",
-	    		brOsiguranika : ""
-	    	}
-		}
+			ulogovan: {},
+			sale: [],
+		} 
 	},
 	template: `
 	<div> 
@@ -22,7 +14,7 @@ Vue.component("home", {
 						<router-link :to="{ path: ''}" data-toggle="pill" class="nav-link">Lekari</router-link>
 					</li>
 					<li class="nav-item">
-						<router-link :to="{ path: 'sale'}" data-toggle="pill" class="nav-link">Sale</router-link>
+						<router-link :to="{ path: 'sale'}" data-toggle="pill" class="nav-link active">Sale</router-link>
 					</li>
 					<li class="nav-item">
 						<router-link :to="{ path: 'api/zahtjevi'}" data-toggle="pill" class="nav-link">Godišnji odmori</router-link>
@@ -102,6 +94,24 @@ Vue.component("home", {
 		    	</div>
 			</div>
 		</div>
+		
+		<div class="tab-content">
+			<table class="table table-hover table-striped">
+			  	<thead class="thead-light">
+			    	<tr>
+				      	<th scope="col" width="20%">Broj</th>
+				      	<th scope="col" width="80%">Dodatne informacije</th>
+			    	</tr>
+			  	</thead>
+			  	<tbody>
+			  		<tr v-for="sala in sale" data-toggle="modal" data-target="#" v-on:click="">
+				      	<td width="20%">{{ sala.broj }}</td>
+				      	<td width="80%">{{ sala.info }}</td>
+			    	</tr>
+			  	</tbody>
+			</table>
+			<router-link :to="{ path: 'dodavanjeSale'}" class="btn btn-primary btn-block btn-lg my-2 p-2" id="dodavanjeSale">Dodaj novu salu</router-link>
+		</div>
 	</div>
 	`
 	,
@@ -111,5 +121,4 @@ Vue.component("home", {
         .then(response => (this.ulogovan = response.data))
         .catch(function (error) { console.log(error); });
 	}
-		
 });
