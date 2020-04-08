@@ -61,6 +61,12 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 		boolean uspesno = salaRepository.dodajSalu(sala);
 		return uspesno;
 	}
+	
+	@Override
+	public boolean dodajLekara(Lekar lekar) {
+		boolean uspesno = lekarRepository.dodajLekara(lekar);
+		return uspesno;
+	}
 
 	public ArrayList<ZahtjevZaOdsustvom> vratiZahtjeve() {
 		return zahtjevi;

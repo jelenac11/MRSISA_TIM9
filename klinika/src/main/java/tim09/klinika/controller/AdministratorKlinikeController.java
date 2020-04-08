@@ -42,6 +42,12 @@ public class AdministratorKlinikeController {
 		return new ResponseEntity<Boolean>(uspesno, HttpStatus.CREATED);
 	}
 	
+	@PostMapping(value = "/dodajLekara", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> dodajLekara(@RequestBody Lekar lekar) throws Exception {
+		boolean uspesno = servis.dodajLekara(lekar);
+		return new ResponseEntity<Boolean>(uspesno, HttpStatus.CREATED);
+	}
+	
 	@GetMapping("/api/getZahteviNaCekanju")
 	public ResponseEntity<ArrayList<ZahtjevZaOdsustvom>> vratiPodatke() {
 		ArrayList<ZahtjevZaOdsustvom> zahtjevi = servis.vratiZahtjeveNaCekanju();

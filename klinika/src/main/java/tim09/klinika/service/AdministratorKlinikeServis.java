@@ -13,4 +13,6 @@ public interface AdministratorKlinikeServis {
 	public Collection<Lekar> vratiSveLekare();
 	
 	public boolean dodajSalu(Sala sala);
+	
+	public boolean dodajLekara(Lekar lekar);
 }

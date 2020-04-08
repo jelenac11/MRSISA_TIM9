@@ -12,7 +12,13 @@ import tim09.klinika.model.Sala;
 @Repository
 public class InMemoryLekarRepository implements LekarRepository {
 
-	private final ConcurrentMap<Integer, Lekar> lekari = new ConcurrentHashMap<Integer, Lekar>();
+	private final ConcurrentMap<String, Lekar> lekari = new ConcurrentHashMap<String, Lekar>();
+	
+	@Override
+	public boolean dodajLekara(Lekar lekar) {
+		this.lekari.put(lekar.getEmail(), lekar);
+		return true;
+	}
 	
 	@Override
 	public Collection<Lekar> vratiSveLekare() {
