@@ -11,9 +11,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.model.Lekar;
 import tim09.klinika.model.MedicinskoOsoblje;
 import tim09.klinika.model.Sala;
 import tim09.klinika.model.ZahtjevZaOdsustvom;
+import tim09.klinika.repository.InMemoryLekarRepository;
 import tim09.klinika.repository.InMemorySalaRepository;
 
 @Service
@@ -21,6 +23,9 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 
 	@Autowired
 	private InMemorySalaRepository salaRepository;
+	
+	@Autowired
+	private InMemoryLekarRepository lekarRepository;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
@@ -39,6 +44,12 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 	private static String potvrdaZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je prihvacen.";
 	private static String odbijanjeZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je odbijen. Razlog odbijanja je sljedeci: \n";
 
+	@Override
+	public Collection<Lekar> vratiSveLekare() {
+		Collection<Lekar> lekari = lekarRepository.vratiSveLekare();
+		return lekari;
+	}
+	
 	@Override
 	public Collection<Sala> vratiSveSale() {
 		Collection<Sala> sale = salaRepository.vratiSveSale();

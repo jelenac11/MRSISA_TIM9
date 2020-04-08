@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Sala;
 import tim09.klinika.model.ZahtjevZaOdsustvom;
 import tim09.klinika.service.AdministratorKlinikeServisImpl;
@@ -22,6 +23,12 @@ public class AdministratorKlinikeController {
 
 	@Autowired
 	private AdministratorKlinikeServisImpl servis;
+
+	@GetMapping("/ucitajLekare")
+	public ResponseEntity<Collection<Lekar>> ucitajLekare() {
+		Collection<Lekar> lekari = servis.vratiSveLekare();
+		return new ResponseEntity<Collection<Lekar>>(lekari, HttpStatus.OK);
+	}
 	
 	@GetMapping("/ucitajSale")
 	public ResponseEntity<Collection<Sala>> ucitajSale() {
