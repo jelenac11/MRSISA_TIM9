@@ -4,7 +4,6 @@
 const HelloWorld = { template: '<hello-world></hello-world>' }
 const Home = { template: '<home></home>' }
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
-
 const ZahtjeviZaGodisnjim={template: '<zahtjevGodisnji></zahtjevGodisnji>'}
 
 
@@ -23,7 +22,8 @@ const router = new VueRouter({
 
 			path: '/izmenaProfila',
 			component: IzmenaProfila
-	    }]
+	    },
+	    {
 	    	path: '/api/zahtjevi', 
 	    	component: ZahtjeviZaGodisnjim 
 	    }
