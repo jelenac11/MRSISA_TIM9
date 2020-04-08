@@ -1,16 +1,7 @@
 Vue.component("home", {
 	data : function() {
 		return {
-			ulogovan : {
-	    		email : "",
-	    		lozinka : "",
-	    		ime : "",
-	    		prezime : "",
-	    		adresa : "",
-	    		grad : "",
-	    		drzava : "",
-	    		brOsiguranika : ""
-	    	}
+			ulogovan : {},
 		}
 	},
 	template: `
