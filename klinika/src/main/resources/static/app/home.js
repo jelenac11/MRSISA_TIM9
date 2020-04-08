@@ -25,7 +25,7 @@ Vue.component("home", {
 						<router-link :to="{ path: ''}" data-toggle="pill" class="nav-link active">Sale</router-link>
 					</li>
 					<li class="nav-item">
-						<router-link :to="{ path: ''}" data-toggle="pill" class="nav-link active">Godišnji odmori</router-link>
+						<router-link :to="{ path: '/api/zahtjevi'}" data-toggle="pill" class="nav-link active">Godišnji odmori</router-link>
 					</li>
 				</ul>
 		    </div>

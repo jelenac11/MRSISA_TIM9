@@ -1,11 +1,8 @@
 package tim09.klinika.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
-import tim09.klinika.controller.KorisnikKontroler;
+
+import org.springframework.stereotype.Service;
 import tim09.klinika.model.Pacijent;
 
 
