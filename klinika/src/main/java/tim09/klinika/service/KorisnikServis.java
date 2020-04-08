@@ -10,7 +10,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import tim09.klinika.controller.KorisnikKontroler;
+
+
+import org.springframework.stereotype.Service;
 import tim09.klinika.model.Pacijent;
 
 
