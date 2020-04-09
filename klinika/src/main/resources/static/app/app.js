@@ -44,7 +44,7 @@ const router = new VueRouter({
 		component: DodavanjeLekara
 	},
 	{
-		path: '/api/zahtjevi', 
+		path: '/zahtjevi', 
 		component: ZahtjeviZaGodisnjim 
 	}]
 });

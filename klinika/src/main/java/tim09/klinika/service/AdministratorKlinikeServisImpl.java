@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import tim09.klinika.model.Lekar;
@@ -21,14 +19,18 @@ import tim09.klinika.repository.InMemorySalaRepository;
 @Service
 public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServis {
 
+	private static String potvrdaZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je prihvacen.";
+	private static String odbijanjeZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je odbijen. Razlog odbijanja je sljedeci: \n";
+	
+	@Autowired
+	private EmailServiceImpl emailService;
+	
 	@Autowired
 	private InMemorySalaRepository salaRepository;
-	
+
 	@Autowired
 	private InMemoryLekarRepository lekarRepository;
 
-	@Autowired
-	private JavaMailSender javaMailSender;
 	SimpleDateFormat sdf = new SimpleDateFormat();
 
 	ArrayList<ZahtjevZaOdsustvom> zahtjevi = new ArrayList<ZahtjevZaOdsustvom>(Arrays.asList(
@@ -41,15 +43,13 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 							"Bulevar oslobodjenja", "Novi Sad", "Srbija"),
 					new Date().getTime(), new Date().getTime(), false, false, null)));
 
-	private static String potvrdaZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je prihvacen.";
-	private static String odbijanjeZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je odbijen. Razlog odbijanja je sljedeci: \n";
-
+	
 	@Override
 	public Collection<Lekar> vratiSveLekare() {
 		Collection<Lekar> lekari = lekarRepository.vratiSveLekare();
 		return lekari;
 	}
-	
+
 	@Override
 	public Collection<Sala> vratiSveSale() {
 		Collection<Sala> sale = salaRepository.vratiSveSale();
@@ -61,17 +61,14 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 		boolean uspesno = salaRepository.dodajSalu(sala);
 		return uspesno;
 	}
-	
+
 	@Override
 	public boolean dodajLekara(Lekar lekar) {
 		boolean uspesno = lekarRepository.dodajLekara(lekar);
 		return uspesno;
 	}
 
-	public ArrayList<ZahtjevZaOdsustvom> vratiZahtjeve() {
-		return zahtjevi;
-	}
-
+	@Override
 	public ArrayList<ZahtjevZaOdsustvom> vratiZahtjeveNaCekanju() {
 		ArrayList<ZahtjevZaOdsustvom> zahtjeviNacekanju = new ArrayList<ZahtjevZaOdsustvom>();
 		for (ZahtjevZaOdsustvom zahtjev : zahtjevi) {
@@ -82,25 +79,23 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 		return zahtjeviNacekanju;
 	}
 
-	public void updateZahtjeveNaCekanju(ZahtjevZaOdsustvom zahtjev) {
+	@Override
+	public boolean updateZahtjeveNaCekanju(ZahtjevZaOdsustvom zahtjev) {
+
 		for (ZahtjevZaOdsustvom zahtev : zahtjevi) {
 			if (zahtev.equals(zahtjev)) {
 				zahtev.setStanje(zahtjev.isStanje());
 				zahtev.setStatus(zahtjev.isStatus());
 			}
 		}
-		posaljiMejlOdgovorNaZahtjevZaOdustvom(zahtjev);
-	}
+		
+		try {
+			emailService.posaljiEmail(zahtjev.getOsoba().getEmail(), "Odgovor na zahtjev za odsustvom",
+					zahtjev.isStanje() ? potvrdaZahtjeva : odbijanjeZahtjeva + zahtjev.getObrazlozenje());
+		} catch (Exception e) {
 
-	private void posaljiMejlOdgovorNaZahtjevZaOdustvom(ZahtjevZaOdsustvom zahtjev) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(zahtjev.getOsoba().getEmail());
-		message.setSubject("Odgovor na zahtjev za odsustvom");
-		if (zahtjev.isStanje()) {
-			message.setText(potvrdaZahtjeva);
-		} else {
-			message.setText(odbijanjeZahtjeva + zahtjev.getObrazlozenje());
 		}
-		javaMailSender.send(message);
+		
+		return true;
 	}
 }

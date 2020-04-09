@@ -20,10 +20,11 @@ import tim09.klinika.service.AdministratorKlinikeServisImpl;
 
 @RestController
 public class AdministratorKlinikeController {
-
+	
 	@Autowired
 	private AdministratorKlinikeServisImpl servis;
 
+	
 	@GetMapping("/ucitajLekare")
 	public ResponseEntity<Collection<Lekar>> ucitajLekare() {
 		Collection<Lekar> lekari = servis.vratiSveLekare();
@@ -48,15 +49,16 @@ public class AdministratorKlinikeController {
 		return new ResponseEntity<Boolean>(uspesno, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/api/getZahteviNaCekanju")
+	@GetMapping("/getZahteviNaCekanju")
 	public ResponseEntity<ArrayList<ZahtjevZaOdsustvom>> vratiPodatke() {
 		ArrayList<ZahtjevZaOdsustvom> zahtjevi = servis.vratiZahtjeveNaCekanju();
 		return new ResponseEntity<ArrayList<ZahtjevZaOdsustvom>>(zahtjevi, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/api/updateZahtjev", consumes = "application/json")
-	public void updateZahtjev(@RequestBody ZahtjevZaOdsustvom zahtjev) {
-		servis.updateZahtjeveNaCekanju(zahtjev);
+	@PostMapping(value = "/updateZahtjev", consumes = "application/json")
+	public ResponseEntity<Boolean> updateZahtjev(@RequestBody ZahtjevZaOdsustvom zahtjev) {
+		boolean uspjesno = servis.updateZahtjeveNaCekanju(zahtjev);	
+		return new ResponseEntity<Boolean>(uspjesno, HttpStatus.OK);
 		
 	}
 }

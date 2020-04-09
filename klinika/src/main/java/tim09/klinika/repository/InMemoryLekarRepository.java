@@ -7,7 +7,6 @@ import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Repository;
 
 import tim09.klinika.model.Lekar;
-import tim09.klinika.model.Sala;
 
 @Repository
 public class InMemoryLekarRepository implements LekarRepository {

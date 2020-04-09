@@ -17,7 +17,7 @@ Vue.component("lekari", {
 						<router-link :to="{ path: 'sale'}" data-toggle="pill" class="nav-link">Sale</router-link>
 					</li>
 					<li class="nav-item">
-						<router-link :to="{ path: 'api/zahtjevi'}" data-toggle="pill" class="nav-link">Godišnji odmori</router-link>
+						<router-link :to="{ path: 'zahtjevi'}" data-toggle="pill" class="nav-link">Zahtevi za odsustvom</router-link>
 					</li>
 				</ul>
 		    </div>
