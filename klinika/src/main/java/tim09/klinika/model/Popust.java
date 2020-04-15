@@ -1,22 +1,32 @@
-package tim09.klinika.dto;
+package tim09.klinika.model;
 
 import java.util.Date;
 
-import tim09.klinika.model.Popust;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
-public class PopustDTO {
+@Entity
+public class Popust {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	
+	@Column(name = "pocetak",nullable = false)
 	private Date pocetak;
+	
+	@Column(name = "kraj",nullable = false)
 	private Date kraj;
+	
+	@Column(name="procenat",nullable = false)
 	private double procenat;
 
-	public PopustDTO() {
+	public Popust() {
 
-	}
-
-	public PopustDTO(Popust p) {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {

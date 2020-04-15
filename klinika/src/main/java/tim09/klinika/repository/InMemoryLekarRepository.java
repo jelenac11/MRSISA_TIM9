@@ -14,7 +14,7 @@ public class InMemoryLekarRepository {
 	private final ConcurrentMap<String, Lekar> lekari = new ConcurrentHashMap<String, Lekar>();
 	
 	public boolean dodajLekara(Lekar lekar) {
-		this.lekari.put(lekar.getEmail(), lekar);
+		//this.lekari.put(lekar.getEmail(), lekar);
 		return true;
 	}
 	

@@ -2,6 +2,8 @@ package tim09.klinika.dto;
 
 import java.util.Date;
 
+import tim09.klinika.model.Pregled;
+
 public class PregledDTO {
 
 	private Long id;
@@ -15,6 +17,10 @@ public class PregledDTO {
 
 	public PregledDTO() {
 
+	}
+
+	public PregledDTO(Pregled os) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public LekarDTO getLekar() {

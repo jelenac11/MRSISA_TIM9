@@ -11,12 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.model.Lekar;
+import tim09.klinika.model.Odsustvo;
 import tim09.klinika.model.Sala;
-import tim09.klinika.model.ZahtjevZaOdsustvom;
 import tim09.klinika.service.AdministratorKlinikeServisImpl;
 
 @RestController
@@ -50,15 +49,15 @@ public class AdministratorKlinikeController {
 	}
 	
 	@GetMapping("/getZahteviNaCekanju")
-	public ResponseEntity<ArrayList<ZahtjevZaOdsustvom>> vratiPodatke() {
-		ArrayList<ZahtjevZaOdsustvom> zahtjevi = servis.vratiZahtjeveNaCekanju();
-		return new ResponseEntity<ArrayList<ZahtjevZaOdsustvom>>(zahtjevi, HttpStatus.OK);
+	public ResponseEntity<ArrayList<Odsustvo>> vratiPodatke() {
+		List<Odsustvo> zahtjevi = servis.vratiZahtjeveNaCekanju();
+		return new ResponseEntity<ArrayList<Odsustvo>>((ArrayList<Odsustvo>) zahtjevi, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/updateZahtjev", consumes = "application/json")
-	public ResponseEntity<Boolean> updateZahtjev(@RequestBody ZahtjevZaOdsustvom zahtjev) {
-		boolean uspjesno = servis.updateZahtjeveNaCekanju(zahtjev);	
-		return new ResponseEntity<Boolean>(uspjesno, HttpStatus.OK);
+	public ResponseEntity<Odsustvo> updateZahtjev(@RequestBody Odsustvo zahtjev) {
+		Odsustvo uspjesno = servis.updateZahtjeveNaCekanju(zahtjev);	
+		return new ResponseEntity<Odsustvo>(uspjesno, HttpStatus.OK);
 		
 	}
 

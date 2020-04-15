@@ -1,11 +1,11 @@
 package tim09.klinika.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import tim09.klinika.model.Lekar;
+import tim09.klinika.model.Odsustvo;
 import tim09.klinika.model.Sala;
-import tim09.klinika.model.ZahtjevZaOdsustvom;
 
 public interface AdministratorKlinikeServis {
 	
@@ -17,7 +17,7 @@ public interface AdministratorKlinikeServis {
 	
 	public boolean dodajLekara(Lekar lekar);
 	
-	public ArrayList<ZahtjevZaOdsustvom> vratiZahtjeveNaCekanju();
+	public List<Odsustvo> vratiZahtjeveNaCekanju();
 
-	public boolean updateZahtjeveNaCekanju(ZahtjevZaOdsustvom zahtjev);
+	public Odsustvo updateZahtjeveNaCekanju(Odsustvo zahtjev);
 }

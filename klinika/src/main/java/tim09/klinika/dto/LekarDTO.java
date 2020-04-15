@@ -2,10 +2,6 @@ package tim09.klinika.dto;
 
 import java.util.ArrayList;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 public class LekarDTO extends MedicinskoOsobljeDTO {
 

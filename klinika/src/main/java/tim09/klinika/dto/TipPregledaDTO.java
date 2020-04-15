@@ -1,5 +1,7 @@
 package tim09.klinika.dto;
 
+import tim09.klinika.model.TipPregleda;
+
 public class TipPregledaDTO {
 
 	private Long id;
@@ -9,6 +11,10 @@ public class TipPregledaDTO {
 
 	public TipPregledaDTO() {
 
+	}
+
+	public TipPregledaDTO(TipPregleda os) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {

@@ -2,6 +2,11 @@ package tim09.klinika.dto;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
+
+import tim09.klinika.model.Klinika;
+import tim09.klinika.model.MedicinskoOsoblje;
+import tim09.klinika.model.Odsustvo;
 
 public class MedicinskoOsobljeDTO extends KorisnikDTO {
 
@@ -9,6 +14,26 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 	private ArrayList<OdsustvoDTO> odsustva;
 	private Date pocetakRadnogVremena;
 	private Date krajRadnogVremena;
+
+	public MedicinskoOsobljeDTO(MedicinskoOsoblje osoblje) {
+		this(osoblje.getKlinika(),osoblje.getOdsustva(),osoblje.getPocetakRadnogVremena(),osoblje.getKrajRadnogVremena());
+	}
+	
+	
+	
+	public MedicinskoOsobljeDTO(Klinika klinika, Set<Odsustvo> odsustva, Date pocetakRadnogVremena,
+			Date krajRadnogVremena) {
+		super();
+		this.klinika = new KlinikaDTO(klinika);
+		this.odsustva = new ArrayList<OdsustvoDTO>();
+		for(Odsustvo ods : odsustva) {
+			this.odsustva.add(new OdsustvoDTO(ods));
+		}
+		this.pocetakRadnogVremena = pocetakRadnogVremena;
+		this.krajRadnogVremena = krajRadnogVremena;
+	}
+
+
 
 	public KlinikaDTO getKlinika() {
 		return klinika;

@@ -2,6 +2,8 @@ package tim09.klinika.dto;
 
 import java.util.ArrayList;
 
+import tim09.klinika.model.Sala;
+
 public class SalaDTO {
 
 	private Long id;
@@ -12,6 +14,10 @@ public class SalaDTO {
 
 	public SalaDTO() {
 
+	}
+
+	public SalaDTO(Sala os) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {

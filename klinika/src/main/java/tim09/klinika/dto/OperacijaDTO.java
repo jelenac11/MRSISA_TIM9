@@ -2,6 +2,8 @@ package tim09.klinika.dto;
 
 import java.util.Date;
 
+import tim09.klinika.model.Operacija;
+
 public class OperacijaDTO {
 
 	private Long id;
@@ -12,6 +14,11 @@ public class OperacijaDTO {
 
 	public OperacijaDTO() {
 
+	}
+
+
+	public OperacijaDTO(Operacija os) {
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {

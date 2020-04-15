@@ -1,91 +1,59 @@
 package tim09.klinika.model;
 
-public class Pacijent {
-	private String email;
-	private String lozinka;
-	private String ime;
-	private String prezime;
-	private String adresa;
-	private String grad;
-	private String drzava;
-	private String brOsiguranika;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+
+@Entity
+@DiscriminatorValue("PA")
+public class Pacijent extends Korisnik {
+	
+	@OneToOne
+	@JoinColumn(name = "pacijent_id" )
+	private ZdravstveniKarton karton;
+	
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Pregled> pregledi;
+	
+	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Operacija> operacije;
+
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private KlinickiCentar klinickiCentar;
 	
 	public Pacijent() {
-		
-	}
-	
-	public Pacijent(String _email, String loz, String _ime, String prz, String _adresa, String _grad, String _drzava, String br) {
-		this.email = _email;
-		this.lozinka = loz;
-		this.ime = _ime;
-		this.prezime = prz;
-		this.adresa = _adresa;
-		this.grad = _grad;
-		this.drzava = _drzava;
-		this.brOsiguranika = br;
+
 	}
 
-	public String getEmail() {
-		return email;
+	public ZdravstveniKarton getKarton() {
+		return karton;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setKarton(ZdravstveniKarton karton) {
+		this.karton = karton;
 	}
 
-	public String getLozinka() {
-		return lozinka;
+	public Set<Pregled> getPregledi() {
+		return pregledi;
 	}
 
-	public void setLozinka(String lozinka) {
-		this.lozinka = lozinka;
+	public void setPregledi(Set<Pregled> pregledi) {
+		this.pregledi = pregledi;
 	}
 
-	public String getIme() {
-		return ime;
+	public Set<Operacija> getOperacije() {
+		return operacije;
 	}
 
-	public void setIme(String ime) {
-		this.ime = ime;
-	}
-
-	public String getPrezime() {
-		return prezime;
-	}
-
-	public void setPrezime(String prezime) {
-		this.prezime = prezime;
-	}
-
-	public String getAdresa() {
-		return adresa;
-	}
-
-	public void setAdresa(String adresa) {
-		this.adresa = adresa;
-	}
-
-	public String getGrad() {
-		return grad;
-	}
-
-	public void setGrad(String grad) {
-		this.grad = grad;
-	}
-
-	public String getDrzava() {
-		return drzava;
-	}
-
-	public void setDrzava(String drzava) {
-		this.drzava = drzava;
-	}
-
-	public String getBrOsiguranika() {
-		return brOsiguranika;
-	}
-
-	public void setBrOsiguranika(String brOsiguranika) {
-		this.brOsiguranika = brOsiguranika;
+	public void setOperacije(Set<Operacija> operacije) {
+		this.operacije = operacije;
 	}
 }

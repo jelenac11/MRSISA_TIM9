@@ -1,44 +1,46 @@
-package tim09.klinika.dto;
+package tim09.klinika.model;
 
 import java.util.Date;
 
-import tim09.klinika.model.MedicinskoOsoblje;
-import tim09.klinika.model.Odsustvo;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-public class OdsustvoDTO {
 
+@Entity
+public class Odsustvo {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private MedicinskoOsobljeDTO podnosilac;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private MedicinskoOsoblje podnosilac;
+	
+	@Column(name = "pocetak",nullable = false)
 	private Date pocetak;
+	
+	@Column(name = "kraj",nullable = false)
 	private Date kraj;
+	
+	@Column(name = "odgovoreno",nullable = false)
 	private boolean odgovoreno;
+	
+	@Column(name = "odobreno",nullable = true)
 	private boolean odobreno;
+
+	@Column(name = "obrazlozenje",nullable=true)
 	private String obrazlozenje;
 	
-	public OdsustvoDTO() {
+	public Odsustvo() {
 
 	}
 
-	
-	
-	public OdsustvoDTO(Long id, MedicinskoOsoblje podnosilac, Date pocetak, Date kraj, boolean odgovoreno,
-			boolean odobreno,String obrazlozenje) {
-		super();
-		this.id = id;
-		this.podnosilac = new MedicinskoOsobljeDTO(podnosilac);
-		this.pocetak = pocetak;
-		this.kraj = kraj;
-		this.odgovoreno = odgovoreno;
-		this.odobreno = odobreno;
-		this.obrazlozenje=obrazlozenje;
-	}
-
-
-
-	public OdsustvoDTO(Odsustvo odsustvo) {
-		this(odsustvo.getId(),odsustvo.getPodnosilac(),odsustvo.getPocetak(),odsustvo.getKraj(),odsustvo.isOdgovoreno(),odsustvo.isOdobreno(),odsustvo.getObrazlozenje());
-	}
-	
 	public Long getId() {
 		return id;
 	}
@@ -47,11 +49,11 @@ public class OdsustvoDTO {
 		this.id = id;
 	}
 
-	public MedicinskoOsobljeDTO getPodnosilac() {
+	public MedicinskoOsoblje getPodnosilac() {
 		return podnosilac;
 	}
 
-	public void setPodnosilac(MedicinskoOsobljeDTO podnosilac) {
+	public void setPodnosilac(MedicinskoOsoblje podnosilac) {
 		this.podnosilac = podnosilac;
 	}
 
@@ -88,13 +90,9 @@ public class OdsustvoDTO {
 		this.odobreno = odobreno;
 	}
 
-
-
 	public String getObrazlozenje() {
 		return obrazlozenje;
 	}
-
-
 
 	public void setObrazlozenje(String obrazlozenje) {
 		this.obrazlozenje = obrazlozenje;

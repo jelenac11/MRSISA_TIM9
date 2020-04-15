@@ -2,6 +2,8 @@ package tim09.klinika.dto;
 
 import java.util.ArrayList;
 
+import tim09.klinika.model.Cenovnik;
+
 public class CenovnikDTO {
 
 	private Long id;
@@ -11,6 +13,10 @@ public class CenovnikDTO {
 		
 	}
 	
+	public CenovnikDTO(Cenovnik cenovnik) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Long getId() {
 		return id;
 	}

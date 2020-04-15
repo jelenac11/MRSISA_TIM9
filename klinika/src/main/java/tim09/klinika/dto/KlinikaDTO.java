@@ -1,6 +1,18 @@
 package tim09.klinika.dto;
 
 import java.util.ArrayList;
+import java.util.Set;
+
+import tim09.klinika.model.AdminKlinike;
+import tim09.klinika.model.Cenovnik;
+import tim09.klinika.model.Klinika;
+import tim09.klinika.model.MedicinskoOsoblje;
+import tim09.klinika.model.Odsustvo;
+import tim09.klinika.model.Operacija;
+import tim09.klinika.model.Popust;
+import tim09.klinika.model.Pregled;
+import tim09.klinika.model.Sala;
+import tim09.klinika.model.TipPregleda;
 
 public class KlinikaDTO {
 
@@ -18,6 +30,55 @@ public class KlinikaDTO {
 	public KlinikaDTO() {
 
 	}
+	
+	public KlinikaDTO(Klinika klinika) {
+		this(klinika.getId(),klinika.getAdmini(),klinika.getOdsustva(),klinika.getOsoblje(),klinika.getPopusti(),klinika.getCenovnik(),klinika.getPregledi(),klinika.getOperacije(),klinika.getTipoviPregleda(),klinika.getSale());
+	}
+
+	public KlinikaDTO(Long id, Set<AdminKlinike> admini, Set<Odsustvo> odsustva,
+			Set<MedicinskoOsoblje> osoblje, Set<Popust> popusti, Cenovnik cenovnik,
+			Set<Pregled> pregledi, Set<Operacija> operacije, Set<TipPregleda> tipoviPregleda,
+			Set<Sala> sale) {
+		super();
+		this.id = id;
+		this.admini = new ArrayList<AdminKlinikeDTO>();
+		for(AdminKlinike admin:admini){
+			this.admini.add(new AdminKlinikeDTO(admin));
+		}
+		this.odsustva = new ArrayList<OdsustvoDTO>();
+		for(Odsustvo odsustvo:odsustva){
+			this.odsustva.add(new OdsustvoDTO(odsustvo));
+		}
+		this.osoblje = new ArrayList<MedicinskoOsobljeDTO>();
+		for(MedicinskoOsoblje os:osoblje){
+			this.osoblje.add(new MedicinskoOsobljeDTO(os));
+		}
+		this.popusti = new ArrayList<PopustDTO>();
+		for(Popust p:popusti){
+			this.popusti.add(new PopustDTO(p));
+		}
+		this.cenovnik = new CenovnikDTO(cenovnik);
+		
+		this.pregledi = new ArrayList<PregledDTO>();
+		for(Pregled os:pregledi){
+			this.pregledi.add(new PregledDTO(os));
+		}
+		this.operacije = new ArrayList<OperacijaDTO>();
+		for(Operacija os:operacije){
+			this.operacije.add(new OperacijaDTO(os));
+		}
+		
+		this.tipoviPregleda = new ArrayList<TipPregledaDTO>();
+		for(TipPregleda os:tipoviPregleda){
+			this.tipoviPregleda.add(new TipPregledaDTO(os));
+		}
+		this.sale = new ArrayList<SalaDTO>();
+		for(Sala os:sale){
+			this.sale.add(new SalaDTO(os));
+		}
+	}
+
+
 
 	public Long getId() {
 		return id;
