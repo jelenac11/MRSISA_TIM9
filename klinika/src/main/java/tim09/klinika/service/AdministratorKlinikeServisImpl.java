@@ -15,6 +15,7 @@ import tim09.klinika.model.Sala;
 import tim09.klinika.model.ZahtjevZaOdsustvom;
 import tim09.klinika.repository.InMemoryLekarRepository;
 import tim09.klinika.repository.InMemorySalaRepository;
+import tim09.klinika.repository.LekarRepository;
 
 @Service
 public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServis {
@@ -29,7 +30,7 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 	private InMemorySalaRepository salaRepository;
 
 	@Autowired
-	private InMemoryLekarRepository lekarRepository;
+	private LekarRepository lekarRepository;
 
 	SimpleDateFormat sdf = new SimpleDateFormat();
 
@@ -46,7 +47,7 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 	
 	@Override
 	public Collection<Lekar> vratiSveLekare() {
-		Collection<Lekar> lekari = lekarRepository.vratiSveLekare();
+		Collection<Lekar> lekari = lekarRepository.findAll();
 		return lekari;
 	}
 
@@ -64,8 +65,9 @@ public class AdministratorKlinikeServisImpl implements AdministratorKlinikeServi
 
 	@Override
 	public boolean dodajLekara(Lekar lekar) {
-		boolean uspesno = lekarRepository.dodajLekara(lekar);
-		return uspesno;
+		//boolean uspesno = lekarRepository.dodajLekara(lekar);
+		//return uspesno;
+		return true;
 	}
 
 	@Override
