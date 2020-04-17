@@ -3,6 +3,7 @@ package tim09.klinika.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
@@ -12,20 +13,21 @@ import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 
 @Entity
+@DiscriminatorValue("LE")
 public class Lekar extends MedicinskoOsoblje {
 	
 	@ManyToMany
 	@JoinTable(
 	  name = "specijalizovan", 
-	  joinColumns = @JoinColumn(name = "lekar_id",referencedColumnName = "id"), 
-	  inverseJoinColumns = @JoinColumn(name = "tipPregleda_id", referencedColumnName = "id"))
+	  joinColumns = {@JoinColumn(name = "lekar_id",referencedColumnName = "korisnik_id")}, 
+	  inverseJoinColumns = { @JoinColumn(name = "tipPregleda_id")})
 	private Set<TipPregleda> specijalnosti;
 	
-	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "lekar",cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
 	
 	
-	@OneToMany(mappedBy = "lekar", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "lekar", cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
 
 	public Lekar() {

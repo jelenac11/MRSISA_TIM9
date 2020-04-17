@@ -5,26 +5,32 @@ import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 @Entity
+@DiscriminatorValue("MO")
 public class MedicinskoOsoblje extends Korisnik {
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne
+	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
 	
-	@OneToMany(mappedBy = "podnosilac", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "podnosilac", cascade = CascadeType.ALL)
 	private Set<Odsustvo> odsustva;
 	
 	@Column(name="pocetakRadnogVremena",nullable = false)
-	private Date pocetakRadnogVremena;
+	private long pocetakRadnogVremena;
 	
 	@Column(name="krajRadnogVremena",nullable = false)
-	private Date krajRadnogVremena;
+	private long krajRadnogVremena;
 
 	public Klinika getKlinika() {
 		return klinika;
@@ -34,19 +40,19 @@ public class MedicinskoOsoblje extends Korisnik {
 		this.klinika = klinika;
 	}
 	
-	public Date getPocetakRadnogVremena() {
+	public long getPocetakRadnogVremena() {
 		return pocetakRadnogVremena;
 	}
 
-	public void setPocetakRadnogVremena(Date pocetakRadnogVremena) {
+	public void setPocetakRadnogVremena(long pocetakRadnogVremena) {
 		this.pocetakRadnogVremena = pocetakRadnogVremena;
 	}
 
-	public Date getKrajRadnogVremena() {
+	public long getKrajRadnogVremena() {
 		return krajRadnogVremena;
 	}
 
-	public void setKrajRadnogVremena(Date krajRadnogVremena) {
+	public void setKrajRadnogVremena(long krajRadnogVremena) {
 		this.krajRadnogVremena = krajRadnogVremena;
 	}
 

@@ -3,6 +3,8 @@ package tim09.klinika.model;
 import tim09.klinika.model.Izvestaj;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,10 +18,10 @@ public class ZdravstveniKarton {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="zdravstveniKarton_id")
 	private Long id;
 	
-	@OneToMany
-	@JoinColumn(name = "zdravstveniKarton_id" )
+	@OneToMany(mappedBy = "zdravstveniKarton", cascade = CascadeType.ALL)
 	private Set<Izvestaj> bolesti;
 
 	public ZdravstveniKarton() {

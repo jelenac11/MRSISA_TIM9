@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 
@@ -17,16 +18,18 @@ public class Odsustvo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="odsustvo_id")
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne
+	@JoinColumn(name="korisnik_id")
 	private MedicinskoOsoblje podnosilac;
 	
 	@Column(name = "pocetak",nullable = false)
-	private Date pocetak;
+	private long pocetak;
 	
 	@Column(name = "kraj",nullable = false)
-	private Date kraj;
+	private long kraj;
 	
 	@Column(name = "odgovoreno",nullable = false)
 	private boolean odgovoreno;
@@ -36,6 +39,10 @@ public class Odsustvo {
 
 	@Column(name = "obrazlozenje",nullable=true)
 	private String obrazlozenje;
+	
+	@ManyToOne
+	@JoinColumn(name = "klinika_id")
+	private Klinika klinika;
 	
 	public Odsustvo() {
 
@@ -57,19 +64,19 @@ public class Odsustvo {
 		this.podnosilac = podnosilac;
 	}
 
-	public Date getPocetak() {
+	public long getPocetak() {
 		return pocetak;
 	}
 
-	public void setPocetak(Date pocetak) {
+	public void setPocetak(long pocetak) {
 		this.pocetak = pocetak;
 	}
 
-	public Date getKraj() {
+	public long getKraj() {
 		return kraj;
 	}
 
-	public void setKraj(Date kraj) {
+	public void setKraj(long kraj) {
 		this.kraj = kraj;
 	}
 	

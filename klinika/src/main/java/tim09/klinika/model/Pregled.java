@@ -18,30 +18,38 @@ public class Pregled {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="pregled_id")
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne
+	@JoinColumn(name="lekar_id")
 	private Lekar lekar;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne
+	@JoinColumn(name = "pacijent_id")
 	private Pacijent pacijent;
 	
 	@OneToOne
-	@JoinColumn(name = "pregled_id" )
+    @JoinColumn(name="tipPregleda_id")
 	private TipPregleda tipPregleda;
 	
-	@OneToOne(mappedBy = "pregled",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@OneToOne(mappedBy="pregled", cascade = CascadeType.ALL)
 	private Izvestaj izvestaj;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne
+    @JoinColumn(name = "sala_id")
 	private Sala sala;
 	
 	@Column(name = "vreme")
-	private Date vreme;
+	private long vreme;
 	
 	@Column(name = "otkazan")
 	private boolean otkazan;
 
+	@ManyToOne
+	@JoinColumn(name = "klinika_id")
+	private Klinika klinika;
+	
 	public Pregled() {
 
 	}
@@ -94,11 +102,11 @@ public class Pregled {
 		this.id = id;
 	}
 
-	public Date getVreme() {
+	public long getVreme() {
 		return vreme;
 	}
 
-	public void setVreme(Date vreme) {
+	public void setVreme(long vreme) {
 		this.vreme = vreme;
 	}
 

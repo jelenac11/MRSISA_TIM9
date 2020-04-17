@@ -3,12 +3,14 @@ package tim09.klinika.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -18,13 +20,17 @@ public class Klinika {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="klinika_id")
 	private Long id;
 	
-	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne
+	@JoinColumn(name = "klinickiCentar_id")
+	private KlinickiCentar klinickiCentar;
+	
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<AdminKlinike> admini;
 	
-	@OneToMany
-	@JoinColumn(name = "klinika_id" )
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<Odsustvo> odsustva;
 	
 	
@@ -32,33 +38,28 @@ public class Klinika {
 	private Set<MedicinskoOsoblje> osoblje;
 	
 	
-	@OneToMany
-	@JoinColumn(name = "klinika_id" )
+	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Popust> popusti;
 	
 	
 	@OneToOne
-	@JoinColumn(name = "klinika_id" )
+	@JoinColumn(name = "cijena_u_klinika_id" )
 	private Cenovnik cenovnik;
 	
 	
-	@OneToMany
-	@JoinColumn(name = "klinika_id" )
+	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
 	
 	
-	@OneToMany
-	@JoinColumn(name = "klinika_id" )
+	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
 	
 	
-	@OneToMany
-	@JoinColumn(name = "klinika_id" )
+	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<TipPregleda> tipoviPregleda;
 	
 	
-	@OneToMany
-	@JoinColumn(name = "klinika_id" )
+	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Sala> sale;
 
 	public Klinika() {

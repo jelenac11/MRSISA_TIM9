@@ -17,17 +17,14 @@ import javax.persistence.OneToOne;
 public class Pacijent extends Korisnik {
 	
 	@OneToOne
-	@JoinColumn(name = "pacijent_id" )
+	@JoinColumn(name = "zdravstveniKarton_id" )
 	private ZdravstveniKarton karton;
 	
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
 	
-	@OneToMany(mappedBy = "pacijent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private KlinickiCentar klinickiCentar;
 	
 	public Pacijent() {
 

@@ -3,7 +3,7 @@ package tim09.klinika.model;
 
 import java.util.Set;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,30 +14,38 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @Entity
 public class Izvestaj {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="id", unique=true, nullable=false)
-	private Long id;
+    @Column(name="izvestaj_id")
+    @GeneratedValue(generator="gen")
+    @GenericGenerator(name="gen", strategy="foreign",parameters=@Parameter(name="property", value="pregled"))
+    private Long id;
 	
 	@Column(name="opis",unique = false,nullable = true)
 	private String opis;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="izvestaj_id")
+	@OneToOne
+	@PrimaryKeyJoinColumn
 	private Pregled pregled;
 	
 	@ManyToOne
+	@JoinColumn(name="stavkaSifrarnika_id")
 	private StavkaSifrarnika dijagnoza;
 	
-	@OneToMany
-	@JoinColumn(name = "izvestaj_id" )
+	@OneToMany(mappedBy = "izvestaj", cascade = CascadeType.ALL)
 	private Set<Recept> recepti;
 
+	@ManyToOne
+    @JoinColumn(name = "zdravstveniKarton_id")
+	private ZdravstveniKarton zdravstveniKarton;
+	
 	public Izvestaj() {
 
 	}

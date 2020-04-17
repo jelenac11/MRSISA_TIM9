@@ -16,7 +16,6 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 	private Date krajRadnogVremena;
 
 	public MedicinskoOsobljeDTO(MedicinskoOsoblje osoblje) {
-		this(osoblje.getKlinika(),osoblje.getOdsustva(),osoblje.getPocetakRadnogVremena(),osoblje.getKrajRadnogVremena());
 	}
 	
 	

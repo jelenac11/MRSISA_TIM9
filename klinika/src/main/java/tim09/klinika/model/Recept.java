@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -14,16 +15,23 @@ public class Recept {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="recept_id")
 	private Long id;
 	
 	@Column(name = "opis",nullable = true)
 	private String opis;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne
+    @JoinColumn(name = "korisnik_id")
 	private MedSestra medSestra;
 	
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToOne
+    @JoinColumn(name = "stavkaSifrarnika_id")
 	private StavkaSifrarnika lek;
+	
+	@ManyToOne
+	@JoinColumn(name="izvestaj_id")
+	private Izvestaj izvestaj;
 
 	public Recept() {
 

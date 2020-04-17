@@ -36,8 +36,7 @@ public class OdsustvoDTO {
 
 
 	public OdsustvoDTO(Odsustvo odsustvo) {
-		this(odsustvo.getId(),odsustvo.getPodnosilac(),odsustvo.getPocetak(),odsustvo.getKraj(),odsustvo.isOdgovoreno(),odsustvo.isOdobreno(),odsustvo.getObrazlozenje());
-	}
+		}
 	
 	public Long getId() {
 		return id;

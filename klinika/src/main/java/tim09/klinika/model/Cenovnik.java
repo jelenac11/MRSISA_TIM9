@@ -2,6 +2,7 @@ package tim09.klinika.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,11 +17,10 @@ public class Cenovnik {
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	@Column(name="id", unique=true, nullable=false)
+	@Column(name="cenovnik_id", unique=true, nullable=false)
 	private Long id;
 	
-	@OneToMany
-	@JoinColumn(name="cenovnik_id")
+	@OneToMany(mappedBy = "cenovnik", cascade = CascadeType.ALL)
 	private Set<StavkaCenovnika> stavke;
 	
 	public Cenovnik() {

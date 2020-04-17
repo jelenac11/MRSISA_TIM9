@@ -110,10 +110,10 @@ Vue.component("zahtjevGodisnji",{
             </thead>
             <tbody>
                 <tr v-for="(zahtjev,indeks) in zahtjevi">
-                    <td>{{zahtjev.osoba.ime}}</td>
-                    <td>{{zahtjev.osoba.prezime}}</td>
-                    <td>{{urediDatum(zahtjev.pocetak_odsustva)}}</td>
-                    <td>{{urediDatum(zahtjev.kraj_odsustva)}}</td>
+                    <td>{{zahtjev.podnosilac.ime}}</td>
+                    <td>{{zahtjev.podnosilac.prezime}}</td>
+                    <td>{{urediDatum(zahtjev.pocetak)}}</td>
+                    <td>{{urediDatum(zahtjev.kraj)}}</td>
                     <td><button type="button" class="btn btn-success" v-on:click="prihvatanjeZahtjeva(indeks)">Prihvati zahtev</button></td>
                     <td><button type="button" class="btn btn-danger" data-target="#obrazlozenjeModal" data-toggle="modal" v-on:click="zabiljeziIndeks(indeks)">Odbij zahtev</button></td>
                 </tr>
@@ -154,8 +154,8 @@ Vue.component("zahtjevGodisnji",{
 	methods:
     {
 		prihvatanjeZahtjeva: function(indeks){
-			this.zahtjevi[indeks].status=true
-            this.zahtjevi[indeks].stanje=true
+			this.zahtjevi[indeks].odgovoreno=true
+            this.zahtjevi[indeks].odobreno=true
             this.zahtjevi[indeks].obrazlozenje=""
             this.updateZahtjev(indeks)
         },
@@ -167,8 +167,8 @@ Vue.component("zahtjevGodisnji",{
 		odbijanjeZahtjeva: function(){
 			this.submitovano = true;
 			if (document.getElementById('forma-obrazlozenje-odbijanja').checkValidity() === true){
-				this.zahtjevi[this.indeks].status=true
-	            this.zahtjevi[this.indeks].stanje=false
+				this.zahtjevi[this.indeks].odgovoreno=true
+	            this.zahtjevi[this.indeks].odobreno=false
 	            this.zahtjevi[this.indeks].obrazlozenje=$("#obrazlozenje").val()
 	            jQuery.noConflict();
 				$('#obrazlozenjeModal').modal('hide');

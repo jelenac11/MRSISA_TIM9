@@ -10,7 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 
@@ -19,6 +21,7 @@ public class TipPregleda {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="tipPregleda_id")
 	private Long id;
 	
 	@Column(name="naziv",nullable = false,unique = true)
@@ -29,9 +32,10 @@ public class TipPregleda {
 	
 	@OneToOne(mappedBy = "tipPregleda",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 	private StavkaCenovnika stavkaCenovnika;
-
-	@ManyToMany(mappedBy = "specijalnosti")
-	private Set<Lekar> strucnjaci; 
+	
+	@ManyToOne
+	@JoinColumn(name = "klinika_id")
+	private Klinika klinika;
 	
 	public TipPregleda() {
 

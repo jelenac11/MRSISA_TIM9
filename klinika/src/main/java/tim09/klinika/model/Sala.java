@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
@@ -17,6 +19,7 @@ public class Sala {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="sala_id")
 	private Long id;
 	
 	@Column(name = "broj",nullable = false,unique = true)
@@ -31,6 +34,10 @@ public class Sala {
 	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
 
+	@ManyToOne
+	@JoinColumn(name = "klinika_id")
+	private Klinika klinika;
+	
 	public Sala() {
 
 	}

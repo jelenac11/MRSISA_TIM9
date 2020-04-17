@@ -2,6 +2,7 @@ package tim09.klinika.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,27 +10,36 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 @Entity
 public class StavkaCenovnika {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(generator="gen2")
+	@Column(name="stavkaCenovnika_id")
+	@GenericGenerator(name="gen2", strategy="foreign",parameters=@Parameter(name="property", value="tipPregleda"))
 	private Long id;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "stavkaCenovnika_id")
+	@OneToOne
+    @PrimaryKeyJoinColumn
 	private TipPregleda tipPregleda;
 	
 	@Column(name = "cena")
 	private double cena;
 	
-	@OneToMany
-	@JoinColumn(name="stavkaCenovnika_id")
+	@OneToMany(mappedBy = "stavkaCenovnika", cascade = CascadeType.ALL)
 	private Set<Popust> popusti;
 
+	@ManyToOne
+	@JoinColumn(name = "cenovnik_id")
+	private Cenovnik cenovnik;
+	
 	public StavkaCenovnika() {
 
 	}

@@ -5,9 +5,12 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -17,8 +20,8 @@ import javax.persistence.Table;
 public class Korisnik {
 
 	@Id
-	@GeneratedValue
-	@Column(name="id", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="korisnik_id")
 	private Long id;
 
 	@Column(name="email", unique=true, nullable=false)
@@ -41,6 +44,10 @@ public class Korisnik {
 	
 	@Column(name="drzava", nullable=false)
 	private String drzava;
+	
+	@ManyToOne
+	@JoinColumn(name="klinickiCentar_id")
+	private KlinickiCentar klinickiCentar;
 
 	public Korisnik() {
 

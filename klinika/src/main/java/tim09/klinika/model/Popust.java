@@ -7,24 +7,35 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Popust {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="popust_id")
 	private Long id;
 	
 	
 	@Column(name = "pocetak",nullable = false)
-	private Date pocetak;
+	private long pocetak;
 	
 	@Column(name = "kraj",nullable = false)
-	private Date kraj;
+	private long kraj;
 	
 	@Column(name="procenat",nullable = false)
 	private double procenat;
+	
+	@ManyToOne
+    @JoinColumn(name = "stavkaCenovnika_id")
+    private StavkaCenovnika stavkaCenovnika;
 
+	@ManyToOne
+	@JoinColumn(name = "klinika_id")
+	private Klinika klinika;
+	
 	public Popust() {
 
 	}
@@ -37,19 +48,19 @@ public class Popust {
 		this.id = id;
 	}
 
-	public Date getPocetak() {
+	public long getPocetak() {
 		return pocetak;
 	}
 
-	public void setPocetak(Date pocetak) {
+	public void setPocetak(long pocetak) {
 		this.pocetak = pocetak;
 	}
 
-	public Date getKraj() {
+	public long getKraj() {
 		return kraj;
 	}
 
-	public void setKraj(Date kraj) {
+	public void setKraj(long kraj) {
 		this.kraj = kraj;
 	}
 
