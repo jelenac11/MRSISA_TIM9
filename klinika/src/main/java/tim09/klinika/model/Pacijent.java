@@ -11,21 +11,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-
 @Entity
 @DiscriminatorValue("PA")
 public class Pacijent extends Korisnik {
-	
-	@OneToOne
-	@JoinColumn(name = "zdravstveniKarton_id" )
+
+	@OneToOne(mappedBy = "pacijent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private ZdravstveniKarton karton;
-	
+
 	@OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
-	
+
 	@OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
-	
+
 	public Pacijent() {
 
 	}

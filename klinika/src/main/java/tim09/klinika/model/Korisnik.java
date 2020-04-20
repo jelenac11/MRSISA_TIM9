@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,39 +15,39 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="korisnici")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="tip", discriminatorType=DiscriminatorType.STRING)
+@Table(name = "korisnici")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tip", discriminatorType = DiscriminatorType.STRING)
 public class Korisnik {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="korisnik_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "korisnik_id")
 	private Long id;
 
-	@Column(name="email", unique=true, nullable=false)
+	@Column(name = "email", unique = true, nullable = false)
 	private String email;
-	
-	@Column(name="lozinka", nullable=false)
+
+	@Column(name = "lozinka", nullable = false)
 	private String lozinka;
-	
-	@Column(name="ime", nullable=false)
+
+	@Column(name = "ime", nullable = false)
 	private String ime;
-	
-	@Column(name="prezime", nullable=false)
+
+	@Column(name = "prezime", nullable = false)
 	private String prezime;
-	
-	@Column(name="adresa", nullable=false)
+
+	@Column(name = "adresa", nullable = false)
 	private String adresa;
-	
-	@Column(name="grad", nullable=false)
+
+	@Column(name = "grad", nullable = false)
 	private String grad;
-	
-	@Column(name="drzava", nullable=false)
+
+	@Column(name = "drzava", nullable = false)
 	private String drzava;
-	
-	@ManyToOne
-	@JoinColumn(name="klinickiCentar_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "klinickiCentar_id")
 	private KlinickiCentar klinickiCentar;
 
 	public Korisnik() {
@@ -115,6 +116,14 @@ public class Korisnik {
 
 	public void setDrzava(String drzava) {
 		this.drzava = drzava;
+	}
+
+	public KlinickiCentar getKlinickiCentar() {
+		return klinickiCentar;
+	}
+
+	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
 	}
 
 }

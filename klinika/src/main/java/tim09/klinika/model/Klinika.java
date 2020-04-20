@@ -14,53 +14,54 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-
 @Entity
 public class Klinika {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="klinika_id")
+	@Column(name = "klinika_id")
 	private Long id;
-	
-	@ManyToOne
-	@JoinColumn(name = "klinickiCentar_id")
-	private KlinickiCentar klinickiCentar;
-	
+
+	@Column(name = "naziv", nullable = false)
+	private String naziv;
+
+	@Column(name = "lokacija", nullable = false)
+	private String lokacija;
+
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<AdminKlinike> admini;
-	
+
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<Odsustvo> odsustva;
-	
-	
-	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<MedicinskoOsoblje> osoblje;
-	
-	
-	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<Popust> popusti;
-	
-	
-	@OneToOne
-	@JoinColumn(name = "cijena_u_klinika_id" )
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "cenovnik_id")
 	private Cenovnik cenovnik;
-	
-	
-	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
-	
-	
-	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
-	
-	
-	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<TipPregleda> tipoviPregleda;
-	
-	
-	@OneToMany(mappedBy = "klinika",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<Sala> sale;
+
+	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
+	private Set<OcenaKlinike> ocene;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "klinickiCentar_id")
+	private KlinickiCentar klinickiCentar;
 
 	public Klinika() {
 
@@ -106,6 +107,22 @@ public class Klinika {
 		this.popusti = popusti;
 	}
 
+	public String getNaziv() {
+		return naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public String getLokacija() {
+		return lokacija;
+	}
+
+	public void setLokacija(String lokacija) {
+		this.lokacija = lokacija;
+	}
+
 	public Cenovnik getCenovnik() {
 		return cenovnik;
 	}
@@ -144,5 +161,21 @@ public class Klinika {
 
 	public void setSale(Set<Sala> sale) {
 		this.sale = sale;
+	}
+
+	public Set<OcenaKlinike> getOcene() {
+		return ocene;
+	}
+
+	public void setOcene(Set<OcenaKlinike> ocene) {
+		this.ocene = ocene;
+	}
+
+	public KlinickiCentar getKlinickiCentar() {
+		return klinickiCentar;
+	}
+
+	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
 	}
 }

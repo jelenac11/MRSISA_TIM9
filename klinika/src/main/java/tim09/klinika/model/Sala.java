@@ -13,31 +13,30 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-
 @Entity
 public class Sala {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="sala_id")
+	@Column(name = "sala_id")
 	private Long id;
-	
-	@Column(name = "broj",nullable = false,unique = true)
+
+	@Column(name = "broj", nullable = false, unique = true)
 	private int broj;
-	
-	@Column(name = "naziv",nullable = false,unique = true)
+
+	@Column(name = "naziv", nullable = false, unique = true)
 	private String naziv;
-	
-	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
-	
-	@OneToMany(mappedBy = "sala", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+	@OneToMany(mappedBy = "sala", cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
-	
+
 	public Sala() {
 
 	}

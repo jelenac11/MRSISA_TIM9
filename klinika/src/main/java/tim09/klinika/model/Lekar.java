@@ -15,20 +15,21 @@ import javax.persistence.JoinColumn;
 @Entity
 @DiscriminatorValue("LE")
 public class Lekar extends MedicinskoOsoblje {
-	
+
 	@ManyToMany
-	@JoinTable(
-	  name = "specijalizovan", 
-	  joinColumns = {@JoinColumn(name = "lekar_id",referencedColumnName = "korisnik_id")}, 
-	  inverseJoinColumns = { @JoinColumn(name = "tipPregleda_id")})
+	@JoinTable(name = "specijalizovan", joinColumns = {
+			@JoinColumn(name = "lekar_id", referencedColumnName = "korisnik_id") }, inverseJoinColumns = {
+					@JoinColumn(name = "tipPregleda_id", referencedColumnName = "tipPregleda_id") })
 	private Set<TipPregleda> specijalnosti;
-	
-	@OneToMany(mappedBy = "lekar",cascade = CascadeType.ALL)
+
+	@ManyToMany(mappedBy = "lekari")
 	private Set<Operacija> operacije;
-	
-	
+
 	@OneToMany(mappedBy = "lekar", cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
+
+	@OneToMany(mappedBy = "lekar", cascade = CascadeType.ALL)
+	private Set<OcenaLekara> ocene;
 
 	public Lekar() {
 
@@ -48,6 +49,14 @@ public class Lekar extends MedicinskoOsoblje {
 
 	public void setOperacije(Set<Operacija> operacije) {
 		this.operacije = operacije;
+	}
+
+	public Set<OcenaLekara> getOcene() {
+		return ocene;
+	}
+
+	public void setOcene(Set<OcenaLekara> ocene) {
+		this.ocene = ocene;
 	}
 
 	public Set<Pregled> getPregledi() {

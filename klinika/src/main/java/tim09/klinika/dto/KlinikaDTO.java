@@ -15,7 +15,7 @@ import tim09.klinika.model.Sala;
 import tim09.klinika.model.TipPregleda;
 
 public class KlinikaDTO {
-
+// FALE OCENEDTO DODAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ I NAZIV I LOKACIJA I KLINICKI CENTAR
 	private Long id;
 	private ArrayList<AdminKlinikeDTO> admini;
 	private ArrayList<OdsustvoDTO> odsustva;
@@ -26,6 +26,10 @@ public class KlinikaDTO {
 	private ArrayList<OperacijaDTO> operacije;
 	private ArrayList<TipPregledaDTO> tipoviPregleda;
 	private ArrayList<SalaDTO> sale;
+	private ArrayList<OcenaKlinikeDTO> ocene;
+	private String naziv;
+	private String lokacija;
+	private KlinickiCentarDTO klinickiCentar;
 
 	public KlinikaDTO() {
 
@@ -120,6 +124,30 @@ public class KlinikaDTO {
 		this.popusti = popusti;
 	}
 
+	public ArrayList<OcenaKlinikeDTO> getOcene() {
+		return ocene;
+	}
+
+	public void setOcene(ArrayList<OcenaKlinikeDTO> ocene) {
+		this.ocene = ocene;
+	}
+
+	public String getNaziv() {
+		return naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		this.naziv = naziv;
+	}
+
+	public String getLokacija() {
+		return lokacija;
+	}
+
+	public void setLokacija(String lokacija) {
+		this.lokacija = lokacija;
+	}
+
 	public CenovnikDTO getCenovnik() {
 		return cenovnik;
 	}
@@ -158,5 +186,13 @@ public class KlinikaDTO {
 
 	public void setSale(ArrayList<SalaDTO> sale) {
 		this.sale = sale;
+	}
+
+	public KlinickiCentarDTO getKlinickiCentar() {
+		return klinickiCentar;
+	}
+
+	public void setKlinickiCentar(KlinickiCentarDTO klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
 	}
 }

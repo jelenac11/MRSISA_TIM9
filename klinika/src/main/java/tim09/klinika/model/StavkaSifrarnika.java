@@ -13,38 +13,32 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import tim09.klinika.model.TipSifre;
-
 @Entity
 public class StavkaSifrarnika {
-	
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="stavkaSifrarnika_id")
+	@Column(name = "stavkaSifrarnika_id")
 	private Long id;
-	
-	@Column(name = "sifra",unique = true,nullable = false)
+
+	@Column(name = "sifra", unique = true, nullable = false)
 	private String sifra;
-	
-	@Column(name = "naziv",nullable = false)
+
+	@Column(name = "naziv", nullable = false)
 	private String naziv;
-	
-	@ManyToOne
-	@JoinColumn(name="tipSifre_id")
-	private TipSifre tipSifre;
-	
+
+	@Column(name = "tipSifre", nullable = false)
+	private String tipSifre;
+
 	@OneToMany(mappedBy = "dijagnoza", cascade = CascadeType.ALL)
 	private Set<Izvestaj> izvestaji;
-	
+
 	@OneToMany(mappedBy = "lek", cascade = CascadeType.ALL)
-    private Set<Recept> recepti;
-	
-	@ManyToOne
-	@JoinColumn(name="sifrarnik_id")
+	private Set<Recept> recepti;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sifrarnik_id")
 	private Sifrarnik sifrarnik;
-	
-	
 
 	public StavkaSifrarnika() {
 
@@ -74,11 +68,11 @@ public class StavkaSifrarnika {
 		this.naziv = naziv;
 	}
 
-	public TipSifre getTipSifre() {
+	public String getTipSifre() {
 		return tipSifre;
 	}
 
-	public void setTipSifre(TipSifre tipSifre) {
+	public void setTipSifre(String tipSifre) {
 		this.tipSifre = tipSifre;
 	}
 }

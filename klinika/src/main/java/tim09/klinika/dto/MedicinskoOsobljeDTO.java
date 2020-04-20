@@ -17,22 +17,18 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 
 	public MedicinskoOsobljeDTO(MedicinskoOsoblje osoblje) {
 	}
-	
-	
-	
+
 	public MedicinskoOsobljeDTO(Klinika klinika, Set<Odsustvo> odsustva, Date pocetakRadnogVremena,
 			Date krajRadnogVremena) {
 		super();
 		this.klinika = new KlinikaDTO(klinika);
 		this.odsustva = new ArrayList<OdsustvoDTO>();
-		for(Odsustvo ods : odsustva) {
+		for (Odsustvo ods : odsustva) {
 			this.odsustva.add(new OdsustvoDTO(ods));
 		}
 		this.pocetakRadnogVremena = pocetakRadnogVremena;
 		this.krajRadnogVremena = krajRadnogVremena;
 	}
-
-
 
 	public KlinikaDTO getKlinika() {
 		return klinika;
@@ -41,7 +37,7 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 	public void setKlinika(KlinikaDTO klinika) {
 		this.klinika = klinika;
 	}
-	
+
 	public Date getPocetakRadnogVremena() {
 		return pocetakRadnogVremena;
 	}

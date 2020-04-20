@@ -2,8 +2,10 @@ package tim09.klinika.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,27 +17,26 @@ public class Popust {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="popust_id")
+	@Column(name = "popust_id")
 	private Long id;
-	
-	
-	@Column(name = "pocetak",nullable = false)
-	private long pocetak;
-	
-	@Column(name = "kraj",nullable = false)
-	private long kraj;
-	
-	@Column(name="procenat",nullable = false)
-	private double procenat;
-	
-	@ManyToOne
-    @JoinColumn(name = "stavkaCenovnika_id")
-    private StavkaCenovnika stavkaCenovnika;
 
-	@ManyToOne
+	@Column(name = "pocetak", nullable = false)
+	private long pocetak;
+
+	@Column(name = "kraj", nullable = false)
+	private long kraj;
+
+	@Column(name = "procenat", nullable = false)
+	private double procenat;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "stavkaCenovnika_id")
+	private StavkaCenovnika stavkaCenovnika;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
-	
+
 	public Popust() {
 
 	}

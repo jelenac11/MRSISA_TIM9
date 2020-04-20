@@ -11,6 +11,7 @@ public class SalaDTO {
 	private String naziv;
 	private ArrayList<PregledDTO> pregledi;
 	private ArrayList<OperacijaDTO> operacije;
+	private KlinikaDTO klinika;
 
 	public SalaDTO() {
 
@@ -58,5 +59,13 @@ public class SalaDTO {
 
 	public void setOperacije(ArrayList<OperacijaDTO> operacije) {
 		this.operacije = operacije;
+	}
+
+	public KlinikaDTO getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(KlinikaDTO klinika) {
+		this.klinika = klinika;
 	}
 }

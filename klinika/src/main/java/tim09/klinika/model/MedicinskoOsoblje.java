@@ -14,22 +14,21 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
 @Entity
 @DiscriminatorValue("MO")
 public class MedicinskoOsoblje extends Korisnik {
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
-	
+
 	@OneToMany(mappedBy = "podnosilac", cascade = CascadeType.ALL)
 	private Set<Odsustvo> odsustva;
-	
-	@Column(name="pocetakRadnogVremena",nullable = false)
+
+	@Column(name = "pocetakRadnogVremena", nullable = false)
 	private long pocetakRadnogVremena;
-	
-	@Column(name="krajRadnogVremena",nullable = false)
+
+	@Column(name = "krajRadnogVremena", nullable = false)
 	private long krajRadnogVremena;
 
 	public Klinika getKlinika() {
@@ -39,7 +38,7 @@ public class MedicinskoOsoblje extends Korisnik {
 	public void setKlinika(Klinika klinika) {
 		this.klinika = klinika;
 	}
-	
+
 	public long getPocetakRadnogVremena() {
 		return pocetakRadnogVremena;
 	}
@@ -67,6 +66,5 @@ public class MedicinskoOsoblje extends Korisnik {
 	public void setOdsustva(Set<Odsustvo> odsustva) {
 		this.odsustva = odsustva;
 	}
-	
-	
+
 }

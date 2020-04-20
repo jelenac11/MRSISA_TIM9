@@ -18,38 +18,41 @@ public class Pregled {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="pregled_id")
+	@Column(name = "pregled_id")
 	private Long id;
-	
-	@ManyToOne
-	@JoinColumn(name="lekar_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "lekar_id")
 	private Lekar lekar;
-	
-	@ManyToOne
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pacijent_id")
 	private Pacijent pacijent;
-	
-	@OneToOne
-    @JoinColumn(name="tipPregleda_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tipPregleda_id")
 	private TipPregleda tipPregleda;
-	
-	@OneToOne(mappedBy="pregled", cascade = CascadeType.ALL)
+
+	@OneToOne(mappedBy = "pregled", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Izvestaj izvestaj;
-	
-	@ManyToOne
-    @JoinColumn(name = "sala_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sala_id")
 	private Sala sala;
-	
+
 	@Column(name = "vreme")
 	private long vreme;
-	
+
+	@Column(name = "trajanje")
+	private int trajanje;
+
 	@Column(name = "otkazan")
 	private boolean otkazan;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
-	
+
 	public Pregled() {
 
 	}

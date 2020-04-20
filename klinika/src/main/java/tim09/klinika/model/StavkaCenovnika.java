@@ -11,35 +11,36 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
 @Entity
 public class StavkaCenovnika {
 
 	@Id
-	@GeneratedValue(generator="gen2")
-	@Column(name="stavkaCenovnika_id")
-	@GenericGenerator(name="gen2", strategy="foreign",parameters=@Parameter(name="property", value="tipPregleda"))
+	@Column(name = "stavkaCenovnika_id")
 	private Long id;
-	
-	@OneToOne
-    @PrimaryKeyJoinColumn
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "tipPregleda_id")
+	@MapsId
 	private TipPregleda tipPregleda;
-	
-	@Column(name = "cena")
+
+	@Column(name = "cena", nullable = false)
 	private double cena;
-	
+
 	@OneToMany(mappedBy = "stavkaCenovnika", cascade = CascadeType.ALL)
 	private Set<Popust> popusti;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cenovnik_id")
 	private Cenovnik cenovnik;
-	
+
 	public StavkaCenovnika() {
 
 	}
@@ -75,5 +76,5 @@ public class StavkaCenovnika {
 	public void setPopusti(Set<Popust> popusti) {
 		this.popusti = popusti;
 	}
-	
+
 }

@@ -10,13 +10,14 @@ public class KorisnikDTO {
 	private String adresa;
 	private String grad;
 	private String drzava;
+	private KlinickiCentarDTO klinickiCentar;
 
 	public KorisnikDTO() {
 
 	}
 	
 	public KorisnikDTO(Long id, String email, String lozinka, String ime, String prezime, String adresa, String grad,
-			String drzava) {
+			String drzava, KlinickiCentarDTO klinickiCentar) {
 		this.id = id;
 		this.email = email;
 		this.lozinka = lozinka;
@@ -25,6 +26,7 @@ public class KorisnikDTO {
 		this.adresa = adresa;
 		this.grad = grad;
 		this.drzava = drzava;
+		this.klinickiCentar = klinickiCentar;
 	}
 
 	public Long getId() {
@@ -89,6 +91,14 @@ public class KorisnikDTO {
 
 	public void setDrzava(String drzava) {
 		this.drzava = drzava;
+	}
+
+	public KlinickiCentarDTO getKlinickiCentar() {
+		return klinickiCentar;
+	}
+
+	public void setKlinickiCentar(KlinickiCentarDTO klinickiCentar) {
+		this.klinickiCentar = klinickiCentar;
 	}
 
 }

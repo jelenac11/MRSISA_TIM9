@@ -1,5 +1,7 @@
 package tim09.klinika.dto;
 
+import java.util.ArrayList;
+
 import tim09.klinika.model.TipPregleda;
 
 public class TipPregledaDTO {
@@ -8,6 +10,9 @@ public class TipPregledaDTO {
 	private String naziv;
 	private String opis;
 	private StavkaCenovnikaDTO stavkaCenovnika;
+	private KlinikaDTO klinika;
+	private ArrayList<LekarDTO> lekari;
+	private ArrayList<PregledDTO> pregledi;
 
 	public TipPregledaDTO() {
 
@@ -47,6 +52,30 @@ public class TipPregledaDTO {
 
 	public void setStavkaCenovnika(StavkaCenovnikaDTO stavkaCenovnika) {
 		this.stavkaCenovnika = stavkaCenovnika;
+	}
+
+	public KlinikaDTO getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(KlinikaDTO klinika) {
+		this.klinika = klinika;
+	}
+
+	public ArrayList<LekarDTO> getLekari() {
+		return lekari;
+	}
+
+	public void setLekari(ArrayList<LekarDTO> lekari) {
+		this.lekari = lekari;
+	}
+
+	public ArrayList<PregledDTO> getPregledi() {
+		return pregledi;
+	}
+
+	public void setPregledi(ArrayList<PregledDTO> pregledi) {
+		this.pregledi = pregledi;
 	}
 
 }

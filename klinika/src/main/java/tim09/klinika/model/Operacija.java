@@ -1,6 +1,8 @@
 package tim09.klinika.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,36 +12,37 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-
 
 @Entity
 public class Operacija {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="operacija_id")
+	@Column(name = "operacija_id")
 	private Long id;
-	
-	@ManyToOne
-	@JoinColumn(name="lekar_id")
-	private Lekar lekar;
-	
-	@ManyToOne
+
+	@ManyToMany
+	@JoinTable(name = "operisali", joinColumns = @JoinColumn(name = "operacija_id", referencedColumnName = "operacija_id"), inverseJoinColumns = @JoinColumn(name = "lekar_id", referencedColumnName = "korisnik_id"))
+	private Set<Lekar> lekari;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "pacijent_id")
 	private Pacijent pacijent;
-	
-	@ManyToOne
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sala_id")
 	private Sala sala;
-	
-	@Column(name = "vreme",nullable = false)
+
+	@Column(name = "vreme", nullable = false)
 	private long vreme;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
-	
+
 	public Operacija() {
 
 	}
@@ -52,12 +55,20 @@ public class Operacija {
 		this.id = id;
 	}
 
-	public Lekar getLekar() {
-		return lekar;
+	public Set<Lekar> getLekari() {
+		return lekari;
 	}
 
-	public void setLekar(Lekar lekar) {
-		this.lekar = lekar;
+	public void setLekari(Set<Lekar> lekari) {
+		this.lekari = lekari;
+	}
+
+	public Klinika getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(Klinika klinika) {
+		this.klinika = klinika;
 	}
 
 	public Pacijent getPacijent() {

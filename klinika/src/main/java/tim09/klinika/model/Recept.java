@@ -15,22 +15,22 @@ public class Recept {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="recept_id")
+	@Column(name = "recept_id")
 	private Long id;
-	
-	@Column(name = "opis",nullable = true)
+
+	@Column(name = "opis", nullable = true)
 	private String opis;
-	
-	@ManyToOne
-    @JoinColumn(name = "korisnik_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "medSestra_id")
 	private MedSestra medSestra;
-	
-	@ManyToOne
-    @JoinColumn(name = "stavkaSifrarnika_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "lek_id")
 	private StavkaSifrarnika lek;
-	
-	@ManyToOne
-	@JoinColumn(name="izvestaj_id")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "izvestaj_id")
 	private Izvestaj izvestaj;
 
 	public Recept() {

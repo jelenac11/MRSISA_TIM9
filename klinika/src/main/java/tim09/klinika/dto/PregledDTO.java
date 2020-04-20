@@ -14,6 +14,7 @@ public class PregledDTO {
 	private SalaDTO sala;
 	private Date vreme;
 	private boolean otkazan;
+	private KlinikaDTO klinika;
 
 	public PregledDTO() {
 
@@ -85,5 +86,13 @@ public class PregledDTO {
 
 	public void setOtkazan(boolean otkazan) {
 		this.otkazan = otkazan;
+	}
+
+	public KlinikaDTO getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(KlinikaDTO klinika) {
+		this.klinika = klinika;
 	}
 }

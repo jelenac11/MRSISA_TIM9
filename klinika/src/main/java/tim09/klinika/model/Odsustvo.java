@@ -12,38 +12,37 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-
 @Entity
 public class Odsustvo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="odsustvo_id")
+	@Column(name = "odsustvo_id")
 	private Long id;
-	
-	@ManyToOne
-	@JoinColumn(name="korisnik_id")
-	private MedicinskoOsoblje podnosilac;
-	
-	@Column(name = "pocetak",nullable = false)
-	private long pocetak;
-	
-	@Column(name = "kraj",nullable = false)
-	private long kraj;
-	
-	@Column(name = "odgovoreno",nullable = false)
-	private boolean odgovoreno;
-	
-	@Column(name = "odobreno",nullable = true)
-	private boolean odobreno;
 
-	@Column(name = "obrazlozenje",nullable=true)
-	private String obrazlozenje;
-	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "podnosilac_id")
+	private MedicinskoOsoblje podnosilac;
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
-	
+
+	@Column(name = "pocetak", nullable = false)
+	private long pocetak;
+
+	@Column(name = "kraj", nullable = false)
+	private long kraj;
+
+	@Column(name = "odgovoreno", nullable = false)
+	private boolean odgovoreno;
+
+	@Column(name = "odobreno", nullable = true)
+	private boolean odobreno;
+
+	@Column(name = "obrazlozenje", nullable = true)
+	private String obrazlozenje;
+
 	public Odsustvo() {
 
 	}
@@ -79,7 +78,6 @@ public class Odsustvo {
 	public void setKraj(long kraj) {
 		this.kraj = kraj;
 	}
-	
 
 	public boolean isOdgovoreno() {
 		return odgovoreno;
@@ -104,5 +102,13 @@ public class Odsustvo {
 	public void setObrazlozenje(String obrazlozenje) {
 		this.obrazlozenje = obrazlozenje;
 	}
-	
+
+	public Klinika getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(Klinika klinika) {
+		this.klinika = klinika;
+	}
+
 }

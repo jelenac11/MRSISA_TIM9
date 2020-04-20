@@ -14,6 +14,7 @@ public class OdsustvoDTO {
 	private boolean odgovoreno;
 	private boolean odobreno;
 	private String obrazlozenje;
+	private KlinikaDTO klinika;
 	
 	public OdsustvoDTO() {
 
@@ -22,7 +23,7 @@ public class OdsustvoDTO {
 	
 	
 	public OdsustvoDTO(Long id, MedicinskoOsoblje podnosilac, Date pocetak, Date kraj, boolean odgovoreno,
-			boolean odobreno,String obrazlozenje) {
+			boolean odobreno,String obrazlozenje, KlinikaDTO klinika) {
 		super();
 		this.id = id;
 		this.podnosilac = new MedicinskoOsobljeDTO(podnosilac);
@@ -31,6 +32,19 @@ public class OdsustvoDTO {
 		this.odgovoreno = odgovoreno;
 		this.odobreno = odobreno;
 		this.obrazlozenje=obrazlozenje;
+		this.klinika = klinika;
+	}
+
+
+
+	public KlinikaDTO getKlinika() {
+		return klinika;
+	}
+
+
+
+	public void setKlinika(KlinikaDTO klinika) {
+		this.klinika = klinika;
 	}
 
 

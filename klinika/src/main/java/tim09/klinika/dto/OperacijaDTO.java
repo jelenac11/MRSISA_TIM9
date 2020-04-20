@@ -1,5 +1,6 @@
 package tim09.klinika.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import tim09.klinika.model.Operacija;
@@ -7,10 +8,11 @@ import tim09.klinika.model.Operacija;
 public class OperacijaDTO {
 
 	private Long id;
-	private LekarDTO lekar;
+	private ArrayList<LekarDTO> lekari;
 	private PacijentDTO pacijent;
 	private SalaDTO sala;
 	private Date vreme;
+	private KlinikaDTO klinika;
 
 	public OperacijaDTO() {
 
@@ -29,13 +31,15 @@ public class OperacijaDTO {
 		this.id = id;
 	}
 
-	public LekarDTO getLekar() {
-		return lekar;
+	public ArrayList<LekarDTO> getLekari() {
+		return lekari;
 	}
 
-	public void setLekar(LekarDTO lekar) {
-		this.lekar = lekar;
+
+	public void setLekari(ArrayList<LekarDTO> lekari) {
+		this.lekari = lekari;
 	}
+
 
 	public PacijentDTO getPacijent() {
 		return pacijent;
@@ -59,5 +63,15 @@ public class OperacijaDTO {
 
 	public void setVreme(Date vreme) {
 		this.vreme = vreme;
+	}
+
+
+	public KlinikaDTO getKlinika() {
+		return klinika;
+	}
+
+
+	public void setKlinika(KlinikaDTO klinika) {
+		this.klinika = klinika;
 	}
 }

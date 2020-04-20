@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 public class LekarDTO extends MedicinskoOsobljeDTO {
-
+// ISTOOOOOOOOOOOO KAOOOOOOOOO KOOOOOOOOOOOOD KLIIIIINIIIIIIKEEEEEEEE OCENEEEEEEEEEEEDTOOOOOOOO
 	private ArrayList<TipPregledaDTO> specijalnosti;
 	private ArrayList<OperacijaDTO> operacije;
 	private ArrayList<PregledDTO> pregledi;
