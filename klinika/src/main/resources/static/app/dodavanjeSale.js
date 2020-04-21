@@ -3,7 +3,7 @@ Vue.component("dodavanje-sale", {
 		return {
 			novaSala : {
 				broj: 0,
-				info: ""
+				naziv: ""
 			},
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
@@ -24,8 +24,9 @@ Vue.component("dodavanje-sale", {
 					</div>
 				  	<div class="form-row">
 				    	<div class="col">
-				    	 	<label for="inf">Dodatne informacije</label>
-							<textarea v-model="novaSala.info" class="form-control" id="inf" placeholder="Dodatne informacije" rows="3"></textarea>
+				    	 	<label for="inf">Naziv</label>
+							<input type="text" v-model="novaSala.naziv" class="form-control" id="naz" placeholder="Naziv" required></input>
+							<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli naziv sale.</div>
 						</div>
 				  	</div>
 				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
@@ -43,7 +44,7 @@ Vue.component("dodavanje-sale", {
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-salu').checkValidity() === true) {
 				axios
-				.post('/dodajSalu', this.novaSala)
+				.post('/sale', this.novaSala)
 				.then(response => {
 					this.uspesnoDodavanje = response.data;
 					

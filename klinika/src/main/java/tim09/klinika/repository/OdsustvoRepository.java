@@ -9,6 +9,5 @@ import tim09.klinika.model.Odsustvo;
 public interface OdsustvoRepository extends JpaRepository<Odsustvo, Long> {
 
 	List<Odsustvo> findByOdgovoreno(boolean odgovoreno);
-	
-	
+
 }

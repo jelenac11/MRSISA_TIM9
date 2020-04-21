@@ -100,13 +100,13 @@ Vue.component("sale", {
 			  	<thead class="thead-light">
 			    	<tr>
 				      	<th scope="col" width="20%">Broj</th>
-				      	<th scope="col" width="80%">Dodatne informacije</th>
+				      	<th scope="col" width="80%">Naziv</th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
 			  		<tr v-for="sala in sale" data-toggle="modal" data-target="#" v-on:click="">
 				      	<td width="20%">{{ sala.broj }}</td>
-				      	<td width="80%">{{ sala.info }}</td>
+				      	<td width="80%">{{ sala.naziv }}</td>
 			    	</tr>
 			  	</tbody>
 			</table>
@@ -116,12 +116,12 @@ Vue.component("sale", {
 	`
 	,
 	mounted() {
+		//axios
+        //.get('/api/getUserInfo')
+        //.then(response => (this.ulogovan = response.data))
+        //.catch(function (error) { console.log(error); });
 		axios
-        .get('/api/getUserInfo')
-        .then(response => (this.ulogovan = response.data))
-        .catch(function (error) { console.log(error); });
-		axios
-        .get('/ucitajSale')
+        .get('/sale/ucitajSve')
         .then(response => (this.sale = response.data))
         .catch(function (error) { console.log(error); });
 	}

@@ -80,4 +80,12 @@ public class Sala {
 	public void setOperacije(Set<Operacija> operacije) {
 		this.operacije = operacije;
 	}
+
+	public Klinika getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(Klinika klinika) {
+		this.klinika = klinika;
+	}
 }

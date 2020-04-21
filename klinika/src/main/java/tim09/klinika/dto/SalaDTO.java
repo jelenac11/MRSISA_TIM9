@@ -9,16 +9,15 @@ public class SalaDTO {
 	private Long id;
 	private int broj;
 	private String naziv;
-	private ArrayList<PregledDTO> pregledi;
-	private ArrayList<OperacijaDTO> operacije;
-	private KlinikaDTO klinika;
 
 	public SalaDTO() {
 
 	}
 
-	public SalaDTO(Sala os) {
-		// TODO Auto-generated constructor stub
+	public SalaDTO(Sala sala) {
+		this.id = sala.getId();
+		this.broj = sala.getBroj();
+		this.naziv = sala.getNaziv();
 	}
 
 	public Long getId() {
@@ -45,27 +44,4 @@ public class SalaDTO {
 		this.naziv = naziv;
 	}
 
-	public ArrayList<PregledDTO> getPregledi() {
-		return pregledi;
-	}
-
-	public void setPregledi(ArrayList<PregledDTO> pregledi) {
-		this.pregledi = pregledi;
-	}
-
-	public ArrayList<OperacijaDTO> getOperacije() {
-		return operacije;
-	}
-
-	public void setOperacije(ArrayList<OperacijaDTO> operacije) {
-		this.operacije = operacije;
-	}
-
-	public KlinikaDTO getKlinika() {
-		return klinika;
-	}
-
-	public void setKlinika(KlinikaDTO klinika) {
-		this.klinika = klinika;
-	}
 }
