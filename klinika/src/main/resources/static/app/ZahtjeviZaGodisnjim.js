@@ -177,12 +177,12 @@ Vue.component("zahtjevGodisnji",{
 			}
         },
         updateZahtjev: function(indeks){
-            axios.post('/updateZahtjev',this.zahtjevi[indeks]).then(response=>{this.dobaviZahtjeve()});
+            axios.put('/odsustva/updateOdsustvo',this.zahtjevi[indeks]).then(response=>{this.dobaviZahtjeve()});
         },
         dobaviZahtjeve: function(){
-            axios.get('/getZahteviNaCekanju').then(response => 
+            axios.get('/odsustva/ucitajSvaNeodgovorenaOdsustva').then(response => 
                 {
-                    this.zahtjevi = response.data
+                    this.zahtjevi =response.data;
                 })
                 .catch(function (error) { console.log(error); });
         },

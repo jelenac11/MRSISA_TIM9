@@ -30,6 +30,11 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 		this.krajRadnogVremena = krajRadnogVremena;
 	}
 
+	public MedicinskoOsobljeDTO(long id,String ime,String prezime){
+		this.setIme(ime);
+		this.setPrezime(prezime);
+		this.setId(id);
+	}
 	public KlinikaDTO getKlinika() {
 		return klinika;
 	}

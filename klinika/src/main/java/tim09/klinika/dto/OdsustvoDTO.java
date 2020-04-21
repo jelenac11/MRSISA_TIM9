@@ -1,6 +1,5 @@
 package tim09.klinika.dto;
 
-import java.util.Date;
 
 import tim09.klinika.model.MedicinskoOsoblje;
 import tim09.klinika.model.Odsustvo;
@@ -9,12 +8,11 @@ public class OdsustvoDTO {
 
 	private Long id;
 	private MedicinskoOsobljeDTO podnosilac;
-	private Date pocetak;
-	private Date kraj;
+	private long pocetak;
+	private long kraj;
 	private boolean odgovoreno;
 	private boolean odobreno;
 	private String obrazlozenje;
-	private KlinikaDTO klinika;
 	
 	public OdsustvoDTO() {
 
@@ -22,8 +20,8 @@ public class OdsustvoDTO {
 
 	
 	
-	public OdsustvoDTO(Long id, MedicinskoOsoblje podnosilac, Date pocetak, Date kraj, boolean odgovoreno,
-			boolean odobreno,String obrazlozenje, KlinikaDTO klinika) {
+	public OdsustvoDTO(Long id, MedicinskoOsoblje podnosilac, long pocetak, long kraj, boolean odgovoreno,
+			boolean odobreno,String obrazlozenje) {
 		super();
 		this.id = id;
 		this.podnosilac = new MedicinskoOsobljeDTO(podnosilac);
@@ -32,20 +30,19 @@ public class OdsustvoDTO {
 		this.odgovoreno = odgovoreno;
 		this.odobreno = odobreno;
 		this.obrazlozenje=obrazlozenje;
-		this.klinika = klinika;
 	}
 
 
 
-	public KlinikaDTO getKlinika() {
+	/*public KlinikaDTO getKlinika() {
 		return klinika;
-	}
+	}*/
 
 
 
-	public void setKlinika(KlinikaDTO klinika) {
+	/*public void setKlinika(KlinikaDTO klinika) {
 		this.klinika = klinika;
-	}
+	}*/
 
 
 
@@ -68,19 +65,19 @@ public class OdsustvoDTO {
 		this.podnosilac = podnosilac;
 	}
 
-	public Date getPocetak() {
+	public long getPocetak() {
 		return pocetak;
 	}
 
-	public void setPocetak(Date pocetak) {
+	public void setPocetak(long pocetak) {
 		this.pocetak = pocetak;
 	}
 
-	public Date getKraj() {
+	public long getKraj() {
 		return kraj;
 	}
 
-	public void setKraj(Date kraj) {
+	public void setKraj(long kraj) {
 		this.kraj = kraj;
 	}
 	
