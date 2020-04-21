@@ -7,6 +7,7 @@ public class PacijentDTO extends KorisnikDTO {
 	private ZdravstveniKartonDTO karton;
 	private ArrayList<PregledDTO> pregledi;
 	private ArrayList<OperacijaDTO> operacije;
+	private String jbo;
 
 	public PacijentDTO() {
 
@@ -34,5 +35,13 @@ public class PacijentDTO extends KorisnikDTO {
 
 	public void setOperacije(ArrayList<OperacijaDTO> operacije) {
 		this.operacije = operacije;
+	}
+
+	public String getJbo() {
+		return jbo;
+	}
+
+	public void setJbo(String jbo) {
+		this.jbo = jbo;
 	}
 }

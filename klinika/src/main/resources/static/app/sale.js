@@ -116,10 +116,10 @@ Vue.component("sale", {
 	`
 	,
 	mounted() {
-		//axios
-        //.get('/api/getUserInfo')
-        //.then(response => (this.ulogovan = response.data))
-        //.catch(function (error) { console.log(error); });
+		axios
+        .get('/korisnici/dobaviUlogovanog')
+        .then(response => (this.ulogovan = response.data))
+        .catch(function (error) { console.log(error); });
 		axios
         .get('/sale/ucitajSve')
         .then(response => (this.sale = response.data))

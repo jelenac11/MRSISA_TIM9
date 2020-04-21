@@ -98,7 +98,7 @@ Vue.component("home", {
 	,
 	mounted() {
 		axios
-        .get('/api/getUserInfo')
+        .get('/korisnici/dobaviUlogovanog')
         .then(response => (this.ulogovan = response.data))
         .catch(function (error) { console.log(error); });
 	}

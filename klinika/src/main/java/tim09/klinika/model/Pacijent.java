@@ -3,6 +3,7 @@ package tim09.klinika.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,6 +24,9 @@ public class Pacijent extends Korisnik {
 
 	@OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
+
+	@Column(name = "jbo", unique = true, nullable = false)
+	private String jbo;
 
 	public Pacijent() {
 
@@ -50,5 +54,13 @@ public class Pacijent extends Korisnik {
 
 	public void setOperacije(Set<Operacija> operacije) {
 		this.operacije = operacije;
+	}
+
+	public String getJbo() {
+		return jbo;
+	}
+
+	public void setJbo(String jbo) {
+		this.jbo = jbo;
 	}
 }

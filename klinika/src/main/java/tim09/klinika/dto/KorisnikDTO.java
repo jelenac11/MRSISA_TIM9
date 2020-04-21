@@ -1,5 +1,7 @@
 package tim09.klinika.dto;
 
+import tim09.klinika.model.Korisnik;
+
 public class KorisnikDTO {
 
 	private Long id;
@@ -10,23 +12,20 @@ public class KorisnikDTO {
 	private String adresa;
 	private String grad;
 	private String drzava;
-	private KlinickiCentarDTO klinickiCentar;
 
 	public KorisnikDTO() {
 
 	}
-	
-	public KorisnikDTO(Long id, String email, String lozinka, String ime, String prezime, String adresa, String grad,
-			String drzava, KlinickiCentarDTO klinickiCentar) {
-		this.id = id;
-		this.email = email;
-		this.lozinka = lozinka;
-		this.ime = ime;
-		this.prezime = prezime;
-		this.adresa = adresa;
-		this.grad = grad;
-		this.drzava = drzava;
-		this.klinickiCentar = klinickiCentar;
+
+	public KorisnikDTO(Korisnik k) {
+		this.id = k.getId();
+		this.email = k.getEmail();
+		this.lozinka = k.getLozinka();
+		this.ime = k.getIme();
+		this.prezime = k.getPrezime();
+		this.adresa = k.getAdresa();
+		this.grad = k.getGrad();
+		this.drzava = k.getDrzava();
 	}
 
 	public Long getId() {
@@ -91,14 +90,6 @@ public class KorisnikDTO {
 
 	public void setDrzava(String drzava) {
 		this.drzava = drzava;
-	}
-
-	public KlinickiCentarDTO getKlinickiCentar() {
-		return klinickiCentar;
-	}
-
-	public void setKlinickiCentar(KlinickiCentarDTO klinickiCentar) {
-		this.klinickiCentar = klinickiCentar;
 	}
 
 }

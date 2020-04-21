@@ -93,10 +93,10 @@ Vue.component("izmena-profila", {
 					this.submitovano = true;
 					if (document.getElementById('forma-izmena').checkValidity() === true && this.poklapajuSeLozinke) {
 						axios
-						.post('/api/editUser', this.izmenjeniKorisnik)
+						.put('/korisnici', this.izmenjeniKorisnik)
 						.then(response => {
 							this.uspesnaIzmena = true;
-							toast(response.data);
+							toast("Uspešno izmenjeni podaci");
 						})
 						.catch(function (error) { console.log(error);this.uspesnaIzmena = false; });
 					} else {
@@ -119,7 +119,7 @@ Vue.component("izmena-profila", {
 			},
 			mounted () {
 				axios
-		        .get('/api/getUserInfo')
+		        .get('/korisnici/dobaviUlogovanog')
 		        .then(response => {
 		        	this.korisnik = response.data; 
 		        	this.izmenjeniKorisnik = JSON.parse(JSON.stringify(this.korisnik));

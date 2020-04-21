@@ -14,6 +14,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @DiscriminatorValue("MO")
 public class MedicinskoOsoblje extends Korisnik {
@@ -25,10 +29,10 @@ public class MedicinskoOsoblje extends Korisnik {
 	@OneToMany(mappedBy = "podnosilac", cascade = CascadeType.ALL)
 	private Set<Odsustvo> odsustva;
 
-	@Column(name = "pocetakRadnogVremena", nullable = false)
+	@Column(name = "pocetakRadnogVremena")
 	private long pocetakRadnogVremena;
 
-	@Column(name = "krajRadnogVremena", nullable = false)
+	@Column(name = "krajRadnogVremena")
 	private long krajRadnogVremena;
 
 	public Klinika getKlinika() {
