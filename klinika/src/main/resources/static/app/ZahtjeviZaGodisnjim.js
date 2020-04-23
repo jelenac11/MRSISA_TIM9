@@ -82,12 +82,6 @@ Vue.component("zahtjevGodisnji",{
 						  			<p class="mb-0">{{ this.ulogovan.grad }}, {{this.ulogovan.drzava}}</p>
 						  		</div>
 						  	</li>
-						  	<li class="list-group-item">
-						  		<div class="d-flex w-20 justify-content-between">
-							  		<h6>Broj osiguranika:</h6>
-							  		<p class="mb-0">{{ this.ulogovan.brOsiguranika }}</p>
-							  	</div>
-						  	</li>
 						</ul>
 		      		</div>
 		      		<div class="modal-footer">

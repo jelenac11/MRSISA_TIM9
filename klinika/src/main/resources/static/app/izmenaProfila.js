@@ -9,7 +9,6 @@ Vue.component("izmena-profila", {
 	    		adresa : "",
 	    		grad : "",
 	    		drzava : "",
-	    		brOsiguranika : ""
 	    	},
 	    	izmenjeniKorisnik : {},
 	    	submitovano : false,
@@ -71,10 +70,6 @@ Vue.component("izmena-profila", {
 					    		<label for="drzava" class="mt-1">Drzava</label>
 								<input type="text" v-model="izmenjeniKorisnik.drzava" class="form-control" id="drzava" placeholder="Drzava" required>
 					    		<div class="invalid-feedback" id="izmenaInvalid">Niste uneli drzavu.</div>
-					    	</div>
-					    	<div class="col">
-					    		<label for="brOsiguranika">Broj osiguranika</label>
-								<input type="text" v-model="izmenjeniKorisnik.brOsiguranika" class="form-control" id="brOsiguranika" disabled>
 					    	</div>
 					  	</div>
 					  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="izmenjeniKorisnik.ime == korisnik.ime && izmenjeniKorisnik.prezime == korisnik.prezime && izmenjeniKorisnik.adresa == korisnik.adresa && izmenjeniKorisnik.grad == korisnik.grad && izmenjeniKorisnik.drzava == korisnik.drzava && novaLozinka == ''">

@@ -79,12 +79,6 @@ Vue.component("lekari", {
 						  			<p class="mb-0">{{ this.ulogovan.grad }}, {{this.ulogovan.drzava}}</p>
 						  		</div>
 						  	</li>
-						  	<li class="list-group-item">
-						  		<div class="d-flex w-20 justify-content-between">
-							  		<h6>Broj osiguranika:</h6>
-							  		<p class="mb-0">{{ this.ulogovan.brOsiguranika }}</p>
-							  	</div>
-						  	</li>
 						</ul>
 		      		</div>
 		      		<div class="modal-footer">
@@ -129,7 +123,7 @@ Vue.component("lekari", {
         .then(response => (this.ulogovan = response.data))
         .catch(function (error) { console.log(error); });
 		axios
-        .get('/ucitajLekare')
+        .get('lekari/ucitajSve')
         .then(response => (this.lekari = response.data))
         .catch(function (error) { console.log(error); });
 	}

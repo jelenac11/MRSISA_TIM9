@@ -25,7 +25,7 @@ public class Pacijent extends Korisnik {
 	@OneToMany(mappedBy = "pacijent", cascade = CascadeType.ALL)
 	private Set<Operacija> operacije;
 
-	@Column(name = "jbo", unique = true, nullable = false)
+	@Column(name = "jbo", unique = true)
 	private String jbo;
 
 	public Pacijent() {

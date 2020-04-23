@@ -8,7 +8,7 @@ Vue.component("dodavanje-lekara", {
 				lozinka : "",
 				adresa : "",
 				grad : "",
-				drzava : ""
+				drzava : "",
 			},
 			potvrdaLozinke : "",
 			poklapajuSeLozinke : true,
@@ -91,7 +91,7 @@ Vue.component("dodavanje-lekara", {
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-lekara').checkValidity() === true && this.poklapajuSeLozinke) {
 				axios
-				.post('/dodajLekara', this.noviLekar)
+				.post('lekari', this.noviLekar)
 				.then(response => {
 					this.uspesnoDodavanje = response.data;
 					

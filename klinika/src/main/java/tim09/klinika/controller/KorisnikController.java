@@ -24,7 +24,7 @@ public class KorisnikController {
 	KorisnikService korisnikService;
 
 	@GetMapping(value = "/dobaviUlogovanog")
-	public ResponseEntity<KorisnikDTO> ucitajSveSale() {
+	public ResponseEntity<KorisnikDTO> dobaviUlogovanog() {
 		List<Korisnik> svi = korisnikService.findAll();
 
 		KorisnikDTO kor = null;
