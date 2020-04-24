@@ -9,7 +9,8 @@ const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
 const DodavanjeLekara = { template: '<dodavanje-lekara></dodavanje-lekara>' }
 const ZahtjeviZaGodisnjim = {template: '<zahtjevGodisnji></zahtjevGodisnji>'}
-
+const DodavanjeTipaPregleda = {template: '<dodavanje-tipaPregleda></dodavanje-tipaPregleda>'}
+const TipoviPregleda = {template: '<tipoviPregleda></tipoviPregleda>'}
 
 const router = new VueRouter({
 	mode: 'hash',
@@ -46,6 +47,14 @@ const router = new VueRouter({
 	{
 		path: '/zahtjevi', 
 		component: ZahtjeviZaGodisnjim 
+	},
+	{
+		path: '/dodavanjeTipaPregleda',
+		component: DodavanjeTipaPregleda
+	},
+	{
+		path: '/tipoviPregleda',
+		component:TipoviPregleda
 	}]
 });
 

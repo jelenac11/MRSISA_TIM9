@@ -18,6 +18,10 @@ public class TipPregledaService {
 		return tipPregledaRepository.findById(id).orElseGet(null);
 	}
 
+	public TipPregleda findOneByNaziv(String naziv) {
+		return tipPregledaRepository.findByNaziv(naziv);
+	}
+	
 	public List<TipPregleda> findAll() {
 		return tipPregledaRepository.findAll();
 	}

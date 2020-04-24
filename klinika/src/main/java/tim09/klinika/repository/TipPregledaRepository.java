@@ -6,4 +6,6 @@ import tim09.klinika.model.TipPregleda;
 
 public interface TipPregledaRepository extends JpaRepository<TipPregleda, Long> {
 
+	public TipPregleda findByNaziv(String naziv);
+	
 }

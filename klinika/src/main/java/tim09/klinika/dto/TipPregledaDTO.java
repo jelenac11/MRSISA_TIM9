@@ -21,6 +21,12 @@ public class TipPregledaDTO {
 	public TipPregledaDTO(TipPregleda os) {
 		// TODO Auto-generated constructor stub
 	}
+	
+	public TipPregledaDTO(long id,String naziv,String opis) {
+		this.id=id;
+		this.naziv=naziv;
+		this.opis=opis;
+	}
 
 	public Long getId() {
 		return id;
