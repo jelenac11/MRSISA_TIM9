@@ -15,10 +15,10 @@ public class MedSestraDTO extends MedicinskoOsobljeDTO {
 
 	public MedSestraDTO(MedSestra m) {
 		super(m);
-		this.recepti = new ArrayList<ReceptDTO>();
+		/*this.recepti = new ArrayList<ReceptDTO>();
 		for (Recept r : m.getRecepti()) {
 			this.recepti.add(new ReceptDTO(r));
-		}
+		}*/
 	}
 
 	public ArrayList<ReceptDTO> getRecepti() {

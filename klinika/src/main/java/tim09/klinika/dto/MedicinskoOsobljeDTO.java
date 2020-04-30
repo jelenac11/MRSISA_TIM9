@@ -23,9 +23,6 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 		super(osoblje);
 		this.klinika = osoblje.getKlinika().getNaziv();
 		this.odsustva = new ArrayList<OdsustvoDTO>();
-		for (Odsustvo ods : osoblje.getOdsustva()) {
-			this.odsustva.add(new OdsustvoDTO(ods));
-		}
 		this.pocetakRadnogVremena = new Date(osoblje.getPocetakRadnogVremena());
 		this.krajRadnogVremena = new Date(osoblje.getKrajRadnogVremena());
 	}

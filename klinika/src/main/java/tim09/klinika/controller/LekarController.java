@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.LekarDTO;
 import tim09.klinika.model.Autoritet;
+import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Lekar;
 import tim09.klinika.service.AutoritetService;
+import tim09.klinika.service.KlinikaService;
 import tim09.klinika.service.KorisnikService;
 import tim09.klinika.service.LekarService;
 
@@ -32,6 +34,9 @@ public class LekarController {
 	
 	@Autowired
 	private AutoritetService autoritetService;
+	
+	@Autowired
+	private KlinikaService klinikaService;
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<LekarDTO> ucitajPoId(@PathVariable Long id) {
@@ -69,7 +74,8 @@ public class LekarController {
 		lekar.setAktiviran(true);
 		lekar.setVerifikovan(true);
 		lekar.setPromenjenaLozinka(false);
-
+		Klinika k=klinikaService.findByNaziv(lekarDTO.getKlinika());
+		lekar.setKlinika(k);
 		lekar = lekarService.save(lekar);
 		return new ResponseEntity<>(new LekarDTO(lekar), HttpStatus.CREATED);
 	}

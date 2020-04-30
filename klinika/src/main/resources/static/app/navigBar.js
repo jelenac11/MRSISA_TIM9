@@ -84,7 +84,10 @@ Vue.component('navig-bar', {
 							<router-link :to="{ name: 'tipoviPregleda', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Tipovi pregleda</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'lekari', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zaposleni</router-link>
+							<router-link :to="{ name: 'lekari', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Lekari</router-link>
+						</li>
+						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
+							<router-link :to="{ name: 'medSestre', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Medicinske sestre</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
 							<router-link :to="{ name: 'zahtjevi', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zahtevi odsustvo</router-link>

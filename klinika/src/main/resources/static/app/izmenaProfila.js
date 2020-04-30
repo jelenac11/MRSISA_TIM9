@@ -186,7 +186,7 @@ Vue.component("izmena-profila", {
             	}
             	else if (this.uloga == "ROLE_MED_SESTRA") {
             		axios
-            		.get('/medSestre/' + this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
+            		.get('/sestre/' + this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
                     .then(response => { 
                     	this.korisnikUloga = response.data;
                     })

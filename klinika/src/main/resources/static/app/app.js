@@ -2,6 +2,7 @@ const NavigBar = { template: '<navig-bar></navig-bar>' }
 const Login = { template: '<login></login>' }
 const Sale = { template: '<sale></sale>' }
 const Lekari = { template: '<lekari></lekari>' }
+const MedSestre= { template: '<medSestre></medSestre>'}
 const Pacijenti = { template: '<pacijenti></pacijenti>' }
 const Sifrarnici = {template: '<sifrarnici></sifrarnici>'}
 const AdminiKlinike = { template: '<admini-klinike></admini-klinike>' }
@@ -11,6 +12,7 @@ const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
 const DodavanjeLekara = { template: '<dodavanje-lekara></dodavanje-lekara>' }
+const DodavanjeMedSestara = { template: '<dodavanje-medSestara></dodavanje-medSestara>'}
 const DodavanjeKlinike = { template: '<dodavanje-klinike></dodavanje-klinike>' }
 const DodavanjeAdminaKlinike = { template: '<dodavanje-admina-klinike></dodavanje-admina-klinike>' }
 const DodavanjeAdminaCentra = { template: '<dodavanje-admina-centra></dodavanje-admina-centra>' }
@@ -51,6 +53,11 @@ const router = new VueRouter({
 		path: '/lekari',
 		name: 'lekari',
 		component: Lekari
+	},
+	{
+		path: '/medSestre',
+		name: 'medSestre',
+		component: MedSestre
 	},
 	{
 		path: '/pacijetni',
@@ -111,6 +118,11 @@ const router = new VueRouter({
 		path: '/dodavanjeLekara',
 		name: 'dodavanjeLekara',
 		component: DodavanjeLekara
+	},
+	{
+		path: '/dodavanjeMedSestara',
+		name: 'dodavanjeMedSestara',
+		component: DodavanjeMedSestara
 	},
 	{
 		path: '/zahtjevi',

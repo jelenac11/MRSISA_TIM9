@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.AdminKlinikeDTO;
+import tim09.klinika.dto.KlinikaDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Klinika;
 import tim09.klinika.service.AdminKlinikeService;
@@ -42,6 +43,13 @@ public class AdminKlinikeController {
 		AdminKlinike a = adminKlinikeService.findOne(id);
 		AdminKlinikeDTO ak = new AdminKlinikeDTO(a);
 		return new ResponseEntity<AdminKlinikeDTO>(ak, HttpStatus.OK);
+	}
+	
+	@GetMapping("ucitajKlinikuPoIDAdmina/{id}")
+	public ResponseEntity<KlinikaDTO> ucitajKlinikuPoIDAdmina(@PathVariable Long id) {
+		AdminKlinike a = adminKlinikeService.findOne(id);
+		Klinika k=a.getKlinika();
+		return new ResponseEntity<KlinikaDTO>(new KlinikaDTO(k), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/ucitajSve")
