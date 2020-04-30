@@ -16,6 +16,8 @@ Vue.component("izmena-profila", {
 	    	novaLozinka : "",
 	    	potvrdaLozinke : "",
 	    	poklapajuSeLozinke : true,
+	    	uloga : "",
+	    	token : "",
 	    }
 	},
 	template: `
@@ -76,7 +78,7 @@ Vue.component("izmena-profila", {
 					  		Sačuvaj izmene
 					  	</button>
 					</form>
-					<router-link :to="{ path: '/' }" class="btn btn-secondary">Nazad</router-link>
+					<button class="btn btn-lg btn-secondary btn-block mt-4" v-on:click="nazad">Nazad</button>
 				</div>
 			</div>
 		</div>	
@@ -88,7 +90,7 @@ Vue.component("izmena-profila", {
 					this.submitovano = true;
 					if (document.getElementById('forma-izmena').checkValidity() === true && this.poklapajuSeLozinke) {
 						axios
-						.put('/korisnici', this.izmenjeniKorisnik)
+						.put('/korisnici', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
 						.then(response => {
 							this.uspesnaIzmena = true;
 							toast("Uspešno izmenjeni podaci");
@@ -97,6 +99,25 @@ Vue.component("izmena-profila", {
 					} else {
 						this.uspesnaIzmena = true;
 					}
+				},
+				nazad : function () {
+					axios
+		    		.put('/korisnici/dobaviUlogu', this.korisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+		            .then(response => {
+		            	this.uloga = response.data;
+		            	if (this.uloga == "ROLE_PACIJENT") {
+		            		this.$router.replace({ name: 'zdravstveniKarton', params: { korisnikToken: this.token } });
+		            	} else if (this.uloga == "ROLE_LEKAR") {
+		            		this.$router.replace({ name: 'pacijenti', params: { korisnikToken: this.token } });
+		            	} else if (this.uloga == "ROLE_MED_SESTRA") {
+		            		this.$router.replace({ name: 'pacijenti', params: { korisnikToken: this.token } });
+		            	} else if (this.uloga == "ROLE_ADMIN_KLINICKOG_CENTRA") {
+		            		this.$router.replace({ name: 'zahteviRegistracija', params: { korisnikToken: this.token } });
+		            	} else if (this.uloga == "ROLE_ADMIN_KLINIKE") {
+		            		this.$router.replace({ name: 'lekari', params: { korisnikToken: this.token } });
+		            	} 
+		            })
+		            .catch(function (error) { console.log(error); });
 				},
 				proveriLozinke : function () {
 					if (this.novaLozinka != "") {
@@ -113,8 +134,9 @@ Vue.component("izmena-profila", {
 				},
 			},
 			mounted () {
+				this.token = this.$route.params.korisnikToken;
 				axios
-		        .get('/korisnici/dobaviUlogovanog')
+		        .get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
 		        .then(response => {
 		        	this.korisnik = response.data; 
 		        	this.izmenjeniKorisnik = JSON.parse(JSON.stringify(this.korisnik));

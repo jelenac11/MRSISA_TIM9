@@ -10,6 +10,5 @@ import tim09.klinika.model.Lekar;;
 
 public interface KorisnikRepository extends JpaRepository<Korisnik, Long> {
 
-	@Query(value = "SELECT * FROM korisnici WHERE tip = 'LE'", nativeQuery = true)
-	List<Lekar> nadjiSveLekare();
+	Korisnik findByEmail( String email );
 }

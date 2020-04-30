@@ -25,7 +25,7 @@ public class LekarController {
 
 	@GetMapping(value = "/ucitajSve")
 	public ResponseEntity<List<LekarDTO>> ucitajSveLekare() {
-		List<Lekar> lekari = lekarService.nadjiSveLekare();
+		List<Lekar> lekari = lekarService.findAll();
 
 		List<LekarDTO> lekarDTO = new ArrayList<>();
 		for (Lekar l : lekari) {

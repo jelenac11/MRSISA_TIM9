@@ -1,17 +1,15 @@
 package tim09.klinika.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.KorisnikDTO;
+import tim09.klinika.model.Autoritet;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.service.KorisnikService;
 
@@ -22,20 +20,9 @@ public class KorisnikController {
 	@Autowired
 	KorisnikService korisnikService;
 
-	@GetMapping(value = "/dobaviUlogovanog")
-	public ResponseEntity<KorisnikDTO> dobaviUlogovanog() {
-		List<Korisnik> svi = korisnikService.findAll();
-
-		KorisnikDTO kor = null;
-		for (Korisnik k : svi) {
-			kor = new KorisnikDTO(k);
-			break;
-		}
-		return new ResponseEntity<>(kor, HttpStatus.OK);
-	}
-
 	@PutMapping(consumes = "application/json")
 	public ResponseEntity<KorisnikDTO> promeniKorisnika(@RequestBody KorisnikDTO korisnikDTO) {
+
 		Korisnik korisnik = korisnikService.findOne(korisnikDTO.getId());
 		if (korisnik == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,11 +31,24 @@ public class KorisnikController {
 		korisnik.setDrzava(korisnikDTO.getDrzava());
 		korisnik.setGrad(korisnikDTO.getGrad());
 		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setLozinka(korisnikDTO.getLozinka());
+		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
 		korisnik.setPrezime(korisnikDTO.getPrezime());
+		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
+		korisnik.setAktiviran(korisnikDTO.isAktiviran());
+		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
+		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
 
 		korisnik = korisnikService.save(korisnik);
 		return new ResponseEntity<>(new KorisnikDTO(korisnik), HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "dobaviUlogu", consumes = "application/json")
+	public ResponseEntity<String> dobaviUlogu(@RequestBody KorisnikDTO korisnikDTO) {
+
+		Korisnik korisnik = korisnikService.findOne(korisnikDTO.getId());
+		Autoritet a = korisnik.getAutoriteti().get(0);
+
+		return new ResponseEntity<>(a.getIme(), HttpStatus.OK);
 	}
 
 }

@@ -12,6 +12,10 @@ public class KorisnikDTO {
 	private String adresa;
 	private String grad;
 	private String drzava;
+	private String brojTelefona;
+	private boolean aktiviran;
+	private boolean verifikovan;
+	private boolean promenjenaLozinka;
 
 	public KorisnikDTO() {
 
@@ -26,6 +30,10 @@ public class KorisnikDTO {
 		this.adresa = k.getAdresa();
 		this.grad = k.getGrad();
 		this.drzava = k.getDrzava();
+		this.brojTelefona = k.getBrojTelefona();
+		this.aktiviran = k.isAktiviran();
+		this.verifikovan = k.isVerifikovan();
+		this.promenjenaLozinka = k.isPromenjenaLozinka();
 	}
 
 	public Long getId() {
@@ -90,6 +98,38 @@ public class KorisnikDTO {
 
 	public void setDrzava(String drzava) {
 		this.drzava = drzava;
+	}
+
+	public String getBrojTelefona() {
+		return brojTelefona;
+	}
+
+	public void setBrojTelefona(String brojTelefona) {
+		this.brojTelefona = brojTelefona;
+	}
+
+	public boolean isAktiviran() {
+		return aktiviran;
+	}
+
+	public void setAktiviran(boolean aktiviran) {
+		this.aktiviran = aktiviran;
+	}
+
+	public boolean isVerifikovan() {
+		return verifikovan;
+	}
+
+	public void setVerifikovan(boolean verifikovan) {
+		this.verifikovan = verifikovan;
+	}
+
+	public boolean isPromenjenaLozinka() {
+		return promenjenaLozinka;
+	}
+
+	public void setPromenjenaLozinka(boolean promenjenaLozinka) {
+		this.promenjenaLozinka = promenjenaLozinka;
 	}
 
 }

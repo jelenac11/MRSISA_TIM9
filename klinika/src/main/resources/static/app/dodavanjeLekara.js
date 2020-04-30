@@ -14,6 +14,7 @@ Vue.component("dodavanje-lekara", {
 			poklapajuSeLozinke : true,
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
+	    	token : "",
 	    }
 	},
 	template: `
@@ -79,7 +80,7 @@ Vue.component("dodavanje-lekara", {
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ path: 'lekari' }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'lekari', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -91,12 +92,12 @@ Vue.component("dodavanje-lekara", {
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-lekara').checkValidity() === true && this.poklapajuSeLozinke) {
 				axios
-				.post('lekari', this.noviLekar)
+				.post('lekari', this.noviLekar, { headers: { Authorization: 'Bearer ' + this.token }} )
 				.then(response => {
 					this.uspesnoDodavanje = response.data;
 					
 					if (this.uspesnoDodavanje) {
-						this.$router.replace({ path: 'lekari' });
+						this.$router.replace({ name: 'lekari', params: { korisnikToken: this.token } });
 					}
 				})
 				.catch(error => {
@@ -114,5 +115,8 @@ Vue.component("dodavanje-lekara", {
 				this.poklapajuSeLozinke = true;
 			}
 		}
+	},
+	mounted() {
+		this.token = this.$route.params.korisnikToken;
 	}
 });

@@ -1,59 +1,107 @@
-/**
- * 
- */
-const HelloWorld = { template: '<hello-world></hello-world>' }
-const Home = { template: '<home></home>' }
+const NavigBar = { template: '<navig-bar></navig-bar>' }
+const Login = { template: '<login></login>' }
 const Sale = { template: '<sale></sale>' }
 const Lekari = { template: '<lekari></lekari>' }
+const Pacijenti = { template: '<pacijenti></pacijenti>' }
+const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>' }
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
 const DodavanjeLekara = { template: '<dodavanje-lekara></dodavanje-lekara>' }
 const ZahtjeviZaGodisnjim = {template: '<zahtjevGodisnji></zahtjevGodisnji>'}
 const DodavanjeTipaPregleda = {template: '<dodavanje-tipaPregleda></dodavanje-tipaPregleda>'}
 const TipoviPregleda = {template: '<tipoviPregleda></tipoviPregleda>'}
+const Registracija = {template: '<registracija></registracija>'}
+const PotvrdaRegistracije = {template: '<potvrda-registracije></potvrda-registracije>'}
+const ZahteviRegistracija = {template: '<zahtevi-registracija></zahtevi-registracija>'}
+const ProveriEmail = {template: '<proveri-email></proveri-email>'}
+const PromenaLozinke = {template: '<promena-lozinke></promena-lozinke>'}
 
 const router = new VueRouter({
 	mode: 'hash',
 		routes: [
 	{
-		path: '/', 
-		component: Home
+		path: '/',
+		name: 'login',
+		component: Login
 	},
 	{
-		path: '/api/greetings', 
-		component: HelloWorld 
+		path: '/navigBar',
+		name: 'navigBar',
+		component: NavigBar
 	},
 	{
-	
 		path: '/izmenaProfila',
+		name: 'izmenaProfila',
 		component: IzmenaProfila
 	},
 	{
 		path: '/sale',
+		name: 'sale',
 		component: Sale
 	},
 	{
 		path: '/lekari',
+		name: 'lekari',
 		component: Lekari
 	},
 	{
+		path: '/pacijetni',
+		name: 'pacijenti',
+		component: Pacijenti
+	},
+	{
+		path: '/zdravstveniKarton',
+		name: 'zdravstveniKarton',
+		component: ZdravstveniKarton
+	},
+	{
 		path: '/dodavanjeSale',
+		name: 'dodavanjeSale',
 		component: DodavanjeSale
 	},
 	{
 		path: '/dodavanjeLekara',
+		name: 'dodavanjeLekara',
 		component: DodavanjeLekara
 	},
 	{
-		path: '/zahtjevi', 
+		path: '/zahtjevi',
+		name: 'zahtjevi',
 		component: ZahtjeviZaGodisnjim 
 	},
 	{
 		path: '/dodavanjeTipaPregleda',
+		name: 'dodavanjeTipaPregleda',
 		component: DodavanjeTipaPregleda
 	},
 	{
+		path: '/registracija',
+		name: 'registracija',
+		component: Registracija
+	},
+	{
+		path: '/potvrdaRegistracije',
+		name: 'potvrdaRegistracije',
+		component: PotvrdaRegistracije
+	},
+	{
+		path: '/zahteviRegistracija',
+		name: 'zahteviRegistracija',
+		component: ZahteviRegistracija
+	},
+	{
+		path: '/proveriEmail',
+		name: 'proveriEmail',
+		component: ProveriEmail
+	},
+	{
+		path: '/promenaLozinke',
+		name: 'promenaLozinke',
+		component: PromenaLozinke
+	},
+	{
 		path: '/tipoviPregleda',
+		name: 'tipoviPregleda',
 		component:TipoviPregleda
 	}]
 });

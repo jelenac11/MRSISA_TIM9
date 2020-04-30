@@ -8,6 +8,7 @@ Vue.component("dodavanje-tipaPregleda", {
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
 	    	jedinstvenoIme : true,
+	    	token : "",
 	    }
 	},
 	template: `
@@ -33,7 +34,7 @@ Vue.component("dodavanje-tipaPregleda", {
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ path: 'tipoviPregleda' }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'tipoviPregleda', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -46,37 +47,37 @@ Vue.component("dodavanje-tipaPregleda", {
 			this.provjeraImena();
 		},
 		provjeraImena: function(){
-			if(this.noviTipPregleda.naziv===""){
+			if (this.noviTipPregleda.naziv === "") {
 				this.jedinstvenoIme=false;
 			}
-			else{
+			else {
 			axios
-			.get("/tipoviPregleda/provjeraPostojanostiImena/"+this.noviTipPregleda.naziv)
-			.then(response=>{
-				if(!response.data){
+			.get("/tipoviPregleda/provjeraPostojanostiImena/" + this.noviTipPregleda.naziv, { headers: { Authorization: 'Bearer ' + this.token }} )
+			.then(response=> {
+				if (!response.data) {
 					axios
 					.post('/tipoviPregleda', this.noviTipPregleda)
 					.then(response => {
 						this.uspesnoDodavanje = response.data;
 						
 						if (this.uspesnoDodavanje) {
-							this.$router.replace({ path: 'tipoviPregleda' });
+							this.$router.replace({ name: 'tipoviPregleda', params: { korisnikToken: this.token } });
 						}
 					})
 					.catch(error => {
 						console.log(error);
 						this.uspesnoDodavanje = false;
 					});
-				}
-				else
-					{
-					this.jedinstvenoIme=false;
-					}
-			})
-			.catch(response=>{
-				this.jedinstvenoIme=false;
-			})
+				} else {
+					this.jedinstvenoIme = false;
+				}})
+				.catch(response=>{
+					this.jedinstvenoIme = false;
+				})
 			}
 		}
 	},
+	mounted() {
+		this.token = this.$route.params.korisnikToken;
+	}
 });

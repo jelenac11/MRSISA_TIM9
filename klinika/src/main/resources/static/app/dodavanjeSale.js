@@ -7,6 +7,7 @@ Vue.component("dodavanje-sale", {
 			},
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
+	    	token : "",
 	    }
 	},
 	template: `
@@ -33,7 +34,7 @@ Vue.component("dodavanje-sale", {
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ path: 'sale' }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'sale', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -44,12 +45,12 @@ Vue.component("dodavanje-sale", {
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-salu').checkValidity() === true) {
 				axios
-				.post('/sale', this.novaSala)
+				.post('/sale', this.novaSala, { headers: { Authorization: 'Bearer ' + this.token }} )
 				.then(response => {
 					this.uspesnoDodavanje = response.data;
 					
 					if (this.uspesnoDodavanje) {
-						this.$router.replace({ path: 'sale' });
+						this.$router.replace({ name: 'sale', params: { korisnikToken: this.token } });
 					}
 				})
 				.catch(error => {
@@ -60,5 +61,8 @@ Vue.component("dodavanje-sale", {
 				this.uspesnoDodavanje = true;
 			}
 		}
+	},
+	mounted() {
+		this.token = this.$route.params.korisnikToken;
 	}
 });

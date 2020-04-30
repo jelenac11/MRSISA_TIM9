@@ -2,15 +2,23 @@ package tim09.klinika.dto;
 
 import java.util.ArrayList;
 
+import tim09.klinika.model.Pacijent;
+
 public class PacijentDTO extends KorisnikDTO {
 
 	private ZdravstveniKartonDTO karton;
 	private ArrayList<PregledDTO> pregledi;
 	private ArrayList<OperacijaDTO> operacije;
 	private String jbo;
+	private String obrazlozenje;
 
 	public PacijentDTO() {
 
+	}
+	
+	public PacijentDTO(Pacijent p) {
+		super(p);
+		this.jbo = p.getJbo();
 	}
 
 	public ZdravstveniKartonDTO getKarton() {
@@ -43,5 +51,13 @@ public class PacijentDTO extends KorisnikDTO {
 
 	public void setJbo(String jbo) {
 		this.jbo = jbo;
+	}
+
+	public String getObrazlozenje() {
+		return obrazlozenje;
+	}
+
+	public void setObrazlozenje(String obrazlozenje) {
+		this.obrazlozenje = obrazlozenje;
 	}
 }
