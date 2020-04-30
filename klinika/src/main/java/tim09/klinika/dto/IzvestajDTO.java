@@ -2,16 +2,28 @@ package tim09.klinika.dto;
 
 import java.util.ArrayList;
 
+import tim09.klinika.model.Izvestaj;
+import tim09.klinika.model.Recept;
+
 public class IzvestajDTO {
 
 	private Long id;
 	private String opis;
-	private PregledDTO pregled;
 	private StavkaSifrarnikaDTO dijagnoza;
 	private ArrayList<ReceptDTO> recepti;
 
 	public IzvestajDTO() {
 
+	}
+	
+	public IzvestajDTO(Izvestaj i) {
+		this.id = i.getId();
+		this.opis = i.getOpis();
+		this.dijagnoza = new StavkaSifrarnikaDTO(i.getDijagnoza());
+		this.recepti = new ArrayList<ReceptDTO>();
+		for (Recept r : i.getRecepti()) {
+			this.recepti.add(new ReceptDTO(r));
+		}
 	}
 
 	public Long getId() {
@@ -28,14 +40,6 @@ public class IzvestajDTO {
 
 	public void setOpis(String opis) {
 		this.opis = opis;
-	}
-
-	public PregledDTO getPregled() {
-		return pregled;
-	}
-
-	public void setPregled(PregledDTO pregled) {
-		this.pregled = pregled;
 	}
 
 	public StavkaSifrarnikaDTO getDijagnoza() {

@@ -5,6 +5,7 @@ import tim09.klinika.dto.PacijentDTO;
 import tim09.klinika.model.Izvestaj;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -54,6 +55,15 @@ public class ZdravstveniKarton {
 
 	}
 
+	public ZdravstveniKarton(Pacijent pacijent, double visina, double tezina, double dioptrija, String krvnaGrupa) {
+		this.bolesti = new HashSet<Izvestaj>();
+		this.pacijent = pacijent;
+		this.visina = visina;
+		this.tezina = tezina;
+		this.dioptrija = dioptrija;
+		this.krvnaGrupa = krvnaGrupa;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -68,6 +78,46 @@ public class ZdravstveniKarton {
 
 	public void setBolesti(Set<Izvestaj> bolesti) {
 		this.bolesti = bolesti;
+	}
+
+	public Pacijent getPacijent() {
+		return pacijent;
+	}
+
+	public void setPacijent(Pacijent pacijent) {
+		this.pacijent = pacijent;
+	}
+
+	public double getVisina() {
+		return visina;
+	}
+
+	public void setVisina(double visina) {
+		this.visina = visina;
+	}
+
+	public double getTezina() {
+		return tezina;
+	}
+
+	public void setTezina(double tezina) {
+		this.tezina = tezina;
+	}
+
+	public double getDioptrija() {
+		return dioptrija;
+	}
+
+	public void setDioptrija(double dioptrija) {
+		this.dioptrija = dioptrija;
+	}
+
+	public String getKrvnaGrupa() {
+		return krvnaGrupa;
+	}
+
+	public void setKrvnaGrupa(String krvnaGrupa) {
+		this.krvnaGrupa = krvnaGrupa;
 	}
 
 }

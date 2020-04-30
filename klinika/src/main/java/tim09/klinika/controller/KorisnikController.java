@@ -37,6 +37,7 @@ public class KorisnikController {
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());
 		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
 		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
+		// TODO: FALI ZA AUTORITI DA SE PREPISE
 
 		korisnik = korisnikService.save(korisnik);
 		return new ResponseEntity<>(new KorisnikDTO(korisnik), HttpStatus.OK);

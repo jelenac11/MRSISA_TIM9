@@ -15,6 +15,14 @@ public class MedSestra extends MedicinskoOsoblje {
 	@OneToMany(mappedBy = "medSestra", cascade = CascadeType.ALL)
 	private Set<Recept> recepti;
 
+	public Set<Recept> getRecepti() {
+		return recepti;
+	}
+
+	public void setRecepti(Set<Recept> recepti) {
+		this.recepti = recepti;
+	}
+
 	public MedSestra() {
 
 	}

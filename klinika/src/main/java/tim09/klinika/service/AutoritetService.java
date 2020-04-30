@@ -26,6 +26,7 @@ import tim09.klinika.model.Autoritet;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Pacijent;
 import tim09.klinika.model.VerifikacioniToken;
+import tim09.klinika.model.ZdravstveniKarton;
 import tim09.klinika.repository.AutoritetRepository;
 import tim09.klinika.security.TokenUtils;
 import tim09.klinika.security.auth.JwtAuthenticationRequest;
@@ -111,6 +112,7 @@ public class AutoritetService {
 
 		if (pacijentDTO.isAktiviran()) {
 			p.setAktiviran(true);
+			p.setKarton(new ZdravstveniKarton(p, 0, 0, 0, "N/A"));
 			pacijentService.save(p);
 			emailService.posaljiAktivacioniLink(p);
 		} else {

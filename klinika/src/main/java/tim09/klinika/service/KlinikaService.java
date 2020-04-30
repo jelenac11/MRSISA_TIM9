@@ -14,6 +14,10 @@ public class KlinikaService {
 	@Autowired
 	private KlinikaRepository klinikaRepository;
 	
+	public Klinika findByNaziv(String naziv) {
+		return klinikaRepository.findByNaziv(naziv);
+	}
+	
 	public Klinika findOne(Long id) {
 		return klinikaRepository.findById(id).orElseGet(null);
 	}

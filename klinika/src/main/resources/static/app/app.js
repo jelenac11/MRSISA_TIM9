@@ -3,12 +3,20 @@ const Login = { template: '<login></login>' }
 const Sale = { template: '<sale></sale>' }
 const Lekari = { template: '<lekari></lekari>' }
 const Pacijenti = { template: '<pacijenti></pacijenti>' }
+const Sifrarnici = {template: '<sifrarnici></sifrarnici>'}
+const AdminiKlinike = { template: '<admini-klinike></admini-klinike>' }
+const AdminiCentra = { template: '<admini-centra></admini-centra>' }
+const KlinikeAdmin = { template: '<klinike-admin></klinike-admin>' }
 const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>' }
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
 const DodavanjeLekara = { template: '<dodavanje-lekara></dodavanje-lekara>' }
+const DodavanjeKlinike = { template: '<dodavanje-klinike></dodavanje-klinike>' }
+const DodavanjeAdminaKlinike = { template: '<dodavanje-admina-klinike></dodavanje-admina-klinike>' }
+const DodavanjeAdminaCentra = { template: '<dodavanje-admina-centra></dodavanje-admina-centra>' }
 const ZahtjeviZaGodisnjim = {template: '<zahtjevGodisnji></zahtjevGodisnji>'}
 const DodavanjeTipaPregleda = {template: '<dodavanje-tipaPregleda></dodavanje-tipaPregleda>'}
+const DodavanjeSifrarnika = {template: '<dodavanje-sifrarnika></dodavanje-sifrarnika>'}
 const TipoviPregleda = {template: '<tipoviPregleda></tipoviPregleda>'}
 const Registracija = {template: '<registracija></registracija>'}
 const PotvrdaRegistracije = {template: '<potvrda-registracije></potvrda-registracije>'}
@@ -50,6 +58,26 @@ const router = new VueRouter({
 		component: Pacijenti
 	},
 	{
+		path: '/adminiKlinike',
+		name: 'adminiKlinike',
+		component: AdminiKlinike
+	},
+	{
+		path: '/adminiCentra',
+		name: 'adminiCentra',
+		component: AdminiCentra
+	},
+	{
+		path: '/klinikeAdmin',
+		name: 'klinikeAdmin',
+		component: KlinikeAdmin
+	},
+	{
+		path: '/sifrarnici',
+		name: 'sifrarnici',
+		component: Sifrarnici
+	},
+	{
 		path: '/zdravstveniKarton',
 		name: 'zdravstveniKarton',
 		component: ZdravstveniKarton
@@ -58,6 +86,26 @@ const router = new VueRouter({
 		path: '/dodavanjeSale',
 		name: 'dodavanjeSale',
 		component: DodavanjeSale
+	},
+	{
+		path: '/dodavanjeKlinike',
+		name: 'dodavanjeKlinike',
+		component: DodavanjeKlinike
+	},
+	{
+		path: '/dodavanjeAdminaKlinike',
+		name: 'dodavanjeAdminaKlinike',
+		component: DodavanjeAdminaKlinike
+	},
+	{
+		path: '/dodavanjeAdminaCentra',
+		name: 'dodavanjeAdminaCentra',
+		component: DodavanjeAdminaCentra
+	},
+	{
+		path: '/dodavanjeSifrarnika',
+		name: 'dodavanjeSifrarnika',
+		component: DodavanjeSifrarnika
 	},
 	{
 		path: '/dodavanjeLekara',

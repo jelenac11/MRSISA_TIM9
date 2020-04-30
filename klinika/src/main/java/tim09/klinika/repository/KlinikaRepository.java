@@ -6,4 +6,5 @@ import tim09.klinika.model.Klinika;
 
 public interface KlinikaRepository extends JpaRepository<Klinika, Long> {
 
+	Klinika findByNaziv(String naziv);
 }

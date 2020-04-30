@@ -2,23 +2,24 @@ package tim09.klinika.dto;
 
 import tim09.klinika.model.AdminKlinike;
 
-public class AdminKlinikeDTO {
+public class AdminKlinikeDTO extends KorisnikDTO {
 
-	private KlinikaDTO klinika;
+	private String klinika;
 
 	public AdminKlinikeDTO() {
 
 	}
 
 	public AdminKlinikeDTO(AdminKlinike admin) {
-		// TODO Auto-generated constructor stub
+		super(admin);
+		this.klinika = admin.getKlinika().getNaziv();
 	}
 
-	public KlinikaDTO getKlinika() {
+	public String getKlinika() {
 		return klinika;
 	}
 
-	public void setKlinika(KlinikaDTO klinika) {
+	public void setKlinika(String klinika) {
 		this.klinika = klinika;
 	}
 }

@@ -1,14 +1,21 @@
 package tim09.klinika.dto;
 
+import tim09.klinika.model.StavkaSifrarnika;
+
 public class StavkaSifrarnikaDTO {
 
 	private Long id;
 	private String sifra;
 	private String naziv;
-	private TipSifre tipSifre;
 
 	public StavkaSifrarnikaDTO() {
 
+	}
+
+	public StavkaSifrarnikaDTO(StavkaSifrarnika s) {
+		this.id = s.getId();
+		this.sifra = s.getSifra();
+		this.naziv = s.getNaziv();
 	}
 
 	public Long getId() {
@@ -35,11 +42,4 @@ public class StavkaSifrarnikaDTO {
 		this.naziv = naziv;
 	}
 
-	public TipSifre getTipSifre() {
-		return tipSifre;
-	}
-
-	public void setTipSifre(TipSifre tipSifre) {
-		this.tipSifre = tipSifre;
-	}
 }

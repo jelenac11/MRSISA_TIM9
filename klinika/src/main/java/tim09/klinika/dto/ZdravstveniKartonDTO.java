@@ -2,10 +2,12 @@ package tim09.klinika.dto;
 
 import java.util.ArrayList;
 
+import tim09.klinika.model.Izvestaj;
+import tim09.klinika.model.ZdravstveniKarton;
+
 public class ZdravstveniKartonDTO {
 
 	private Long id;
-	private PacijentDTO pacijent;
 	private ArrayList<IzvestajDTO> bolesti;
 	private double visina;
 	private double tezina;
@@ -15,6 +17,18 @@ public class ZdravstveniKartonDTO {
 	public ZdravstveniKartonDTO() {
 
 	}
+	
+	public ZdravstveniKartonDTO(ZdravstveniKarton z) {
+		this.id = z.getId();
+		this.visina = z.getVisina();
+		this.tezina = z.getTezina();
+		this.dioptrija = z.getDioptrija();
+		this.krvnaGrupa = z.getKrvnaGrupa();
+		this.bolesti = new ArrayList<IzvestajDTO>();
+		for (Izvestaj i : z.getBolesti()) {
+			this.bolesti.add(new IzvestajDTO(i));
+		}
+	}
 
 	public Long getId() {
 		return id;
@@ -22,14 +36,6 @@ public class ZdravstveniKartonDTO {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public PacijentDTO getPacijent() {
-		return pacijent;
-	}
-
-	public void setPacijent(PacijentDTO pacijent) {
-		this.pacijent = pacijent;
 	}
 
 	public double getVisina() {

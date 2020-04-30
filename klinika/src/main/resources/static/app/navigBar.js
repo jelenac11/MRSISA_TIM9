@@ -62,7 +62,10 @@ Vue.component('navig-bar', {
 							<router-link :to="{ name: 'klinikeAdmin', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Klinike</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
-							<router-link :to="{ name: 'admini', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Admini</router-link>
+							<router-link :to="{ name: 'adminiKlinike', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Admini klinike</router-link>
+						</li>
+						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
+							<router-link :to="{ name: 'adminiCentra', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Admini centra</router-link>
 						</li>
 						
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
@@ -82,6 +85,9 @@ Vue.component('navig-bar', {
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
 							<router-link :to="{ name: 'lekari', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zaposleni</router-link>
+						</li>
+						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
+							<router-link :to="{ name: 'zahtjevi', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zahtevi odsustvo</router-link>
 						</li>
 						
 					</ul>
@@ -142,6 +148,12 @@ Vue.component('navig-bar', {
 							  		<div class="d-flex w-20 justify-content-between">
 							  			<h6>Grad:</h6>
 							  			<p class="mb-0">{{ this.ulogovan.grad }}, {{this.ulogovan.drzava}}</p>
+							  		</div>
+							  	</li>
+							  	<li class="list-group-item">
+							  		<div class="d-flex w-20 justify-content-between">
+							  			<h6>Broj telefona:</h6>
+							  			<p class="mb-0">{{ this.ulogovan.brojTelefona }}</p>
 							  		</div>
 							  	</li>
 							</ul>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,13 @@ public class PacijentController {
 
 	@Autowired
 	private PacijentService pacijentService;
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<PacijentDTO> ucitajPoId(@PathVariable Long id) {
+		Pacijent p = pacijentService.findOne(id);
+		PacijentDTO pac = new PacijentDTO(p);
+		return new ResponseEntity<PacijentDTO>(pac, HttpStatus.OK);
+	}
 	
 	@GetMapping(value = "/vratiRegZahteve")
 	public ResponseEntity<List<PacijentDTO>> vratiRegZahteve(){

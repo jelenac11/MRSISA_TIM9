@@ -10,7 +10,7 @@ import tim09.klinika.model.Odsustvo;
 
 public class MedicinskoOsobljeDTO extends KorisnikDTO {
 
-	private KlinikaDTO klinika;
+	private String klinika;
 	private ArrayList<OdsustvoDTO> odsustva;
 	private Date pocetakRadnogVremena;
 	private Date krajRadnogVremena;
@@ -18,15 +18,22 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 	public MedicinskoOsobljeDTO() {
 
 	}
-	
+
 	public MedicinskoOsobljeDTO(MedicinskoOsoblje osoblje) {
 		super(osoblje);
+		this.klinika = osoblje.getKlinika().getNaziv();
+		this.odsustva = new ArrayList<OdsustvoDTO>();
+		for (Odsustvo ods : osoblje.getOdsustva()) {
+			this.odsustva.add(new OdsustvoDTO(ods));
+		}
+		this.pocetakRadnogVremena = new Date(osoblje.getPocetakRadnogVremena());
+		this.krajRadnogVremena = new Date(osoblje.getKrajRadnogVremena());
 	}
 
 	public MedicinskoOsobljeDTO(Klinika klinika, Set<Odsustvo> odsustva, Date pocetakRadnogVremena,
 			Date krajRadnogVremena) {
 		super();
-		this.klinika = new KlinikaDTO(klinika);
+		this.klinika = klinika.getNaziv();
 		this.odsustva = new ArrayList<OdsustvoDTO>();
 		for (Odsustvo ods : odsustva) {
 			this.odsustva.add(new OdsustvoDTO(ods));
@@ -35,17 +42,17 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 		this.krajRadnogVremena = krajRadnogVremena;
 	}
 
-	public MedicinskoOsobljeDTO(long id,String ime,String prezime){
+	public MedicinskoOsobljeDTO(long id, String ime, String prezime) {
 		this.setIme(ime);
 		this.setPrezime(prezime);
 		this.setId(id);
 	}
-	
-	public KlinikaDTO getKlinika() {
+
+	public String getKlinika() {
 		return klinika;
 	}
 
-	public void setKlinika(KlinikaDTO klinika) {
+	public void setKlinika(String klinika) {
 		this.klinika = klinika;
 	}
 

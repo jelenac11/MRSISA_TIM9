@@ -1,14 +1,21 @@
 package tim09.klinika.dto;
 
+import tim09.klinika.model.Recept;
+
 public class ReceptDTO {
 
 	private Long id;
 	private String opis;
-	private MedSestraDTO medSestra;
 	private StavkaSifrarnikaDTO lek;
 
 	public ReceptDTO() {
 
+	}
+	
+	public ReceptDTO(Recept r) {
+		this.id = r.getId();
+		this.opis = r.getOpis();
+		this.lek = new StavkaSifrarnikaDTO(r.getLek());
 	}
 
 	public Long getId() {
@@ -25,14 +32,6 @@ public class ReceptDTO {
 
 	public void setOpis(String opis) {
 		this.opis = opis;
-	}
-
-	public MedSestraDTO getMedSestra() {
-		return medSestra;
-	}
-
-	public void setMedSestra(MedSestraDTO medSestra) {
-		this.medSestra = medSestra;
 	}
 
 	public StavkaSifrarnikaDTO getLek() {
