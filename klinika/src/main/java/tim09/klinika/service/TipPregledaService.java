@@ -26,6 +26,9 @@ public class TipPregledaService {
 		return tipPregledaRepository.findAll();
 	}
 
+	public List<TipPregleda> findAllByKlinikaId(long id){
+		return tipPregledaRepository.findByKlinikaId(id);
+	}
 	public TipPregleda save(TipPregleda tipPregleda) {
 		return tipPregledaRepository.save(tipPregleda);
 	}

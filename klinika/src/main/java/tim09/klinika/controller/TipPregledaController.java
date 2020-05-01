@@ -16,7 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.TipPregledaDTO;
+import tim09.klinika.model.AdminKlinike;
+import tim09.klinika.model.Klinika;
 import tim09.klinika.model.TipPregleda;
+import tim09.klinika.service.AdminKlinikeService;
+import tim09.klinika.service.KlinikaService;
 import tim09.klinika.service.TipPregledaService;
 
 @RestController
@@ -24,11 +28,19 @@ import tim09.klinika.service.TipPregledaService;
 public class TipPregledaController {
 
 	@Autowired
-	TipPregledaService tipPregledaService;
+	private TipPregledaService tipPregledaService;
 	
-	@GetMapping(value = "/ucitajSve")
-	public ResponseEntity<List<TipPregledaDTO>> ucitajSveTipovePregleda() {
-		List<TipPregleda> tipoviPregleda = tipPregledaService.findAll();
+	@Autowired
+	private AdminKlinikeService adminKlinikeService;
+	
+	@Autowired
+	private KlinikaService klinikaService;
+	
+	@GetMapping(value = "/ucitajSvePoIdKlinike/{id}")
+	public ResponseEntity<List<TipPregledaDTO>> ucitajSveTipovePregledaPoIDKlinike(@PathVariable("id") long id) {
+		AdminKlinike adm=adminKlinikeService.findOne(id);
+		Klinika k=adm.getKlinika();
+		List<TipPregleda> tipoviPregleda = tipPregledaService.findAllByKlinikaId(k.getId());
 
 		List<TipPregledaDTO> tipoviPregledaDTO = new ArrayList<>();
 		for (TipPregleda t : tipoviPregleda) {
@@ -38,13 +50,20 @@ public class TipPregledaController {
 	}
 	
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<TipPregleda> kreirajTipPregleda(@RequestBody TipPregleda tipPregleda) {
-		TipPregleda pregled=tipPregledaService.findOneByNaziv(tipPregleda.getNaziv());
+	public ResponseEntity<TipPregledaDTO> kreirajTipPregleda(@RequestBody TipPregledaDTO tipPregledaDTO) {
+		TipPregleda pregled=tipPregledaService.findOneByNaziv(tipPregledaDTO.getNaziv());
 		if(pregled!=null) {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
+		TipPregleda tipPregleda=new TipPregleda();
+		tipPregleda.setNaziv(tipPregledaDTO.getNaziv());
+		tipPregleda.setOpis(tipPregledaDTO.getOpis());
+		Klinika k=klinikaService.findByNaziv(tipPregledaDTO.getKlinika());
+		tipPregleda.setKlinika(k);
+		
 		tipPregleda = tipPregledaService.save(tipPregleda);
-		return new ResponseEntity<>(tipPregleda, HttpStatus.CREATED);
+		
+		return new ResponseEntity<>(new TipPregledaDTO(tipPregleda), HttpStatus.CREATED);
 	}
 	
 	@RequestMapping(value = "/provjeraPostojanostiImena/{naziv}", method = RequestMethod.GET)

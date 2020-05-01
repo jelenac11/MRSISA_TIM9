@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.MedicinskoOsobljeDTO;
 import tim09.klinika.dto.OdsustvoDTO;
+import tim09.klinika.model.AdminKlinike;
+import tim09.klinika.model.Klinika;
+import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Odsustvo;
+import tim09.klinika.service.AdminKlinikeService;
+import tim09.klinika.service.KorisnikService;
 import tim09.klinika.service.OdsustvoService;
 
 @RestController
@@ -24,9 +31,15 @@ public class OdsustvoController {
 	@Autowired
 	private OdsustvoService service;
 	
-	@GetMapping(value = "/ucitajSvaNeodgovorenaOdsustva")
-	public ResponseEntity<List<OdsustvoDTO>> ucitajSvaNeodgovorenaOdsustva() {
-		ArrayList<Odsustvo> odsustva = (ArrayList<Odsustvo>) service.findByOdgovoreno(false);
+	@Autowired
+	private AdminKlinikeService adminKlinikeService;
+	
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	@GetMapping(value = "/ucitajSvaNeodgovorenaOdsustva/{id}")
+	public ResponseEntity<List<OdsustvoDTO>> ucitajSvaNeodgovorenaOdsustva(@PathVariable("id") long id) {
+		AdminKlinike kor=adminKlinikeService.findOne(id);
+		Klinika k=kor.getKlinika();
+		ArrayList<Odsustvo> odsustva = (ArrayList<Odsustvo>) service.findByOdgovorenoFalseAndKlinikaID(k.getId());
 		ArrayList<OdsustvoDTO> odsustvaDTO = new ArrayList<OdsustvoDTO>();
 		for (Odsustvo odsustvo : odsustva) {
 			OdsustvoDTO ods=new OdsustvoDTO();

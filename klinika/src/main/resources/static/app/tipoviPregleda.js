@@ -33,8 +33,15 @@ Vue.component("tipoviPregleda", {
 	created() {
 		this.token = this.$route.params.korisnikToken;
 		axios
-        .get('/tipoviPregleda/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
-        .then(response => (this.tipoviPregleda = response.data))
+		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
+        .then(response => { 
+        	this.korisnik=response.data
+        	axios
+            .get('/tipoviPregleda/ucitajSvePoIdKlinike/'+this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
+            .then(response => (this.tipoviPregleda = response.data))
+            .catch(function (error) { console.log(error); });
+        })
         .catch(function (error) { console.log(error); });
+		
 	}
 });

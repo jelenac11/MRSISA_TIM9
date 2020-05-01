@@ -33,6 +33,7 @@ insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (6, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (7, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (8, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (9, 2);
+insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (10, 5);
 
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (1, 180, 72, 0.5, 'A');
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (2, 177, 75, 0.2, 'B');
@@ -48,3 +49,4 @@ insert into sifrarnik (naziv, tip_sifrarnika) values('Sif 2', 'Sifrarnik dijagno
 insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(0, '', false, false, 0, 1, 6);
 insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(0, '', false, false, 0, 1, 7);
 insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(0, '', false, false, 0, 1, 8);
+

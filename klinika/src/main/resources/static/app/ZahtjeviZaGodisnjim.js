@@ -6,6 +6,7 @@ Vue.component("zahtjevGodisnji",{
             ulogovan: {},
             submitovano: false,
             token: "",
+            korisnik:"",
 		}
 	},
     template: `
@@ -61,7 +62,13 @@ Vue.component("zahtjevGodisnji",{
 	,
 	created(){
     	this.token = this.$route.params.korisnikToken;
-        this.dobaviZahtjeve()
+    	axios
+		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
+        .then(response => { 
+        	this.korisnik=response.data
+        	this.dobaviZahtjeve();
+        })
+        .catch(function (error) { console.log(error); });
 	},
 	methods:
     {
@@ -94,7 +101,7 @@ Vue.component("zahtjevGodisnji",{
             .catch(function (error) { console.log(error); });
         },
         dobaviZahtjeve: function() {
-            axios.get('/odsustva/ucitajSvaNeodgovorenaOdsustva', { headers: { Authorization: 'Bearer ' + this.token }} )
+            axios.get('/odsustva/ucitajSvaNeodgovorenaOdsustva/'+this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
             .then(response => { this.zahtjevi =response.data; })
             .catch(function (error) { console.log(error); });
         },

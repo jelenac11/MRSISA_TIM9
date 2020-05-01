@@ -3,7 +3,8 @@ Vue.component("dodavanje-tipaPregleda", {
 		return {
 			noviTipPregleda : {
 				naziv: "",
-				opis: ""
+				opis: "",
+				klinika: null
 			},
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
@@ -56,18 +57,29 @@ Vue.component("dodavanje-tipaPregleda", {
 			.then(response=> {
 				if (!response.data) {
 					axios
-					.post('/tipoviPregleda', this.noviTipPregleda)
-					.then(response => {
-						this.uspesnoDodavanje = response.data;
-						
-						if (this.uspesnoDodavanje) {
-							this.$router.replace({ name: 'tipoviPregleda', params: { korisnikToken: this.token } });
-						}
-					})
-					.catch(error => {
-						console.log(error);
-						this.uspesnoDodavanje = false;
-					});
+					.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
+			        .then(response => { 
+			        	let ulogovan=response.data;
+			        	axios.get('/adminiKlinike/ucitajKlinikuPoIDAdmina/'+ulogovan.id, { headers: { Authorization: 'Bearer ' + this.token }} )
+			        	.then(response=>{
+			        		let klinika=response.data;
+			        		this.noviTipPregleda.klinika=klinika.naziv;
+							axios
+							.post('/tipoviPregleda', this.noviTipPregleda,{ headers: { Authorization: 'Bearer ' + this.token }})
+							.then(response => {
+								this.uspesnoDodavanje = response.data;
+								
+								if (this.uspesnoDodavanje) {
+									this.$router.replace({ name: 'tipoviPregleda', params: { korisnikToken: this.token } });
+								}
+							})
+							.catch(error => {
+								console.log(error);
+								this.uspesnoDodavanje = false;
+							});
+			        	});
+			        })
+			        .catch(function (error) { console.log(error); });
 				} else {
 					this.jedinstvenoIme = false;
 				}})

@@ -10,7 +10,7 @@ public class TipPregledaDTO {
 	private String naziv;
 	private String opis;
 	private StavkaCenovnikaDTO stavkaCenovnika;
-	private KlinikaDTO klinika;
+	private String klinika;
 	private ArrayList<LekarDTO> lekari;
 	private ArrayList<PregledDTO> pregledi;
 
@@ -20,6 +20,10 @@ public class TipPregledaDTO {
 
 	public TipPregledaDTO(TipPregleda os) {
 		// TODO Auto-generated constructor stub
+		this.id=os.getId();
+		this.naziv=os.getNaziv();
+		this.opis=os.getOpis();
+		this.klinika=os.getKlinika().getNaziv();
 	}
 	
 	public TipPregledaDTO(long id,String naziv,String opis) {
@@ -60,11 +64,11 @@ public class TipPregledaDTO {
 		this.stavkaCenovnika = stavkaCenovnika;
 	}
 
-	public KlinikaDTO getKlinika() {
+	public String getKlinika() {
 		return klinika;
 	}
 
-	public void setKlinika(KlinikaDTO klinika) {
+	public void setKlinika(String klinika) {
 		this.klinika = klinika;
 	}
 

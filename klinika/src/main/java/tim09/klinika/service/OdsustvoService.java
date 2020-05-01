@@ -37,8 +37,8 @@ public class OdsustvoService {
 		odsustvoRepository.deleteById(id);
 	}
 	
-	public List<Odsustvo> findByOdgovoreno(boolean odgovoreno){
-		return odsustvoRepository.findByOdgovoreno(odgovoreno);
+	public List<Odsustvo> findByOdgovorenoFalseAndKlinikaID(long id){
+		return odsustvoRepository.findByOdgovorenoFalseAndKlinikaId(id);
 	}
 	
 	public Odsustvo updateOdsustvo(Odsustvo odsustvo) {
