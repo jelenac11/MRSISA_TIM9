@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import tim09.klinika.model.Klinika;
 import tim09.klinika.model.TipPregleda;
 import tim09.klinika.service.AdminKlinikeService;
 import tim09.klinika.service.KlinikaService;
+import tim09.klinika.service.PregledService;
 import tim09.klinika.service.TipPregledaService;
 
 @RestController
@@ -75,6 +77,26 @@ public class TipPregledaController {
 		}
 		
 		return new ResponseEntity<>(true,HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/izbrisiTipPregleda",consumes = "application/json")
+	public ResponseEntity<Boolean> izbrisiTipPregleda(@RequestBody TipPregledaDTO tipPregleda) {
+		TipPregleda pregled=tipPregledaService.findOneByNaziv(tipPregleda.getNaziv());
+		if(pregled==null) {
+			return new ResponseEntity<>(false,HttpStatus.OK);
+		}
+		boolean uspesno=tipPregledaService.remove(pregled.getId());
+		return new ResponseEntity<>(uspesno,HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/izmenaTipaPregleda",consumes="application/json")
+	public ResponseEntity<Boolean> izmenaTipaPregleda(@RequestBody TipPregledaDTO tipPregledaDTO){
+		TipPregleda pregled=tipPregledaService.findOne(tipPregledaDTO.getId());
+		if(pregled==null) {
+			return new ResponseEntity<>(false,HttpStatus.OK);
+		}
+		boolean uspesno=tipPregledaService.update(tipPregledaDTO,pregled);
+		return new ResponseEntity<Boolean>(uspesno,HttpStatus.OK);
 	}
 	
 	

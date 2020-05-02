@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import tim09.klinika.model.Pregled;
 import tim09.klinika.model.TipPregleda;
 
 public interface TipPregledaRepository extends JpaRepository<TipPregleda, Long> {

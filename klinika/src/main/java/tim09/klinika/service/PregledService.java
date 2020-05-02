@@ -29,4 +29,7 @@ public class PregledService {
 	public void remove(Long id) {
 		pregledRepository.deleteById(id);
 	}
+	public List<Pregled> findByTipPregledaIdAndOtkazanAndVremeGreaterThan(long id,boolean otkazano,long vreme){
+		return pregledRepository.findByTipPregledaIdAndOtkazanAndVremeGreaterThan(id,otkazano,vreme);
+	}
 }
