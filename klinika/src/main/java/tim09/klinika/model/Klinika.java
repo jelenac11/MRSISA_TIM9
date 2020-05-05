@@ -58,6 +58,9 @@ public class Klinika {
 
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<OcenaKlinike> ocene;
+	
+	@Column(name = "prosecna_ocena")
+	private double prosecnaOcena;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinickiCentar_id")
@@ -169,6 +172,14 @@ public class Klinika {
 
 	public void setOcene(Set<OcenaKlinike> ocene) {
 		this.ocene = ocene;
+	}
+
+	public double getProsecnaOcena() {
+		return prosecnaOcena;
+	}
+
+	public void setProsecnaOcena(double prosecnaOcena) {
+		this.prosecnaOcena = prosecnaOcena;
 	}
 
 	public KlinickiCentar getKlinickiCentar() {

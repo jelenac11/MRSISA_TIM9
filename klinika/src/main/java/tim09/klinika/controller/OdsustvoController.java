@@ -55,6 +55,7 @@ public class OdsustvoController {
 		return new ResponseEntity<>(odsustvaDTO, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	@PutMapping(value="/updateOdsustvo",consumes = "application/json")
 	public ResponseEntity<OdsustvoDTO> updateOdsustvo(@RequestBody OdsustvoDTO odsustvoDTO) {
 		Odsustvo odsustvo=service.findOne(odsustvoDTO.getId());

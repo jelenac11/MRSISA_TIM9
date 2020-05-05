@@ -14,7 +14,7 @@ Vue.component('navig-bar', {
 			        <ul class="nav nav-pills" role="tablist">
 
 			        	<li v-if="this.uloga == 'ROLE_PACIJENT'" class="nav-item">
-							<router-link :to="{ name: 'klinikePacijent', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Klinike</router-link>
+							<router-link :to="{ name: 'pretragaKlinika', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Klinike</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_PACIJENT'" class="nav-item">
 							<router-link :to="{ name: 'istorijaPregleda', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Istorija pregleda</router-link>

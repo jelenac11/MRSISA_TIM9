@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ public class SalaController {
 	private SalaService salaService;
 
 	@GetMapping(value = "/ucitajSve")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<List<SalaDTO>> ucitajSveSale() {
 		List<Sala> sale = salaService.findAll();
 
@@ -38,6 +40,7 @@ public class SalaController {
 	}
 	
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<SalaDTO> kreirajSalu(@RequestBody SalaDTO salaDTO) {
 		Sala sala = new Sala();
 		sala.setBroj(salaDTO.getBroj());
@@ -48,6 +51,7 @@ public class SalaController {
 	}
 
 	@PutMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<SalaDTO> promeniSalu(@RequestBody SalaDTO salaDTO) {
 		Sala sala = salaService.findOne(salaDTO.getId());
 		if (sala == null) {
@@ -61,6 +65,7 @@ public class SalaController {
 	}
 
 	@DeleteMapping(value = "/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Void> izbrisiSalu(@PathVariable Long id) {
 		Sala sala = salaService.findOne(id);
 

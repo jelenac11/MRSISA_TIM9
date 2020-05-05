@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ public class PacijentController {
 	private PacijentService pacijentService;
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'LEKAR', 'MED_SESTRA')")
 	public ResponseEntity<PacijentDTO> ucitajPoId(@PathVariable Long id) {
 		Pacijent p = pacijentService.findOne(id);
 		PacijentDTO pac = new PacijentDTO(p);
@@ -30,6 +32,7 @@ public class PacijentController {
 	}
 	
 	@GetMapping(value = "/vratiRegZahteve")
+	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
 	public ResponseEntity<List<PacijentDTO>> vratiRegZahteve(){
 		List<Pacijent> pacijenti = pacijentService.nadjiRegZahteve();
 		List<PacijentDTO> pacijentDTO = new ArrayList<>();

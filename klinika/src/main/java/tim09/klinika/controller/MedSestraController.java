@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,7 @@ public class MedSestraController {
 	private AutoritetService autoritetService;
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<MedSestraDTO> ucitajPoId(@PathVariable Long id) {
 		MedSestra m = medicinskaSestraService.findOne(id);
 		m.getKlinika();
@@ -47,6 +49,7 @@ public class MedSestraController {
 		return new ResponseEntity<MedSestraDTO>(ms, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	@GetMapping(value = "/ucitajSve")
 	public ResponseEntity<List<MedSestraDTO>> ucitajSveMedicinskeSestre() {
 		List<MedSestra> medicinskeSestre = medicinskaSestraService.findAll();
@@ -59,6 +62,7 @@ public class MedSestraController {
 	}
 	
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<MedSestraDTO> kreirajMedSestru(@RequestBody MedSestraDTO medSestraDTO) {
 		MedSestra medSestra = new MedSestra();
 		medSestra.setAdresa(medSestraDTO.getAdresa());

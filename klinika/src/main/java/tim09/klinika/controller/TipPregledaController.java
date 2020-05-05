@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class TipPregledaController {
 	private KlinikaService klinikaService;
 	
 	@GetMapping(value = "/ucitajSvePoIdKlinike/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<List<TipPregledaDTO>> ucitajSveTipovePregledaPoIDKlinike(@PathVariable("id") long id) {
 		AdminKlinike adm=adminKlinikeService.findOne(id);
 		Klinika k=adm.getKlinika();
@@ -52,6 +54,7 @@ public class TipPregledaController {
 	}
 	
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<TipPregledaDTO> kreirajTipPregleda(@RequestBody TipPregledaDTO tipPregledaDTO) {
 		TipPregleda pregled=tipPregledaService.findOneByNaziv(tipPregledaDTO.getNaziv());
 		if(pregled!=null) {
@@ -70,6 +73,7 @@ public class TipPregledaController {
 	
 	@RequestMapping(value = "/provjeraPostojanostiImena/{naziv}", method = RequestMethod.GET)
 	@ResponseBody
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> provjeraPostojanostiImena(@PathVariable("naziv") String naziv) {
 		TipPregleda pregled=tipPregledaService.findOneByNaziv(naziv);
 		if(pregled==null) {
@@ -80,6 +84,7 @@ public class TipPregledaController {
 	}
 	
 	@PostMapping(value="/izbrisiTipPregleda",consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> izbrisiTipPregleda(@RequestBody TipPregledaDTO tipPregleda) {
 		TipPregleda pregled=tipPregledaService.findOneByNaziv(tipPregleda.getNaziv());
 		if(pregled==null) {
@@ -90,6 +95,7 @@ public class TipPregledaController {
 	}
 	
 	@PostMapping(value="/izmenaTipaPregleda",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> izmenaTipaPregleda(@RequestBody TipPregledaDTO tipPregledaDTO){
 		TipPregleda pregled=tipPregledaService.findOne(tipPregledaDTO.getId());
 		if(pregled==null) {
@@ -99,5 +105,15 @@ public class TipPregledaController {
 		return new ResponseEntity<Boolean>(uspesno,HttpStatus.OK);
 	}
 	
-	
+	@GetMapping(value = "/ucitajSve")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<List<TipPregledaDTO>> ucitajSveTipove(){
+		List<TipPregleda> tipovi = tipPregledaService.findAll();
+		List<TipPregledaDTO> tipoviDTO = new ArrayList<TipPregledaDTO>();
+		
+		for(TipPregleda tp: tipovi) {
+			tipoviDTO.add(new TipPregledaDTO(tp));
+		}
+		return new ResponseEntity<>(tipoviDTO, HttpStatus.OK);
+	}
 }

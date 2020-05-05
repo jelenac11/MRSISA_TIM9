@@ -8,7 +8,9 @@ public class KlinikaDTO {
 	private double ocena;
 	private String naziv;
 	private String lokacija;
-
+	private boolean zadovoljava;
+	private double cena;
+	
 	public KlinikaDTO() {
 
 	}
@@ -17,7 +19,9 @@ public class KlinikaDTO {
 		this.naziv = klinika.getNaziv();
 		this.id = klinika.getId();
 		this.lokacija = klinika.getLokacija();
-		this.setOcena(1.0);
+		this.ocena = klinika.getProsecnaOcena();
+		this.zadovoljava = true;
+		this.cena = 0;
 	}
 
 	public Long getId() {
@@ -50,6 +54,22 @@ public class KlinikaDTO {
 
 	public void setOcena(double ocena) {
 		this.ocena = ocena;
+	}
+
+	public boolean isZadovoljava() {
+		return zadovoljava;
+	}
+
+	public void setZadovoljava(boolean zadovoljava) {
+		this.zadovoljava = zadovoljava;
+	}
+
+	public double getCena() {
+		return cena;
+	}
+
+	public void setCena(double cena) {
+		this.cena = cena;
 	}
 
 }

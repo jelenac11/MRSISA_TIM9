@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,7 @@ public class AdminKlinikeController {
 	private AutoritetService autoritetService;
 	
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
 	public ResponseEntity<AdminKlinikeDTO> ucitajPoId(@PathVariable Long id) {
 		AdminKlinike a = adminKlinikeService.findOne(id);
 		AdminKlinikeDTO ak = new AdminKlinikeDTO(a);
@@ -46,6 +48,7 @@ public class AdminKlinikeController {
 	}
 	
 	@GetMapping("ucitajKlinikuPoIDAdmina/{id}")
+	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'ADMIN_KLINIKE')")
 	public ResponseEntity<KlinikaDTO> ucitajKlinikuPoIDAdmina(@PathVariable Long id) {
 		AdminKlinike a = adminKlinikeService.findOne(id);
 		Klinika k=a.getKlinika();
@@ -53,6 +56,7 @@ public class AdminKlinikeController {
 	}
 	
 	@GetMapping(value = "/ucitajSve")
+	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
 	public ResponseEntity<List<AdminKlinikeDTO>> ucitajSveAdmineKlinike() {
 		List<AdminKlinike> admini = adminKlinikeService.findAll();
 
@@ -64,6 +68,7 @@ public class AdminKlinikeController {
 	}
 	
 	@PostMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
 	public ResponseEntity<AdminKlinikeDTO> kreirajAdminaKlinike(@RequestBody AdminKlinikeDTO adminKlinikeDTO) {
 		AdminKlinike adminKlinike = new AdminKlinike();
 		adminKlinike.setAdresa(adminKlinikeDTO.getAdresa());

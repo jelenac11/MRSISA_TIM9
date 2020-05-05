@@ -2,6 +2,7 @@ package tim09.klinika.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ public class ZdravstveniKartonController {
 	@Autowired
 	private ZdravstveniKartonService zdravstveniKartonService;
 	
+	@PreAuthorize("hasAnyRole('PACIJENT', 'LEKAR', 'MED_SESTRA')")
 	@PutMapping(value = "/dobaviKartonPacijenta", consumes = "application/json")
 	public ResponseEntity<ZdravstveniKartonDTO> dobaviKartonPacijenta(@RequestBody PacijentDTO p) {
 		ZdravstveniKarton z = zdravstveniKartonService.findOne(p.getId());

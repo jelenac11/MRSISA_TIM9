@@ -25,6 +25,7 @@ const PotvrdaRegistracije = {template: '<potvrda-registracije></potvrda-registra
 const ZahteviRegistracija = {template: '<zahtevi-registracija></zahtevi-registracija>'}
 const ProveriEmail = {template: '<proveri-email></proveri-email>'}
 const PromenaLozinke = {template: '<promena-lozinke></promena-lozinke>'}
+const PretragaKlinika = {template : '<pretraga-klinika></pretraga-klinika>'}
 
 const router = new VueRouter({
 	mode: 'hash',
@@ -158,6 +159,11 @@ const router = new VueRouter({
 		path: '/promenaLozinke',
 		name: 'promenaLozinke',
 		component: PromenaLozinke
+	},
+	{
+		path: '/pretragaKlinika',
+		name: 'pretragaKlinika',
+		component: PretragaKlinika
 	},
 	{
 		path: '/tipoviPregleda',
