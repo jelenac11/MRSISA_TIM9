@@ -89,7 +89,6 @@ Vue.component("zahtjevGodisnji",{
 				this.zahtjevi[this.indeks].odgovoreno=true
 	            this.zahtjevi[this.indeks].odobreno=false
 	            this.zahtjevi[this.indeks].obrazlozenje=$("#obrazlozenje").val()
-	            jQuery.noConflict();
 				$('#obrazlozenjeModal').modal('hide');
 	            this.updateZahtjev(this.indeks)
 	            this.submitovano=false;
