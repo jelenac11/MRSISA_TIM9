@@ -75,7 +75,7 @@ Vue.component("login", {
 			} else {
 				axios
 				.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
-		        .then(response => { 
+		        .then(response => {
 		        	this.kor = response.data;
 		        	this.nijeAktiviran = !this.kor.aktiviran;
 					this.jesteAktivanNijeVerifikovan = !this.kor.verifikovan && this.kor.aktiviran;
@@ -83,23 +83,25 @@ Vue.component("login", {
 					this.uspesanLogin = true;
 					
 					if (!this.nijeAktiviran && !this.jesteAktivanNijeVerifikovan && !this.promenioLozinku) {
-						this.$router.replace({ name: 'promenaLozinke', params: { korisnikToken: this.token } });
+						localStorage.setItem("token", this.token);
+						this.$router.replace({ name: 'promenaLozinke' });
 					} 
 					if (!this.nijeAktiviran && !this.jesteAktivanNijeVerifikovan && this.promenioLozinku) {
+						localStorage.setItem("token", this.token);
 						axios
 			    		.put('/korisnici/dobaviUlogu', this.kor, { headers: { Authorization: 'Bearer ' + this.token }} )
 			            .then(response => {
 			            	this.uloga = response.data;
 			            	if (this.uloga == "ROLE_PACIJENT") {
-			            		this.$router.replace({ name: 'zdravstveniKarton', params: { korisnikToken: this.token } });
+			            		this.$router.replace({ name: 'zdravstveniKarton' });
 			            	} else if (this.uloga == "ROLE_LEKAR") {
-			            		this.$router.replace({ name: 'pacijenti', params: { korisnikToken: this.token } });
+			            		this.$router.replace({ name: 'pacijenti' });
 			            	} else if (this.uloga == "ROLE_MED_SESTRA") {
-			            		this.$router.replace({ name: 'pacijenti', params: { korisnikToken: this.token } });
+			            		this.$router.replace({ name: 'pacijenti' });
 			            	} else if (this.uloga == "ROLE_ADMIN_KLINICKOG_CENTRA") {
-			            		this.$router.replace({ name: 'zahteviRegistracija', params: { korisnikToken: this.token } });
+			            		this.$router.replace({ name: 'zahteviRegistracija' });
 			            	} else if (this.uloga == "ROLE_ADMIN_KLINIKE") {
-			            		this.$router.replace({ name: 'lekari', params: { korisnikToken: this.token } });
+			            		this.$router.replace({ name: 'lekari' });
 			            	} 
 			            })
 			            .catch(function (error) { console.log(error); });

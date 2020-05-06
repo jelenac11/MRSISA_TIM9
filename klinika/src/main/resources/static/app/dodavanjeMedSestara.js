@@ -10,12 +10,17 @@ Vue.component("dodavanje-medSestara", {
 				grad : "",
 				drzava : "",
 				brojTelefona : "",
+				pocetakRadnogVremena : 0,
+				krajRadnogVremena : 0,
 				klinika: null,
 			},
 			potvrdaLozinke : "",
 			poklapajuSeLozinke : true,
 	    	submitovano : false,
+	    	pocetakRadnog : "",
+			krajRadnog : "",
 	    	uspesnoDodavanje : true,
+	    	zauzetEmail : false,
 	    	token : "",
 	    }
 	},
@@ -85,11 +90,40 @@ Vue.component("dodavanje-medSestara", {
 				    		<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli broj telefona.</div>
 				    	</div>
 				  	</div>
+				  	<div class="form-row">
+				  		<div class="col">
+							<label for="poc" class="mt-1">Početak radnog vremena</label>
+							<div class="input-group clockpicker">
+								<div class="input-group-prepend">
+					            	<span class="input-group-text"><i class="material-icons">
+										access_time
+									</i></span>
+								</div>
+								<input class="form-control" id="poc" type="text" placeholder="Početak radnog vremena" required>
+								<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli početak radnog vremena.</div>
+					        </div>
+						</div>
+						<div class="col">
+							<label for="kraj" class="mt-1">Kraj radnog vremena</label>
+							<div class="input-group clockpicker">
+								<div class="input-group-prepend">
+					            	<span class="input-group-text"><i class="material-icons">
+										access_time
+									</i></span>
+								</div>
+								<input class="form-control" id="kraj" type="text" placeholder="Kraj radnog vremena" required>
+								<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli kraj radnog vremena.</div>
+					        </div>
+						</div>
+				  	</div>
+				  	<div v-if=zauzetEmail class="alert alert-danger" role="alert">
+						<p class="mb-0"><b>Greška!</b> Već postoji korisnik sa unetim Email-om. Pokušajte ponovo.</p>
+					</div>
 				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ name: 'medSestre', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'medSestre' }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -100,30 +134,43 @@ Vue.component("dodavanje-medSestara", {
 			this.proveriLozinke();
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-medSestru').checkValidity() === true && this.poklapajuSeLozinke) {
+				this.pocetakRadnog = $('#poc').val();
+				this.krajRadnog = $('#kraj').val();
 				axios
-				.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
-		        .then(response => { 
-		        	let ulogovan=response.data;
-		        	axios.get('/adminiKlinike/ucitajKlinikuPoIDAdmina/'+ulogovan.id, { headers: { Authorization: 'Bearer ' + this.token }} )
-		        	.then(response=>{
-		        		let klinika=response.data;
-		        		this.novaMedSestra.klinika=klinika.naziv;
-		        		axios
-						.post('sestre', this.novaMedSestra, { headers: { Authorization: 'Bearer ' + this.token }} )
-						.then(response => {
-							this.uspesnoDodavanje = response.data;
-							
-							if (this.uspesnoDodavanje) {
-								this.$router.replace({ name: 'medSestre', params: { korisnikToken: this.token } });
-							}
-						})
-						.catch(error => {
-							console.log(error);
-							this.uspesnoDodavanje = false;
-						});
-		        	})
-		        })
-		        .catch(function (error) { console.log(error); });
+				.get('/korisnici/proveriEmail/' + this.novaMedSestra.email, { headers: { Authorization: 'Bearer ' + this.token }} )
+				.then(response => {
+					axios
+					.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
+			        .then(response => { 
+			        	let ulogovan=response.data;
+			        	axios.get('/adminiKlinike/ucitajKlinikuPoIDAdmina/'+ulogovan.id, { headers: { Authorization: 'Bearer ' + this.token }} )
+			        	.then(response=>{
+			        		let klinika=response.data;
+			        		this.novaMedSestra.klinika=klinika.naziv;
+			        		this.novaMedSestra.pocetakRadnogVremena = this.pretvori(this.pocetakRadnog);
+			        		this.novaMedSestra.krajRadnogVremena = this.pretvori(this.krajRadnog);
+			        		axios
+							.post('sestre', this.novaMedSestra, { headers: { Authorization: 'Bearer ' + this.token }} )
+							.then(response => {
+								this.uspesnoDodavanje = response.data;
+								
+								if (this.uspesnoDodavanje) {
+									this.$router.replace({ name: 'medSestre' });
+								}
+							})
+							.catch(error => {
+								console.log(error);
+								this.uspesnoDodavanje = false;
+							});
+			        	})
+			        })
+			        .catch(function (error) { console.log(error); });
+				})
+				.catch(error => {
+					console.log(error);
+					this.uspesnoDodavanje = false;
+					this.zauzetEmail = true;
+				});
 			} else {
 				this.uspesnoDodavanje = true;
 			}
@@ -134,9 +181,23 @@ Vue.component("dodavanje-medSestara", {
 			} else {
 				this.poklapajuSeLozinke = true;
 			}
-		}
+		},
+		pretvori : function (datumStr) {
+			var sati = datumStr.substr(0, 2);
+			var minuti = datumStr.substr(3, 2);
+			return sati*3600000 + minuti*60000;
+		},
 	},
 	mounted() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
+		$('.clockpicker').clockpicker({
+		    'default': 'now',
+		    vibrate: true,
+		    placement: "top",
+		    align: "right",
+		    autoclose: true,
+		    twelvehour: false,
+		    donetext: 'Gotovo',
+	    });
 	}
 });

@@ -37,7 +37,7 @@ Vue.component("dodavanje-sifrarnika", {
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ name: 'sifrarnici', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'sifrarnici' }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -53,7 +53,7 @@ Vue.component("dodavanje-sifrarnika", {
 					this.uspesnoDodavanje = response.data;
 					
 					if (this.uspesnoDodavanje) {
-						this.$router.replace({ name: 'sifrarnici', params: { korisnikToken: this.token } });
+						this.$router.replace({ name: 'sifrarnici' });
 					}
 				})
 				.catch(error => {
@@ -66,6 +66,6 @@ Vue.component("dodavanje-sifrarnika", {
 		}
 	},
 	mounted() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 	}
 });

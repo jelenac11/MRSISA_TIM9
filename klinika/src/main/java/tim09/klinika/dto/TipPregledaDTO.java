@@ -9,27 +9,26 @@ public class TipPregledaDTO {
 	private Long id;
 	private String naziv;
 	private String opis;
-	private StavkaCenovnikaDTO stavkaCenovnika;
 	private String klinika;
-	private ArrayList<LekarDTO> lekari;
-	private ArrayList<PregledDTO> pregledi;
+	private double cena;
 
 	public TipPregledaDTO() {
 
 	}
 
 	public TipPregledaDTO(TipPregleda os) {
-		// TODO Auto-generated constructor stub
-		this.id=os.getId();
-		this.naziv=os.getNaziv();
-		this.opis=os.getOpis();
-		this.klinika=os.getKlinika().getNaziv();
+		this.id = os.getId();
+		this.naziv = os.getNaziv();
+		this.opis = os.getOpis();
+		this.klinika = os.getKlinika().getNaziv();
+		this.cena = os.getStavkaCenovnika().getCena();
 	}
-	
-	public TipPregledaDTO(long id,String naziv,String opis) {
-		this.id=id;
-		this.naziv=naziv;
-		this.opis=opis;
+
+	public TipPregledaDTO(long id, String naziv, String opis, double cena) {
+		this.id = id;
+		this.naziv = naziv;
+		this.opis = opis;
+		this.cena = cena;
 	}
 
 	public Long getId() {
@@ -56,14 +55,6 @@ public class TipPregledaDTO {
 		this.opis = opis;
 	}
 
-	public StavkaCenovnikaDTO getStavkaCenovnika() {
-		return stavkaCenovnika;
-	}
-
-	public void setStavkaCenovnika(StavkaCenovnikaDTO stavkaCenovnika) {
-		this.stavkaCenovnika = stavkaCenovnika;
-	}
-
 	public String getKlinika() {
 		return klinika;
 	}
@@ -72,20 +63,12 @@ public class TipPregledaDTO {
 		this.klinika = klinika;
 	}
 
-	public ArrayList<LekarDTO> getLekari() {
-		return lekari;
+	public double getCena() {
+		return cena;
 	}
 
-	public void setLekari(ArrayList<LekarDTO> lekari) {
-		this.lekari = lekari;
-	}
-
-	public ArrayList<PregledDTO> getPregledi() {
-		return pregledi;
-	}
-
-	public void setPregledi(ArrayList<PregledDTO> pregledi) {
-		this.pregledi = pregledi;
+	public void setCena(double cena) {
+		this.cena = cena;
 	}
 
 }

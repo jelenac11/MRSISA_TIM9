@@ -72,4 +72,21 @@ public class Popust {
 	public void setProcenat(double procenat) {
 		this.procenat = procenat;
 	}
+
+	public StavkaCenovnika getStavkaCenovnika() {
+		return stavkaCenovnika;
+	}
+
+	public void setStavkaCenovnika(StavkaCenovnika stavkaCenovnika) {
+		this.stavkaCenovnika = stavkaCenovnika;
+	}
+
+	public Klinika getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(Klinika klinika) {
+		this.klinika = klinika;
+	}
+
 }

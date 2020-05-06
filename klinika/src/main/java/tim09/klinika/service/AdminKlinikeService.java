@@ -14,6 +14,10 @@ public class AdminKlinikeService {
 	@Autowired
 	private AdminKlinikeRepository adminKlinikeRepository;
 
+	public AdminKlinike findByEmail(String email) {
+		return adminKlinikeRepository.findByEmail(email);
+	}
+	
 	public AdminKlinike findOne(Long id) {
 		return adminKlinikeRepository.findById(id).orElseGet(null);
 	}

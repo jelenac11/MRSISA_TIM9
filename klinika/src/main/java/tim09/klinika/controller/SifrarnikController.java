@@ -22,15 +22,20 @@ public class SifrarnikController {
 
 	@Autowired
 	private SifrarnikService sifrarnikService;
+	
+	@GetMapping(value = "/ucitajSifrarnikLekova")
+	public ResponseEntity<SifrarnikDTO> ucitajSifrarnikLekova() {
+		Sifrarnik sifrarnik = sifrarnikService.findByTipSifrarnika("LEKOVI");
 
-	@GetMapping(value = "/ucitajSve")
-	public ResponseEntity<List<SifrarnikDTO>> ucitajSveSifrarnike() {
-		List<Sifrarnik> sifrarnici = sifrarnikService.findAll();
+		SifrarnikDTO sifrarnikDTO = new SifrarnikDTO(sifrarnik);
+		return new ResponseEntity<>(sifrarnikDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/ucitajSifrarnikDijagnoza")
+	public ResponseEntity<SifrarnikDTO> ucitajSifrarnikDijagnoza() {
+		Sifrarnik sifrarnik = sifrarnikService.findByTipSifrarnika("DIJAGNOZE");
 
-		List<SifrarnikDTO> sifrarnikDTO = new ArrayList<>();
-		for (Sifrarnik s : sifrarnici) {
-			sifrarnikDTO.add(new SifrarnikDTO(s));
-		}
+		SifrarnikDTO sifrarnikDTO = new SifrarnikDTO(sifrarnik);
 		return new ResponseEntity<>(sifrarnikDTO, HttpStatus.OK);
 	}
 	

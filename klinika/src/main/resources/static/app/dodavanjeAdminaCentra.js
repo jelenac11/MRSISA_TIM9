@@ -15,6 +15,7 @@ Vue.component("dodavanje-admina-centra", {
 			poklapajuSeLozinke : true,
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
+	    	zauzetEmail : false,
 	    	token : "",
 	    }
 	},
@@ -84,11 +85,14 @@ Vue.component("dodavanje-admina-centra", {
 				    		<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli brojTelefona.</div>
 				    	</div>
 				  	</div>
+				  	<div v-if=zauzetEmail class="alert alert-danger" role="alert">
+						<p class="mb-0"><b>Greška!</b> Već postoji korisnik sa unetim Email-om. Pokušajte ponovo.</p>
+					</div>
 				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ name: 'adminiCentra', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'adminiCentra' }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -100,20 +104,30 @@ Vue.component("dodavanje-admina-centra", {
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-admina').checkValidity() === true && this.poklapajuSeLozinke) {
 				axios
-				.post('adminiCentra', this.noviAdmin, { headers: { Authorization: 'Bearer ' + this.token }} )
+				.get('/korisnici/proveriEmail/' + this.noviAdmin.email, { headers: { Authorization: 'Bearer ' + this.token }} )
 				.then(response => {
-					this.uspesnoDodavanje = response.data;
-					
-					if (this.uspesnoDodavanje) {
-						this.$router.replace({ name: 'adminiCentra', params: { korisnikToken: this.token } });
-					}
+					axios
+					.post('adminiCentra', this.noviAdmin, { headers: { Authorization: 'Bearer ' + this.token }} )
+					.then(response => {
+						this.uspesnoDodavanje = response.data;
+						
+						if (this.uspesnoDodavanje) {
+							this.$router.replace({ name: 'adminiCentra' });
+						}
+					})
+					.catch(error => {
+						console.log(error);
+						this.uspesnoDodavanje = false;
+					});
 				})
 				.catch(error => {
 					console.log(error);
 					this.uspesnoDodavanje = false;
+					this.zauzetEmail = true;
 				});
 			} else {
 				this.uspesnoDodavanje = true;
+				this.zauzetEmail = false;
 			}
 		},
 		proveriLozinke : function () {
@@ -125,6 +139,6 @@ Vue.component("dodavanje-admina-centra", {
 		}
 	},
 	mounted() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 	}
 });

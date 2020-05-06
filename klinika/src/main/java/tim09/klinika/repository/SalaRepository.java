@@ -8,4 +8,5 @@ import tim09.klinika.model.Sala;
 
 public interface SalaRepository extends JpaRepository<Sala, Long> {
 
+	Sala findByBroj(int broj);
 }

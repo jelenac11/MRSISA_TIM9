@@ -7,6 +7,7 @@ public class StavkaSifrarnikaDTO {
 	private Long id;
 	private String sifra;
 	private String naziv;
+	private String tipSifre;
 
 	public StavkaSifrarnikaDTO() {
 
@@ -16,6 +17,15 @@ public class StavkaSifrarnikaDTO {
 		this.id = s.getId();
 		this.sifra = s.getSifra();
 		this.naziv = s.getNaziv();
+		this.tipSifre = s.getTipSifre();
+	}
+
+	public String getTipSifre() {
+		return tipSifre;
+	}
+
+	public void setTipSifre(String tipSifre) {
+		this.tipSifre = tipSifre;
 	}
 
 	public Long getId() {

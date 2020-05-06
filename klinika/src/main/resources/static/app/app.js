@@ -4,7 +4,8 @@ const Sale = { template: '<sale></sale>' }
 const Lekari = { template: '<lekari></lekari>' }
 const MedSestre= { template: '<medSestre></medSestre>'}
 const Pacijenti = { template: '<pacijenti></pacijenti>' }
-const Sifrarnici = {template: '<sifrarnici></sifrarnici>'}
+const SifrarnikLekova = {template: '<sifrarnik-lekova></sifrarnik-lekova>'}
+const SifrarnikDijagnoza = {template: '<sifrarnik-dijagnoza></sifrarnik-dijagnoza>'}
 const AdminiKlinike = { template: '<admini-klinike></admini-klinike>' }
 const AdminiCentra = { template: '<admini-centra></admini-centra>' }
 const KlinikeAdmin = { template: '<klinike-admin></klinike-admin>' }
@@ -12,6 +13,9 @@ const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
 const DodavanjeLekara = { template: '<dodavanje-lekara></dodavanje-lekara>' }
+const DodavanjeSifreLeka = { template: '<dodavanje-sifre-leka></dodavanje-sifre-leka>' }
+const DodavanjeSifreDijagnoze = { template: '<dodavanje-sifre-dijagnoze></dodavanje-sifre-dijagnoze>' }
+const DodavanjePopusta = { template: '<dodavanje-popusta></dodavanje-popusta>' }
 const DodavanjeMedSestara = { template: '<dodavanje-medSestara></dodavanje-medSestara>'}
 const DodavanjeKlinike = { template: '<dodavanje-klinike></dodavanje-klinike>' }
 const DodavanjeAdminaKlinike = { template: '<dodavanje-admina-klinike></dodavanje-admina-klinike>' }
@@ -20,6 +24,7 @@ const ZahtjeviZaGodisnjim = {template: '<zahtjevGodisnji></zahtjevGodisnji>'}
 const DodavanjeTipaPregleda = {template: '<dodavanje-tipaPregleda></dodavanje-tipaPregleda>'}
 const DodavanjeSifrarnika = {template: '<dodavanje-sifrarnika></dodavanje-sifrarnika>'}
 const TipoviPregleda = {template: '<tipoviPregleda></tipoviPregleda>'}
+const Cenovnik = { template: '<cenovnik></cenovnik>' }
 const Registracija = {template: '<registracija></registracija>'}
 const PotvrdaRegistracije = {template: '<potvrda-registracije></potvrda-registracije>'}
 const ZahteviRegistracija = {template: '<zahtevi-registracija></zahtevi-registracija>'}
@@ -81,9 +86,14 @@ const router = new VueRouter({
 		component: KlinikeAdmin
 	},
 	{
-		path: '/sifrarnici',
-		name: 'sifrarnici',
-		component: Sifrarnici
+		path: '/sifrarnikLekova',
+		name: 'sifrarnikLekova',
+		component: SifrarnikLekova
+	},
+	{
+		path: '/sifrarnikDijagnoza',
+		name: 'sifrarnikDijagnoza',
+		component: SifrarnikDijagnoza
 	},
 	{
 		path: '/zdravstveniKarton',
@@ -134,6 +144,26 @@ const router = new VueRouter({
 		path: '/dodavanjeTipaPregleda',
 		name: 'dodavanjeTipaPregleda',
 		component: DodavanjeTipaPregleda
+	},
+	{
+		path: '/dodavanjePopusta',
+		name: 'dodavanjePopusta',
+		component: DodavanjePopusta
+	},
+	{
+		path: '/dodavanjeSifreLeka',
+		name: 'dodavanjeSifreLeka',
+		component: DodavanjeSifreLeka
+	},
+	{
+		path: '/dodavanjeSifreDijagnoze',
+		name: 'dodavanjeSifreDijagnoze',
+		component: DodavanjeSifreDijagnoze
+	},
+	{
+		path: '/cenovnik',
+		name: 'cenovnik',
+		component: Cenovnik
 	},
 	{
 		path: '/registracija',

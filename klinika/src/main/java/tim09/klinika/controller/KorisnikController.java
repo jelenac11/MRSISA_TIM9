@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tim09.klinika.dto.KorisnikDTO;
 import tim09.klinika.model.Autoritet;
 import tim09.klinika.model.Korisnik;
+import tim09.klinika.model.StavkaSifrarnika;
 import tim09.klinika.service.KorisnikService;
 
 @RestController
@@ -39,19 +42,29 @@ public class KorisnikController {
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());
 		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
 		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
-		// TODO: FALI ZA AUTORITI DA SE PREPISE
 
 		korisnik = korisnikService.save(korisnik);
 		return new ResponseEntity<>(new KorisnikDTO(korisnik), HttpStatus.OK);
 	}
 	
 	@PutMapping(value = "dobaviUlogu", consumes = "application/json")
+	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'PACIJENT', 'ADMIN_KLINIKE', 'LEKAR', 'MED_SESTRA')")
 	public ResponseEntity<String> dobaviUlogu(@RequestBody KorisnikDTO korisnikDTO) {
 
 		Korisnik korisnik = korisnikService.findOne(korisnikDTO.getId());
 		Autoritet a = korisnik.getAutoriteti().get(0);
 
 		return new ResponseEntity<>(a.getIme(), HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/proveriEmail/{email}")
+	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'PACIJENT', 'ADMIN_KLINIKE', 'LEKAR', 'MED_SESTRA')")
+	public ResponseEntity<Boolean> proveriEmail(@PathVariable("email") String email) {
+		Korisnik korisnik = korisnikService.findByEmail(email);
+		if (korisnik != null) {
+			return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(false, HttpStatus.CREATED);
 	}
 
 }

@@ -10,14 +10,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.AdminKlinikeDTO;
 import tim09.klinika.dto.KlinikaDTO;
+import tim09.klinika.dto.KorisnikDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Klinika;
+import tim09.klinika.model.Korisnik;
 import tim09.klinika.service.AdminKlinikeService;
 import tim09.klinika.service.AutoritetService;
 import tim09.klinika.service.KlinikaService;
@@ -40,7 +43,7 @@ public class AdminKlinikeController {
 	private AutoritetService autoritetService;
 	
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
+	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'ADMIN_KLINIKE')")
 	public ResponseEntity<AdminKlinikeDTO> ucitajPoId(@PathVariable Long id) {
 		AdminKlinike a = adminKlinikeService.findOne(id);
 		AdminKlinikeDTO ak = new AdminKlinikeDTO(a);
@@ -89,5 +92,29 @@ public class AdminKlinikeController {
 
 		adminKlinike = adminKlinikeService.save(adminKlinike);
 		return new ResponseEntity<>(new AdminKlinikeDTO(adminKlinike), HttpStatus.CREATED);
+	}
+	
+	@PutMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<AdminKlinikeDTO> promeniKorisnika(@RequestBody AdminKlinikeDTO korisnikDTO) {
+
+		AdminKlinike korisnik = adminKlinikeService.findOne(korisnikDTO.getId());
+		if (korisnik == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		korisnik.setAdresa(korisnikDTO.getAdresa());
+		korisnik.setDrzava(korisnikDTO.getDrzava());
+		korisnik.setGrad(korisnikDTO.getGrad());
+		korisnik.setIme(korisnikDTO.getIme());
+		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
+		korisnik.setPrezime(korisnikDTO.getPrezime());
+		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
+		korisnik.setAktiviran(korisnikDTO.isAktiviran());
+		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
+		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
+		korisnik.setKlinika(klinikaService.findByNaziv(korisnikDTO.getKlinika()));
+
+		korisnik = adminKlinikeService.save(korisnik);
+		return new ResponseEntity<>(new AdminKlinikeDTO(korisnik), HttpStatus.OK);
 	}
 }

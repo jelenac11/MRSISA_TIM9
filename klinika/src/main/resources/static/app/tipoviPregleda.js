@@ -3,11 +3,11 @@ Vue.component("tipoviPregleda", {
 		return {
 			ulogovan: {},
 			tipoviPregleda: [],
-			token: "",
 			noviTipPregleda:{},
 			izabraniTipPregleda:{},
 			submitovano : false,
 	    	uspesnaIzmena : true,
+	    	token: "",
 		} 
 	},
 	template: `
@@ -27,54 +27,60 @@ Vue.component("tipoviPregleda", {
 			  		<tr v-for="tipPregleda in tipoviPregleda" data-toggle="modal" data-target="#izmenaTipaPregledaModal"  v-on:click="izaberiTipPregleda(tipPregleda)">
 				      	<td width="30%">{{ tipPregleda.naziv }}</td>
 				      	<td width="50%">{{ tipPregleda.opis }}</td>
-				      	<td width="20%"><button class="btn btn-danger btn-sm" v-on:click="obrisiTipPregleda(tipPregleda)">Ukloni</button></td>
+				      	<td width="20%"><button class="btn btn-danger btn-sm" v-on:click="obrisiTipPregleda(tipPregleda)" id="brisanjeTipa">Ukloni</button></td>
 			    	</tr>
 			  	</tbody>
 			</table>
-			<router-link :to="{ name: 'dodavanjeTipaPregleda', params: { korisnikToken: this.token } }" class="btn btn-primary btn-block btn-lg my-2 p-2" id="dodavanjeTipaPregleda">Dodaj novi tip pregleda</router-link>
+			<router-link :to="{ name: 'dodavanjeTipaPregleda' }" class="btn btn-primary btn-block btn-lg my-2 p-2" id="dodavanjeTipaPregleda">Dodaj novi tip pregleda</router-link>
 		</div>
-		
 		
 		<div class="modal fade" id="izmenaTipaPregledaModal" tabindex="-1" role="dialog">
-		<div class="modal-dialog modal-lg" role="document">
-	    	<div class="modal-content">
-	      		<div class="modal-header">
-	        		<h5 class="modal-title">Podaci o tipu pregleda</h5>
-	        		<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-	      		</div>
-	      		<div class="modal-body">
-	        		<form class="needs-validation mb-4" v-bind:class="{ 'was-validated': submitovano }" novalidate @submit.prevent="izmenaTipaPregleda" id="forma-izmena-tipaPregleda">
-					  	
-					  	<div class="form-row mb-3">
-					  		<div class="col">
-					    	 	<label for="tipPregleda">Naziv tipa pregleda</label>
-								<input type="text" v-model="noviTipPregleda.naziv" class="form-control" v-bind:class="{ 'is-invalid':submitovano}" id="nazivTipaPregleda" placeholder="Naziv tipa pregleda" required>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Uneti naziv tipa pregleda je neispravan.</div>
+			<div class="modal-dialog modal-lg" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<h5 class="modal-title">Podaci o tipu pregleda</h5>
+		        		<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+		      		</div>
+		      		<div class="modal-body">
+		        		<form class="needs-validation mb-4" v-bind:class="{ 'was-validated': submitovano }" novalidate @submit.prevent="izmenaTipaPregleda" id="forma-izmena-tipaPregleda">
+						  	
+						  	<div class="form-row mb-3">
+						  		<div class="col">
+						    	 	<label for="tipPregleda">Naziv tipa pregleda</label>
+									<input type="text" v-model="noviTipPregleda.naziv" class="form-control" v-bind:class="{ 'is-invalid':submitovano}" id="nazivTipaPregleda" placeholder="Naziv tipa pregleda" required>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Uneti naziv tipa pregleda je neispravan.</div>
+								</div>
 							</div>
-						</div>
-					  	<div class="form-row">
-					    	<div class="col">
-					    	 	<label for="inf">Opis</label>
-								<input type="text" v-model="noviTipPregleda.opis" class="form-control" id="opis" placeholder="Opis"></input>
-							</div>
-					  	</div>
-					  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="noviTipPregleda.naziv==izabraniTipPregleda.naziv && noviTipPregleda.opis==izabraniTipPregleda.opis">
-					  		Sačuvaj izmene
-					  	</button>
-					</form>
-	      		</div>
-	      		<div class="modal-footer">
-	        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
-	      		</div>
-	    	</div>
+						  	<div class="form-row">
+						    	<div class="col">
+						    	 	<label for="inf">Opis</label>
+									<input type="text" v-model="noviTipPregleda.opis" class="form-control" id="opis" placeholder="Opis"></input>
+								</div>
+						  	</div>
+						  	<div class="form-row">
+						    	<div class="col">
+						    	 	<label for="cena">Cena</label>
+									<input type="number" v-model="noviTipPregleda.cena" min="0" step="1" class="form-control" id="cena" placeholder="Cena">
+									<div class="invalid-feedback" id="izmenaInvalid">Unesite ispravnu cenu.</div>
+								</div>
+						  	</div>
+						  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="noviTipPregleda.naziv==izabraniTipPregleda.naziv && noviTipPregleda.opis==izabraniTipPregleda.opis && noviTipPregleda.cena==izabraniTipPregleda.cena">
+						  		Sačuvaj izmene
+						  	</button>
+						</form>
+		      		</div>
+		      		<div class="modal-footer">
+		        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+		      		</div>
+		    	</div>
+			</div>
 		</div>
-	</div>
 		
 	</div>
 	`
 	,
 	created() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 		axios
 		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => { 
@@ -82,7 +88,6 @@ Vue.component("tipoviPregleda", {
         	this.dobaviSve();
         })
         .catch(function (error) { console.log(error); });
-		
 	},
 	methods:{
 		obrisiTipPregleda: function(tipPregleda){
@@ -110,7 +115,6 @@ Vue.component("tipoviPregleda", {
             .then(response => (this.tipoviPregleda = response.data))
             .catch(function (error) { console.log(error); });
 		},
-		
 		izmenaTipaPregleda : function () {
 			this.submitovano = true;
 			if (document.getElementById('forma-izmena-tipaPregleda').checkValidity() === true) {
@@ -121,11 +125,15 @@ Vue.component("tipoviPregleda", {
 					this.uspesnaIzmena = response.data;
 					if (this.uspesnaIzmena) {
 						toast("Uspešno izmenjen tip pregleda "+ this.noviTipPregleda.naziv + ".");
+						this.izabraniTipPregleda = JSON.parse(JSON.stringify(this.noviTipPregleda));
 						this.dobaviSve();
+						// ugasi modal
 					}
 					else{
 						toast("Tip pregleda nije moguce izmeniti.");
+						this.izabraniTipPregleda = JSON.parse(JSON.stringify(this.noviTipPregleda));
 						this.dobaviSve();
+						// ugasi modal
 					}
 				})
 				.catch(error => {

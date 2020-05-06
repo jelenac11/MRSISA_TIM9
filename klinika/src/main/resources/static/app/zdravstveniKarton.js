@@ -61,7 +61,7 @@ Vue.component("zdravstveni-karton", {
 	`
 	,
 	created() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 	},
 	mounted() {
 		axios

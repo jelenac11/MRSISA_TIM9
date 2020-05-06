@@ -6,4 +6,5 @@ import tim09.klinika.model.AdminKlinike;
 
 public interface AdminKlinikeRepository extends JpaRepository<AdminKlinike, Long> {
 
+	AdminKlinike findByEmail( String email );
 }

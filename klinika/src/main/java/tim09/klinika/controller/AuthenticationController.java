@@ -62,8 +62,22 @@ public class AuthenticationController {
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
 
 		Korisnik ulogovan = userDetailsService.findByEmail(trenutniKorisnik.getName());
+		System.out.println(trenutniKorisnik.getName());
 		KorisnikDTO korisnikDTO = new KorisnikDTO(ulogovan);
 		return new ResponseEntity<>(korisnikDTO, HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "promeniLozinku", consumes = "application/json")
+	public ResponseEntity<KorisnikDTO> promeniLozinku(@RequestBody KorisnikDTO korisnikDTO) {
+
+		Korisnik korisnik = userDetailsService.findOne(korisnikDTO.getId());
+		if (korisnik == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		korisnik.setLozinka(userDetailsService.encodePassword(korisnikDTO.getLozinka()));
+
+		korisnik = userDetailsService.save(korisnik);
+		return new ResponseEntity<>(new KorisnikDTO(korisnik), HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/login", consumes = "application/json")

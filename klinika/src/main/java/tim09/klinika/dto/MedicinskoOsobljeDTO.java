@@ -12,8 +12,8 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 
 	private String klinika;
 	private ArrayList<OdsustvoDTO> odsustva;
-	private Date pocetakRadnogVremena;
-	private Date krajRadnogVremena;
+	private long pocetakRadnogVremena;
+	private long krajRadnogVremena;
 
 	public MedicinskoOsobljeDTO() {
 
@@ -23,12 +23,12 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 		super(osoblje);
 		this.klinika = osoblje.getKlinika().getNaziv();
 		this.odsustva = new ArrayList<OdsustvoDTO>();
-		this.pocetakRadnogVremena = new Date(osoblje.getPocetakRadnogVremena());
-		this.krajRadnogVremena = new Date(osoblje.getKrajRadnogVremena());
+		this.pocetakRadnogVremena = osoblje.getPocetakRadnogVremena();
+		this.krajRadnogVremena = osoblje.getKrajRadnogVremena();
 	}
 
-	public MedicinskoOsobljeDTO(Klinika klinika, Set<Odsustvo> odsustva, Date pocetakRadnogVremena,
-			Date krajRadnogVremena) {
+	public MedicinskoOsobljeDTO(Klinika klinika, Set<Odsustvo> odsustva, long pocetakRadnogVremena,
+			long krajRadnogVremena) {
 		super();
 		this.klinika = klinika.getNaziv();
 		this.odsustva = new ArrayList<OdsustvoDTO>();
@@ -53,19 +53,19 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 		this.klinika = klinika;
 	}
 
-	public Date getPocetakRadnogVremena() {
+	public long getPocetakRadnogVremena() {
 		return pocetakRadnogVremena;
 	}
 
-	public void setPocetakRadnogVremena(Date pocetakRadnogVremena) {
+	public void setPocetakRadnogVremena(long pocetakRadnogVremena) {
 		this.pocetakRadnogVremena = pocetakRadnogVremena;
 	}
 
-	public Date getKrajRadnogVremena() {
+	public long getKrajRadnogVremena() {
 		return krajRadnogVremena;
 	}
 
-	public void setKrajRadnogVremena(Date krajRadnogVremena) {
+	public void setKrajRadnogVremena(long krajRadnogVremena) {
 		this.krajRadnogVremena = krajRadnogVremena;
 	}
 

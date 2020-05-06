@@ -6,4 +6,5 @@ import tim09.klinika.model.StavkaSifrarnika;
 
 public interface StavkaSifrarnikaRepository extends JpaRepository<StavkaSifrarnika, Long> {
 
+	StavkaSifrarnika findBySifra(String sifra);
 }

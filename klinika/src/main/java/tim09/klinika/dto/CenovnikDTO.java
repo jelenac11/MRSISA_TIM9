@@ -3,6 +3,7 @@ package tim09.klinika.dto;
 import java.util.ArrayList;
 
 import tim09.klinika.model.Cenovnik;
+import tim09.klinika.model.StavkaCenovnika;
 
 public class CenovnikDTO {
 
@@ -13,8 +14,12 @@ public class CenovnikDTO {
 		
 	}
 	
-	public CenovnikDTO(Cenovnik cenovnik) {
-		// TODO Auto-generated constructor stub
+	public CenovnikDTO(Cenovnik c) {
+		this.id = c.getId();
+		this.stavke = new ArrayList<StavkaCenovnikaDTO>();
+		for (StavkaCenovnika sc : c.getStavke()) {
+			this.stavke.add(new StavkaCenovnikaDTO(sc));
+		}
 	}
 
 	public Long getId() {

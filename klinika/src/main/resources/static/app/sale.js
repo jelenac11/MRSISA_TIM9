@@ -25,13 +25,13 @@ Vue.component("sale", {
 			    	</tr>
 			  	</tbody>
 			</table>
-			<router-link :to="{ name: 'dodavanjeSale', params: { korisnikToken: this.token } }" class="btn btn-primary btn-block btn-lg my-2 p-2" id="dodavanjeSale">Dodaj novu salu</router-link>
+			<router-link :to="{ name: 'dodavanjeSale' }" class="btn btn-primary btn-block btn-lg my-2 p-2" id="dodavanjeSale">Dodaj novu salu</router-link>
 		</div>
 	</div>
 	`
 	,
 	created() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 		axios
         .get('/sale/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => (this.sale = response.data))

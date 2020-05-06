@@ -7,8 +7,9 @@ import tim09.klinika.model.Popust;
 public class PopustDTO {
 
 	private Long id;
-	private Date pocetak;
-	private Date kraj;
+	private String tipPregleda;
+	private long pocetak;
+	private long kraj;
 	private double procenat;
 
 	public PopustDTO() {
@@ -16,7 +17,19 @@ public class PopustDTO {
 	}
 
 	public PopustDTO(Popust p) {
-		// TODO Auto-generated constructor stub
+		this.id = p.getId();
+		this.tipPregleda = p.getStavkaCenovnika().getTipPregleda().getNaziv();
+		this.pocetak = p.getPocetak();
+		this.kraj = p.getKraj();
+		this.procenat = p.getProcenat();
+	}
+
+	public String getTipPregleda() {
+		return tipPregleda;
+	}
+
+	public void setTipPregleda(String tipPregleda) {
+		this.tipPregleda = tipPregleda;
 	}
 
 	public Long getId() {
@@ -27,19 +40,19 @@ public class PopustDTO {
 		this.id = id;
 	}
 
-	public Date getPocetak() {
+	public long getPocetak() {
 		return pocetak;
 	}
 
-	public void setPocetak(Date pocetak) {
+	public void setPocetak(long pocetak) {
 		this.pocetak = pocetak;
 	}
 
-	public Date getKraj() {
+	public long getKraj() {
 		return kraj;
 	}
 
-	public void setKraj(Date kraj) {
+	public void setKraj(long kraj) {
 		this.kraj = kraj;
 	}
 

@@ -4,7 +4,8 @@ Vue.component("dodavanje-tipaPregleda", {
 			noviTipPregleda : {
 				naziv: "",
 				opis: "",
-				klinika: null
+				klinika: "",
+				cena: 0,
 			},
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
@@ -25,6 +26,13 @@ Vue.component("dodavanje-tipaPregleda", {
 							<div class="invalid-feedback" id="dodavanjeInvalid">Uneti naziv tipa pregleda je neispravan ili zauzet.</div>
 						</div>
 					</div>
+					<div class="form-row">
+				    	<div class="col">
+				    	 	<label for="cena">Cena</label>
+							<input type="number" v-model="noviTipPregleda.cena" min="0" step="1" class="form-control" id="cena" placeholder="Cena">
+							<div class="invalid-feedback" id="izmenaInvalid">Unesite ispravnu cenu.</div>
+						</div>
+				  	</div>
 				  	<div class="form-row">
 				    	<div class="col">
 				    	 	<label for="inf">Opis</label>
@@ -35,7 +43,7 @@ Vue.component("dodavanje-tipaPregleda", {
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ name: 'tipoviPregleda', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'tipoviPregleda' }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -70,7 +78,7 @@ Vue.component("dodavanje-tipaPregleda", {
 								this.uspesnoDodavanje = response.data;
 								
 								if (this.uspesnoDodavanje) {
-									this.$router.replace({ name: 'tipoviPregleda', params: { korisnikToken: this.token } });
+									this.$router.replace({ name: 'tipoviPregleda' });
 								}
 							})
 							.catch(error => {
@@ -90,6 +98,6 @@ Vue.component("dodavanje-tipaPregleda", {
 		}
 	},
 	mounted() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 	}
 });

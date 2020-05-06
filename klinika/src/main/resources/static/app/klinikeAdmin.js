@@ -26,13 +26,13 @@ Vue.component("klinike-admin", {
 			    	</tr>
 			  	</tbody>
 			</table>
-			<router-link :to="{ name: 'dodavanjeKlinike', params: { korisnikToken: this.token } }" class="btn btn-primary btn-block btn-lg my-2 p-2" id="dodavanjeKlinike">Dodaj novu kliniku</router-link>
+			<router-link :to="{ name: 'dodavanjeKlinike' }" class="btn btn-primary btn-block btn-lg my-2 p-2" id="dodavanjeKlinike">Dodaj novu kliniku</router-link>
 		</div>
 	</div>
 	`
 	,
 	created() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 		axios
         .get('klinike/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => (this.klinike = response.data))

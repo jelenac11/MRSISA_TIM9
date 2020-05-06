@@ -25,6 +25,10 @@ public class StavkaCenovnikaService {
 	@Autowired
 	private PopustRepository popustRepository;
 
+	public StavkaCenovnika findByTipPregleda(TipPregleda tp) {
+		return stavkaCenovnikaRepository.findByTipPregleda(tp);
+	}
+	
 	public StavkaCenovnika findOne(Long id) {
 		return stavkaCenovnikaRepository.findById(id).orElseGet(null);
 	}

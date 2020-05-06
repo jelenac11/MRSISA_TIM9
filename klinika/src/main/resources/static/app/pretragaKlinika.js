@@ -21,6 +21,7 @@ Vue.component("pretraga-klinika", {
 	<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		<div class="tab-pane fade show active" id="pills-pk" role="tabpanel" >
+			<p class="m-1 ml-3 mt-2 font-weight-normal">*Za pretragu klinika je neophodno uneti tip pregleda i datum.</p>
 			<div class="input-group">
 			  	<span class="input-group-btn">
 			    	<a class="btn btn-secondary m-2" data-toggle="collapse" href="#filteriKlinike" role="button">
@@ -56,7 +57,7 @@ Vue.component("pretraga-klinika", {
 					    	 	<label for="doocena">Do</label>
 								<input type="number" v-model="ocenaGornja" class="form-control" id="doocena" placeholder="Do">
 							</div>
-							<div class="mt-5 mr-3 custom-control custom-checkbox">
+							<div class="mt-5 ml-4 mr-3 custom-control custom-checkbox">
 					  			<input type="checkbox" class="custom-control-input" id="cena" v-model="cenaFilter">
 					  			<label class="custom-control-label" for="cena"><font size="4">Cena</font></label>
 							</div>
@@ -78,7 +79,7 @@ Vue.component("pretraga-klinika", {
 				      	<th scope="col" width="30%">Naziv</th>
 				      	<th scope="col" width="30%">Lokacija</th>
 				      	<th scope="col" width="20%">Ocena</th>
-				      	<th scope="col" width="20%">Cena pregleda</th>
+				      	<th id="cenaKolona" scope="col" width="20%">Cena pregleda</th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
@@ -86,7 +87,7 @@ Vue.component("pretraga-klinika", {
 				      	<td width="30%">{{ kl.naziv }}</td>
 				      	<td width="30%">{{ kl.lokacija }}</td>
 				      	<td width="20%">{{ kl.ocena }}</td>
-				      	<td width="20%">{{ kl.cenaPregleda }}</td>
+				      	<td id="cenaKolonica" width="20%">{{ prikazi(kl.cenaPregleda) }}</td>
 			    	</tr>
 			  	</tbody>
 			</table>
@@ -137,11 +138,18 @@ Vue.component("pretraga-klinika", {
 			if (this.tip != "" && this.datum != null) {
 	    		axios
 	    		.put('/stavkeCenovnika/dobaviCenuPregleda', { id: klinika.id, datum: timestamp, tipPregleda: this.tip}, { headers: { Authorization: 'Bearer ' + this.token }})
-	    		.then(response => {this.$set(this.klinike[indeks], 'cenaPregleda', response.data); console.log("cena za " + this.tip + " za kliniku " + klinika.id + " je " + klinika.cenaPregleda);})
+	    		.then(response => { this.$set(this.klinike[indeks], 'cenaPregleda', response.data); })
 	            .catch(function (error) { console.log(error); })
 	    	} else {
 	    		this.$set(this.klinike[indeks], 'cenaPregleda', 0);
 	    	}
+		},
+		prikazi : function(cena) {
+			if (this.tip != "" && this.datum != null) {
+				return cena;
+			} else {
+				return "";
+			}
 		}
 	},
 	
@@ -150,10 +158,12 @@ Vue.component("pretraga-klinika", {
 	    	return this.klinike.filter(klinika => {
 	    		this.dobaviCenu(klinika, this.klinike.indexOf(klinika));
 	    		if (this.tip != "" && this.datum != null) {
+	    			$("#cenaKolona").text("Cena pregleda");
 					this.zadovoljavaDatumITip(klinika);
 					return klinika.naziv.toLowerCase().includes(this.naziv.toLowerCase()) && klinika.lokacija.toLowerCase().includes(this.lokacija.toLowerCase()) &&
 					this.zadovoljavaOcenu(klinika) && this.zadovoljavaCenu(klinika) && klinika.zadovoljava;
 	    		} else {
+	    			$("#cenaKolona").text("");
 	    			return true;
 	    		}
 	    	})
@@ -161,7 +171,7 @@ Vue.component("pretraga-klinika", {
 	},
 	
 	created() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 		axios
         .get('/klinike/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => (this.klinike = response.data))

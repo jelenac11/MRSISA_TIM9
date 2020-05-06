@@ -14,83 +14,89 @@ Vue.component('navig-bar', {
 			        <ul class="nav nav-pills" role="tablist">
 
 			        	<li v-if="this.uloga == 'ROLE_PACIJENT'" class="nav-item">
-							<router-link :to="{ name: 'pretragaKlinika', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Klinike</router-link>
+							<router-link :to="{ name: 'pretragaKlinika' }" data-toggle="pill" class="nav-link">Klinike</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_PACIJENT'" class="nav-item">
-							<router-link :to="{ name: 'istorijaPregleda', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Istorija pregleda</router-link>
+							<router-link :to="{ name: 'istorijaPregleda' }" data-toggle="pill" class="nav-link">Istorija pregleda</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_PACIJENT'" class="nav-item">
-							<router-link :to="{ name: 'zdravstveniKarton', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zdravstveni karton</router-link>
+							<router-link :to="{ name: 'zdravstveniKarton' }" data-toggle="pill" class="nav-link">Zdravstveni karton</router-link>
 						</li>
 						
 						<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
-							<router-link :to="{ name: 'pacijenti', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Pacijenti</router-link>
+							<router-link :to="{ name: 'pacijenti' }" data-toggle="pill" class="nav-link">Pacijenti</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
-							<router-link :to="{ name: 'zapocniPregled', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Započni pregled</router-link>
+							<router-link :to="{ name: 'zapocniPregled' }" data-toggle="pill" class="nav-link">Započni pregled</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
-							<router-link :to="{ name: 'radniKalendar', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Radni kalendar</router-link>
+							<router-link :to="{ name: 'radniKalendar' }" data-toggle="pill" class="nav-link">Radni kalendar</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
-							<router-link :to="{ name: 'zahtevOdsustvo', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Odsustvo</router-link>
+							<router-link :to="{ name: 'zahtevOdsustvo' }" data-toggle="pill" class="nav-link">Odsustvo</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
-							<router-link :to="{ name: 'zakazivanjeLekar', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zakaži pregled</router-link>
+							<router-link :to="{ name: 'zakazivanjeLekar' }" data-toggle="pill" class="nav-link">Zakaži pregled</router-link>
 						</li>
 						
 						<li v-if="this.uloga == 'ROLE_MED_SESTRA'" class="nav-item">
-							<router-link :to="{ name: 'pacijenti', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Pacijenti</router-link>
+							<router-link :to="{ name: 'pacijenti' }" data-toggle="pill" class="nav-link">Pacijenti</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_MED_SESTRA'" class="nav-item">
-							<router-link :to="{ name: 'radniKalendar', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Radni kalendar</router-link>
+							<router-link :to="{ name: 'radniKalendar' }" data-toggle="pill" class="nav-link">Radni kalendar</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_MED_SESTRA'" class="nav-item">
-							<router-link :to="{ name: 'zahtevOdsustvo', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Odsustvo</router-link>
+							<router-link :to="{ name: 'zahtevOdsustvo' }" data-toggle="pill" class="nav-link">Odsustvo</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_MED_SESTRA'" class="nav-item">
-							<router-link :to="{ name: 'overavanjeRecepata', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Overi recepte</router-link>
+							<router-link :to="{ name: 'overavanjeRecepata' }" data-toggle="pill" class="nav-link">Overi recepte</router-link>
 						</li>
 						
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
-							<router-link :to="{ name: 'zahteviRegistracija', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zahtevi za registraciju</router-link>
+							<router-link :to="{ name: 'zahteviRegistracija' }" data-toggle="pill" class="nav-link">Zahtevi za registraciju</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
-							<router-link :to="{ name: 'sifrarnici', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Šifrarnici</router-link>
+							<router-link :to="{ name: 'sifrarnikLekova' }" data-toggle="pill" class="nav-link">Šifrarnik lekova</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
-							<router-link :to="{ name: 'klinikeAdmin', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Klinike</router-link>
+							<router-link :to="{ name: 'sifrarnikDijagnoza' }" data-toggle="pill" class="nav-link">Šifrarnik dijagnoza</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
-							<router-link :to="{ name: 'adminiKlinike', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Admini klinike</router-link>
+							<router-link :to="{ name: 'klinikeAdmin' }" data-toggle="pill" class="nav-link">Klinike</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
-							<router-link :to="{ name: 'adminiCentra', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Admini centra</router-link>
+							<router-link :to="{ name: 'adminiKlinike' }" data-toggle="pill" class="nav-link">Admini klinike</router-link>
+						</li>
+						<li v-if="this.uloga == 'ROLE_ADMIN_KLINICKOG_CENTRA'" class="nav-item">
+							<router-link :to="{ name: 'adminiCentra' }" data-toggle="pill" class="nav-link">Admini centra</router-link>
 						</li>
 						
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'klinika', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Klinika</router-link>
+							<router-link :to="{ name: 'klinika' }" data-toggle="pill" class="nav-link">Klinika</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'termini', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Termini</router-link>
+							<router-link :to="{ name: 'cenovnik' }" data-toggle="pill" class="nav-link">Cenovnik</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'poslovanje', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Poslovanje</router-link>
+							<router-link :to="{ name: 'termini' }" data-toggle="pill" class="nav-link">Termini</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'sale', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Sale</router-link>
+							<router-link :to="{ name: 'poslovanje' }" data-toggle="pill" class="nav-link">Poslovanje</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'tipoviPregleda', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Tipovi pregleda</router-link>
+							<router-link :to="{ name: 'sale' }" data-toggle="pill" class="nav-link">Sale</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'lekari', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Lekari</router-link>
+							<router-link :to="{ name: 'tipoviPregleda' }" data-toggle="pill" class="nav-link">Tipovi pregleda</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'medSestre', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Medicinske sestre</router-link>
+							<router-link :to="{ name: 'lekari' }" data-toggle="pill" class="nav-link">Lekari</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'zahtjevi', params: { korisnikToken: this.token }}" data-toggle="pill" class="nav-link">Zahtevi odsustvo</router-link>
+							<router-link :to="{ name: 'medSestre' }" data-toggle="pill" class="nav-link">Medicinske sestre</router-link>
+						</li>
+						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
+							<router-link :to="{ name: 'zahtjevi' }" data-toggle="pill" class="nav-link">Zahtevi odsustvo</router-link>
 						</li>
 						
 					</ul>
@@ -163,7 +169,7 @@ Vue.component('navig-bar', {
 			      		</div>
 			      		<div class="modal-footer">
 			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
-			        		<router-link :to="{ name: 'izmenaProfila', params: { korisnikToken: this.token } }" class="btn btn-primary" data-dismiss="modal">Izmena podataka</router-link>
+			        		<router-link :to="{ name: 'izmenaProfila' }" class="btn btn-primary" data-dismiss="modal">Izmena podataka</router-link>
 			      		</div>
 			    	</div>
 				</div>
@@ -173,6 +179,7 @@ Vue.component('navig-bar', {
 	,
 	methods : {
 		odjaviSe : function () {
+			localStorage.removeItem("token");
 			this.$router.replace({ path: '/' });
 		},
 	},

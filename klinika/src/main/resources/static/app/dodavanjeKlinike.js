@@ -8,6 +8,7 @@ Vue.component("dodavanje-klinike", {
 			},
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
+	    	zauzetoIme : false,
 	    	token : "",
 	    }
 	},
@@ -31,11 +32,14 @@ Vue.component("dodavanje-klinike", {
 				    		<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli lokaciju.</div>
 				    	</div>
 				  	</div>
+				  	<div v-if=zauzetoIme class="alert alert-danger" role="alert">
+						<p class="mb-0"><b>Greška!</b> Već postoji klinika sa unetim imenom. Pokušajte ponovo.</p>
+					</div>
 				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ name: 'klinikeAdmin', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'klinikeAdmin' }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -46,24 +50,34 @@ Vue.component("dodavanje-klinike", {
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-kliniku').checkValidity() === true) {
 				axios
-				.post('klinike', this.novaKlinika, { headers: { Authorization: 'Bearer ' + this.token }} )
+				.get('/klinike/proveriIme/' + this.novaKlinika.naziv, { headers: { Authorization: 'Bearer ' + this.token }} )
 				.then(response => {
-					this.uspesnoDodavanje = response.data;
-					
-					if (this.uspesnoDodavanje) {
-						this.$router.replace({ name: 'klinikeAdmin', params: { korisnikToken: this.token } });
-					}
+					axios
+					.post('klinike', this.novaKlinika, { headers: { Authorization: 'Bearer ' + this.token }} )
+					.then(response => {
+						this.uspesnoDodavanje = response.data;
+						
+						if (this.uspesnoDodavanje) {
+							this.$router.replace({ name: 'klinikeAdmin' });
+						}
+					})
+					.catch(error => {
+						console.log(error);
+						this.uspesnoDodavanje = false;
+					});
 				})
 				.catch(error => {
 					console.log(error);
 					this.uspesnoDodavanje = false;
+					this.zauzetoIme = true;
 				});
 			} else {
 				this.uspesnoDodavanje = true;
+				this.zauzetoIme = false;
 			}
 		},
 	},
 	mounted() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 	}
 });

@@ -14,6 +14,10 @@ public class SifrarnikService {
 	@Autowired
 	private SifrarnikRepository sifrarnikRepository;
 
+	public Sifrarnik findByTipSifrarnika(String tip) {
+		return sifrarnikRepository.findByTipSifrarnika(tip);
+	}
+	
 	public Sifrarnik findOne(Long id) {
 		return sifrarnikRepository.findById(id).orElseGet(null);
 	}

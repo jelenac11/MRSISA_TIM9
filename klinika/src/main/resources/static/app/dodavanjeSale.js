@@ -7,6 +7,7 @@ Vue.component("dodavanje-sale", {
 			},
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
+	    	zauzetBroj : false,
 	    	token : "",
 	    }
 	},
@@ -30,11 +31,14 @@ Vue.component("dodavanje-sale", {
 							<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli naziv sale.</div>
 						</div>
 				  	</div>
+				  	<div v-if=zauzetBroj class="alert alert-danger" role="alert">
+						<p class="mb-0"><b>Greška!</b> Već postoji sala sa unetim brojem. Pokušajte ponovo.</p>
+					</div>
 				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Dodaj
 				  	</button>
 				</form>
-				<router-link :to="{ name: 'sale', params: { korisnikToken: this.token } }" class="btn btn-secondary">Nazad</router-link>
+				<router-link :to="{ name: 'sale' }" class="btn btn-secondary">Nazad</router-link>
 			</div>
 		</div>
 	</div>
@@ -45,24 +49,34 @@ Vue.component("dodavanje-sale", {
 			this.submitovano = true;
 			if (document.getElementById('forma-dodaj-salu').checkValidity() === true) {
 				axios
-				.post('/sale', this.novaSala, { headers: { Authorization: 'Bearer ' + this.token }} )
+				.get('/sale/proveriBroj/' + this.novaSala.broj, { headers: { Authorization: 'Bearer ' + this.token }} )
 				.then(response => {
-					this.uspesnoDodavanje = response.data;
-					
-					if (this.uspesnoDodavanje) {
-						this.$router.replace({ name: 'sale', params: { korisnikToken: this.token } });
-					}
+					axios
+					.post('/sale', this.novaSala, { headers: { Authorization: 'Bearer ' + this.token }} )
+					.then(response => {
+						this.uspesnoDodavanje = response.data;
+						
+						if (this.uspesnoDodavanje) {
+							this.$router.replace({ name: 'sale' });
+						}
+					})
+					.catch(error => {
+						console.log(error);
+						this.uspesnoDodavanje = false;
+					});
 				})
 				.catch(error => {
 					console.log(error);
 					this.uspesnoDodavanje = false;
+					this.zauzetBroj = true;
 				});
 			} else {
 				this.uspesnoDodavanje = true;
+				this.zauzetBroj = false;
 			}
 		}
 	},
 	mounted() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 	}
 });

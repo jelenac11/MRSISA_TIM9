@@ -75,4 +75,28 @@ public class StavkaSifrarnika {
 	public void setTipSifre(String tipSifre) {
 		this.tipSifre = tipSifre;
 	}
+
+	public Set<Izvestaj> getIzvestaji() {
+		return izvestaji;
+	}
+
+	public void setIzvestaji(Set<Izvestaj> izvestaji) {
+		this.izvestaji = izvestaji;
+	}
+
+	public Set<Recept> getRecepti() {
+		return recepti;
+	}
+
+	public void setRecepti(Set<Recept> recepti) {
+		this.recepti = recepti;
+	}
+
+	public Sifrarnik getSifrarnik() {
+		return sifrarnik;
+	}
+
+	public void setSifrarnik(Sifrarnik sifrarnik) {
+		this.sifrarnik = sifrarnik;
+	}
 }

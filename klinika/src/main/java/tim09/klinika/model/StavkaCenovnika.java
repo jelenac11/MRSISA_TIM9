@@ -76,5 +76,13 @@ public class StavkaCenovnika {
 	public void setPopusti(Set<Popust> popusti) {
 		this.popusti = popusti;
 	}
+	
+	public Cenovnik getCenovnik() {
+		return cenovnik;
+	}
+
+	public void setCenovnik(Cenovnik cenovnik) {
+		this.cenovnik = cenovnik;
+	}
 
 }

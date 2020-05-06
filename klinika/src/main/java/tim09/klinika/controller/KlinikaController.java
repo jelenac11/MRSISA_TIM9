@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.KlinikaDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
+import tim09.klinika.model.Cenovnik;
 import tim09.klinika.model.Klinika;
+import tim09.klinika.model.Korisnik;
 import tim09.klinika.service.KlinikaService;
 
 @RestController
@@ -54,6 +56,7 @@ public class KlinikaController {
 		
 		klinika.setNaziv(klinikaDTO.getNaziv());
 		klinika.setLokacija(klinikaDTO.getLokacija());
+		klinika.setCenovnik(new Cenovnik());
 
 		klinika = klinikaService.save(klinika);
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
@@ -63,6 +66,16 @@ public class KlinikaController {
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<Boolean> proveriTipZaKliniku(@RequestBody PretragaKlinikeDTO pretragaKlinikeDTO) {
 		return new ResponseEntity<>(klinikaService.proveriTip(pretragaKlinikeDTO), HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/proveriIme/{ime}")
+	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
+	public ResponseEntity<Boolean> proveriIme(@PathVariable("ime") String ime) {
+		Klinika klinika = klinikaService.findByNaziv(ime);
+		if (klinika != null) {
+			return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(false, HttpStatus.CREATED);
 	}
 	
 }

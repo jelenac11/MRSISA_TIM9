@@ -61,7 +61,7 @@ Vue.component("zahtjevGodisnji",{
 	`
 	,
 	created(){
-    	this.token = this.$route.params.korisnikToken;
+    	this.token = localStorage.getItem("token");
     	axios
 		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => { 

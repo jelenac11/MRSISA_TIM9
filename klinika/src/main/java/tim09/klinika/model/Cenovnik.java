@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Cenovnik {
@@ -22,6 +23,9 @@ public class Cenovnik {
 
 	@OneToMany(mappedBy = "cenovnik", cascade = CascadeType.ALL)
 	private Set<StavkaCenovnika> stavke;
+	
+	@OneToOne(mappedBy = "cenovnik", fetch = FetchType.LAZY)
+	private Klinika klinika;
 
 	public Cenovnik() {
 

@@ -135,6 +135,8 @@ Vue.component("registracija", {
 									this.porukaUspeha = true;
 									this.postojiEmail = false;
 									this.postojiJbo = false;
+									this.submitovano = false;
+									this.isprazniPolja(); 
 								})
 								.catch(function (error) { console.log(error); });
 							}
@@ -146,6 +148,7 @@ Vue.component("registracija", {
 			} else {
 				this.postojiEmail = false;
 				this.postojiJbo = false;
+				this.porukaUspeha = false;
 			}
 		},
 		proveriLozinke : function () {
@@ -160,6 +163,22 @@ Vue.component("registracija", {
 				this.poklapajuSeLozinke = true;
 				this.korisnik.lozinka = this.novaLozinka;
 			}
+		},
+		isprazniPolja : function () {
+			this.korisnik = {
+	    		email : "",
+	    		lozinka : "",
+	    		ime : "",
+	    		prezime : "",
+	    		adresa : "",
+	    		grad : "",
+	    		drzava : "",
+	    		brojTelefona : "",
+	    		jbo : "",
+	    		aktiviran : false
+	    	};
+			this.novaLozinka = "";
+	    	this.potvrdaLozinke = "";
 		},
 	}
 });

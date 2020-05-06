@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Lekar;
 import tim09.klinika.repository.KorisnikRepository;
 import tim09.klinika.repository.LekarRepository;
@@ -15,6 +16,10 @@ public class LekarService {
 	@Autowired
 	private LekarRepository lekarRepository;
 
+	public List<Lekar> findAllByKlinika(Klinika k) {
+		return lekarRepository.findAllByKlinika(k);
+	}
+	
 	public Lekar findOne(Long id) {
 		return lekarRepository.findById(id).orElseGet(null);
 	}

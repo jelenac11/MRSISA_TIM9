@@ -14,6 +14,10 @@ public class PopustService {
 	@Autowired
 	private PopustRepository popustRepository;
 	
+	public List<Popust> findAllByKlinikaId(long id) {
+		return popustRepository.findByKlinikaId(id);
+	}
+	
 	public Popust findOne(Long id) {
 		return popustRepository.findById(id).orElseGet(null);
 	}

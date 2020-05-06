@@ -67,7 +67,7 @@ Vue.component("promena-lozinke", {
 		},
 	},
 	mounted() {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 		axios
 		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => { this.ulogovan = response.data; })

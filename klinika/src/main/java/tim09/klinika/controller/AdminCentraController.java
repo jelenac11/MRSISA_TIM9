@@ -10,12 +10,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.AdminCentraDTO;
+import tim09.klinika.dto.KorisnikDTO;
 import tim09.klinika.model.AdminCentra;
+import tim09.klinika.model.Korisnik;
 import tim09.klinika.service.AdminCentraService;
 import tim09.klinika.service.AutoritetService;
 import tim09.klinika.service.KorisnikService;
@@ -72,5 +75,28 @@ public class AdminCentraController {
 
 		adminCentra = adminCentraService.save(adminCentra);
 		return new ResponseEntity<>(new AdminCentraDTO(adminCentra), HttpStatus.CREATED);
+	}
+	
+	@PutMapping(consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
+	public ResponseEntity<AdminCentraDTO> promeniKorisnika(@RequestBody AdminCentraDTO korisnikDTO) {
+
+		AdminCentra korisnik = adminCentraService.findOne(korisnikDTO.getId());
+		if (korisnik == null) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		korisnik.setAdresa(korisnikDTO.getAdresa());
+		korisnik.setDrzava(korisnikDTO.getDrzava());
+		korisnik.setGrad(korisnikDTO.getGrad());
+		korisnik.setIme(korisnikDTO.getIme());
+		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
+		korisnik.setPrezime(korisnikDTO.getPrezime());
+		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
+		korisnik.setAktiviran(korisnikDTO.isAktiviran());
+		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
+		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
+
+		korisnik = adminCentraService.save(korisnik);
+		return new ResponseEntity<>(new AdminCentraDTO(korisnik), HttpStatus.OK);
 	}
 }

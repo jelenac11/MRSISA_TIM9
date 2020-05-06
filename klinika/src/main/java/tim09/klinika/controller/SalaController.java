@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.SalaDTO;
+import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Sala;
 import tim09.klinika.service.SalaService;
 
@@ -75,5 +76,15 @@ public class SalaController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@GetMapping(value = "/proveriBroj/{broj}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<Boolean> proveriBroj(@PathVariable("broj") int broj) {
+		Sala sala = salaService.findByBroj(broj);
+		if (sala != null) {
+			return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(false, HttpStatus.CREATED);
 	}
 }

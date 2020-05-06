@@ -83,11 +83,11 @@ Vue.component("izmena-profila", {
 				  	<div v-if="this.uloga == 'ROLE_LEKAR' || this.uloga == 'ROLE_MED_SESTRA'" class="form-row">
 				    	<div class="col">
 				    		<label for="poc" class="mt-1">Početak radnog vremena</label>
-							<input type="text" v-model="korisnikUloga.pocetakRadnogVremena" class="form-control" id="poc" placeholder="Početak radnog vremena" disabled required>
+							<input type="text" :value="sati(korisnikUloga.pocetakRadnogVremena)" class="form-control" id="poc" placeholder="Početak radnog vremena" disabled required>
 				    	</div>
 				    	<div class="col">
 				    		<label for="kraj" class="mt-1">Kraj radnog vremena</label>
-							<input type="text" v-model="korisnikUloga.krajRadnogVremena" class="form-control" id="kraj" placeholder="Kraj radnog vremena" disabled required>
+							<input type="text" :value="sati(korisnikUloga.krajRadnogVremena)" class="form-control" id="kraj" placeholder="Kraj radnog vremena" disabled required>
 				    	</div>
 				  	</div>
 				  	<div v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="form-row">
@@ -107,40 +107,109 @@ Vue.component("izmena-profila", {
 	`
 	,
 	methods : {
+		sati : function (vreme) {
+		    var minutes = Math.floor((vreme / (1000 * 60)) % 60);
+		    var hours = Math.floor((vreme / (1000 * 60 * 60)) % 24);
+	
+			hours = (hours < 10) ? "0" + hours : hours;
+			minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+			return (hours + ":" + minutes);
+		},
 		izmenaPod : function () {
 			this.proveriLozinke();
 			this.submitovano = true;
 			if (document.getElementById('forma-izmena').checkValidity() === true && this.poklapajuSeLozinke) {
 				axios
-				.put('/korisnici', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+	    		.put('/korisnici/dobaviUlogu', this.korisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+	            .then(response => {
+	            	this.uloga = response.data;
+	            	if (this.uloga == "ROLE_PACIJENT") {
+	    				axios
+	    				.put('/pacijenti', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+	    				.then(response => {
+	    					this.uspesnaIzmena = true;
+	    					toast("Uspešno izmenjeni podaci");
+	    					this.korisnik = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    					this.korisnikUloga = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    				})
+	    				.catch(function (error) { console.log(error); this.uspesnaIzmena = false; });
+	            	} else if (this.uloga == "ROLE_LEKAR") {
+	    				axios
+	    				.put('/lekari', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+	    				.then(response => {
+	    					this.uspesnaIzmena = true;
+	    					toast("Uspešno izmenjeni podaci");
+	    					this.korisnik = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    					this.korisnikUloga = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    				})
+	    				.catch(function (error) { console.log(error); this.uspesnaIzmena = false; });
+	            	} else if (this.uloga == "ROLE_MED_SESTRA") {
+	    				axios
+	    				.put('/sestre', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+	    				.then(response => {
+	    					this.uspesnaIzmena = true;
+	    					toast("Uspešno izmenjeni podaci");
+	    					this.korisnik = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    					this.korisnikUloga = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    				})
+	    				.catch(function (error) { console.log(error); this.uspesnaIzmena = false; });
+	            	} else if (this.uloga == "ROLE_ADMIN_KLINICKOG_CENTRA") {
+	    				axios
+	    				.put('/adminiCentra', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+	    				.then(response => {
+	    					this.uspesnaIzmena = true;
+	    					toast("Uspešno izmenjeni podaci");
+	    					this.korisnik = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    					this.korisnikUloga = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    				})
+	    				.catch(function (error) { console.log(error); this.uspesnaIzmena = false; });
+	            	} else if (this.uloga == "ROLE_ADMIN_KLINIKE") {
+	    				axios
+	    				.put('/adminiKlinike', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+	    				.then(response => {
+	    					this.uspesnaIzmena = true;
+	    					toast("Uspešno izmenjeni podaci");
+	    					this.korisnik = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    					this.korisnikUloga = JSON.parse(JSON.stringify(this.izmenjeniKorisnik));
+	    				})
+	    				.catch(function (error) { console.log(error); this.uspesnaIzmena = false; });
+	            	}
+	            })
+	            .catch(function (error) { console.log(error); });
+				
+				axios
+				.post('auth/login', { username : this.izmenjeniKorisnik.email, password : this.izmenjeniKorisnik.lozinka })
 				.then(response => {
-					this.uspesnaIzmena = true;
-					toast("Uspešno izmenjeni podaci");
+					this.token = response.data.accessToken;
+					localStorage.setItem("token", this.token);
 				})
-				.catch(function (error) { console.log(error);this.uspesnaIzmena = false; });
+				.catch(function (error) { console.log(error); });
 			} else {
 				this.uspesnaIzmena = true;
 			}
 		},
 		nazad : function () {
-			console.log(this.korisnik);
 			axios
-    		.put('/korisnici/dobaviUlogu', this.korisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+    		.put('/korisnici/dobaviUlogu', this.izmenjeniKorisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
             .then(response => {
             	this.uloga = response.data;
             	if (this.uloga == "ROLE_PACIJENT") {
-            		this.$router.replace({ name: 'zdravstveniKarton', params: { korisnikToken: this.token } });
+            		this.$router.replace({ name: 'zdravstveniKarton' });
             	} else if (this.uloga == "ROLE_LEKAR") {
-            		this.$router.replace({ name: 'pacijenti', params: { korisnikToken: this.token } });
+            		this.$router.replace({ name: 'pacijenti' });
             	} else if (this.uloga == "ROLE_MED_SESTRA") {
-            		this.$router.replace({ name: 'pacijenti', params: { korisnikToken: this.token } });
+            		this.$router.replace({ name: 'pacijenti' });
             	} else if (this.uloga == "ROLE_ADMIN_KLINICKOG_CENTRA") {
-            		this.$router.replace({ name: 'zahteviRegistracija', params: { korisnikToken: this.token } });
+            		this.$router.replace({ name: 'zahteviRegistracija' });
             	} else if (this.uloga == "ROLE_ADMIN_KLINIKE") {
-            		this.$router.replace({ name: 'lekari', params: { korisnikToken: this.token } });
+            		this.$router.replace({ name: 'lekari' });
             	}
             })
-            .catch(function (error) { console.log(error); });
+            .catch(function (error) { 
+            	localStorage.removeItem("token");
+            	this.$router.replace({ name: 'login' });
+            });
 		},
 		proveriLozinke : function () {
 			if (this.novaLozinka != "") {
@@ -157,7 +226,7 @@ Vue.component("izmena-profila", {
 		},
 	},
 	mounted () {
-		this.token = this.$route.params.korisnikToken;
+		this.token = localStorage.getItem("token");
 		axios
         .get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => {
@@ -173,6 +242,7 @@ Vue.component("izmena-profila", {
             		.get('/pacijenti/' + this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
                     .then(response => { 
                     	this.korisnikUloga = response.data;
+                    	this.izmenjeniKorisnik = JSON.parse(JSON.stringify(this.korisnikUloga));
                     })
                     .catch(function (error) { console.log(error); });
             	}
@@ -181,6 +251,7 @@ Vue.component("izmena-profila", {
             		.get('/lekari/' + this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
                     .then(response => { 
                     	this.korisnikUloga = response.data;
+                    	this.izmenjeniKorisnik = JSON.parse(JSON.stringify(this.korisnikUloga));
                     })
                     .catch(function (error) { console.log(error); });
             	}
@@ -189,6 +260,7 @@ Vue.component("izmena-profila", {
             		.get('/sestre/' + this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
                     .then(response => { 
                     	this.korisnikUloga = response.data;
+                    	this.izmenjeniKorisnik = JSON.parse(JSON.stringify(this.korisnikUloga));
                     })
                     .catch(function (error) { console.log(error); });
             	}
@@ -197,6 +269,7 @@ Vue.component("izmena-profila", {
             		.get('/adminiKlinike/' + this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }} )
                     .then(response => { 
                     	this.korisnikUloga = response.data;
+                    	this.izmenjeniKorisnik = JSON.parse(JSON.stringify(this.korisnikUloga));
                     })
                     .catch(function (error) { console.log(error); });
             	}

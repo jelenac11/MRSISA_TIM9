@@ -14,6 +14,10 @@ public class SalaService {
 	@Autowired
 	private SalaRepository salaRepository;
 
+	public Sala findByBroj(int broj) {
+		return salaRepository.findByBroj(broj);
+	}
+	
 	public Sala findOne(Long id) {
 		return salaRepository.findById(id).orElseGet(null);
 	}

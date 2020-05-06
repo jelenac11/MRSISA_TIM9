@@ -6,4 +6,5 @@ import tim09.klinika.model.Sifrarnik;
 
 public interface SifrarnikRepository extends JpaRepository<Sifrarnik, Long> {
 
+	Sifrarnik findByTipSifrarnika(String tip);
 }
