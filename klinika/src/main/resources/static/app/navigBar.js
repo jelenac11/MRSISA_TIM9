@@ -3,6 +3,7 @@ Vue.component('navig-bar', {
 		return {
 			ulogovan: {},
 			uloga: "",
+			klinika:{}
 		} 
 	},
 	props: ['token'],
@@ -111,7 +112,7 @@ Vue.component('navig-bar', {
 						  	</a>
 						  	<div class="dropdown-menu">
 						  		<a class="dropdown-item" data-toggle="modal" data-target="#profilModal" href='#'>Pregled profila</a>
-						  		<a class="dropdown-item" data-toggle="modal" data-target="#profilModal" href='#'>Pregled profila klinike</a>
+						  		<a class="dropdown-item" v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" data-toggle="modal" data-target="#profilKlinikeModal" href='#' v-on:click="prikaziPodatkeKlinike">Pregled profila klinike</a>
 					        	<a class="dropdown-item" v-on:click="odjaviSe" href="#">Odjavi se</a>
 					        </div>
 			            </li>
@@ -175,6 +176,45 @@ Vue.component('navig-bar', {
 			    	</div>
 				</div>
 			</div>
+			
+			<div class="modal fade" id="profilKlinikeModal" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+			    	<div class="modal-content">
+						<div class="modal-header">
+			        		<h5 class="modal-title" id="exampleModalLabel">Pregled profila klinike</h5>
+			        		<button type="button" class="close" data-dismiss="modal">
+			          			<span>&times;</span>
+			        		</button>
+			      		</div>
+			      		<div class="modal-body">
+			        		<ul class="list-group">
+							  	<li class="list-group-item">
+							  		<div class="d-flex w-20 justify-content-between">
+								  		<h6>Naziv:</h6>
+								  		<p class="mb-0">{{ this.klinika.naziv }}</p>
+								  	</div>
+							  	</li>
+							  	<li class="list-group-item">
+							  		<div class="d-flex w-20 justify-content-between">
+								  		<h6>Lokacija:</h6>
+								  		<p class="mb-0">{{ this.klinika.lokacija }}</p>
+								  	</div>
+							  	</li>
+							  	<li class="list-group-item">
+							  		<div class="d-flex w-20 justify-content-between">
+							  			<h6>Opis:</h6>
+							  			<p class="mb-0">{{ this.klinika.opis }}</p>
+							  		</div>
+							  	</li>
+							</ul>
+			      		</div>
+			      		<div class="modal-footer">
+			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			        		<router-link :to="{ name: 'izmenaProfilaKlinike', params: {klinikaParam:this.klinika }}" class="btn btn-primary" data-dismiss="modal">Izmena podataka</router-link>
+			      		</div>
+			    	</div>
+				</div>
+			</div>
 		</div>
 	`
 	,
@@ -183,6 +223,14 @@ Vue.component('navig-bar', {
 			localStorage.removeItem("token");
 			this.$router.replace({ path: '/' });
 		},
+		prikaziPodatkeKlinike: function(){
+			axios
+			.get("adminiKlinike/ucitajKlinikuPoIDAdmina/"+this.ulogovan.id, { headers: { Authorization: 'Bearer ' + this.token }})
+			.then(response=>{
+				this.klinika=response.data;
+			})
+			.catch(function (error) { console.log(error); });
+		}
 	},
 	created() {
 		axios

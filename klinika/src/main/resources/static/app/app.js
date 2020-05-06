@@ -11,6 +11,7 @@ const AdminiCentra = { template: '<admini-centra></admini-centra>' }
 const KlinikeAdmin = { template: '<klinike-admin></klinike-admin>' }
 const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>' }
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
+const IzmenaProfilaKlinike = { template: '<izmena-profilaKlinike></izmena-profilaKlinike>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
 const DodavanjeLekara = { template: '<dodavanje-lekara></dodavanje-lekara>' }
 const DodavanjeSifreLeka = { template: '<dodavanje-sifre-leka></dodavanje-sifre-leka>' }
@@ -50,6 +51,11 @@ const router = new VueRouter({
 		path: '/izmenaProfila',
 		name: 'izmenaProfila',
 		component: IzmenaProfila
+	},
+	{
+		path: '/izmenaProfilaKlinike',
+		name: 'izmenaProfilaKlinike',
+		component: IzmenaProfilaKlinike
 	},
 	{
 		path: '/sale',

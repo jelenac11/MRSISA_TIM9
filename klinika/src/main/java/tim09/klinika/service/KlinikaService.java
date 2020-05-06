@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.dto.KlinikaDTO;
 import tim09.klinika.dto.OperacijaDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.model.Klinika;
@@ -159,6 +160,26 @@ public class KlinikaService {
 			}
 		}
 		return false;
+	}
+	
+	public boolean update(KlinikaDTO klinikaDTO) {
+		Klinika klinika=findOne(klinikaDTO.getId());
+		Klinika postojiKlinika=null;
+		
+		if(!klinikaDTO.getNaziv().equals(klinika.getNaziv())) {
+			postojiKlinika=klinikaRepository.findByNaziv(klinikaDTO.getNaziv());
+		}
+		
+		if(postojiKlinika==null) {
+			klinika.setNaziv(klinikaDTO.getNaziv());
+			klinika.setLokacija(klinikaDTO.getLokacija());
+			klinika.setOpis(klinikaDTO.getOpis());
+			klinikaRepository.save(klinika);
+		}
+		else {
+			return false;
+		}
+		return true;
 	}
 }
 

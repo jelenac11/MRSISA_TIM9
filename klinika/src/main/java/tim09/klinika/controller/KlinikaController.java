@@ -78,4 +78,13 @@ public class KlinikaController {
 		return new ResponseEntity<>(false, HttpStatus.CREATED);
 	}
 	
+	@PostMapping(value="/izmenaProfilaKlinike",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<Boolean> izmenaProfilaKlinike(@RequestBody KlinikaDTO klinikaDTO){
+		
+		boolean uspesno=klinikaService.update(klinikaDTO);
+		
+		return new ResponseEntity<Boolean>(uspesno,HttpStatus.OK);
+	}
+	
 }

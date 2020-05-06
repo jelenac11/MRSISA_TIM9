@@ -10,6 +10,7 @@ public class KlinikaDTO {
 	private String lokacija;
 	private boolean zadovoljava;
 	private double cena;
+	private String opis;
 	
 	public KlinikaDTO() {
 
@@ -22,6 +23,7 @@ public class KlinikaDTO {
 		this.ocena = klinika.getProsecnaOcena();
 		this.zadovoljava = true;
 		this.cena = 0;
+		this.opis=klinika.getOpis();
 	}
 
 	public Long getId() {
@@ -71,5 +73,14 @@ public class KlinikaDTO {
 	public void setCena(double cena) {
 		this.cena = cena;
 	}
+
+	public String getOpis() {
+		return opis;
+	}
+
+	public void setOpis(String opis) {
+		this.opis = opis;
+	}
+	
 
 }

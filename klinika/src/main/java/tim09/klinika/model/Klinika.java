@@ -27,6 +27,9 @@ public class Klinika {
 
 	@Column(name = "lokacija", nullable = false)
 	private String lokacija;
+	
+	@Column(name = "opis", nullable = true)
+	private String opis;
 
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<AdminKlinike> admini;
@@ -188,5 +191,13 @@ public class Klinika {
 
 	public void setKlinickiCentar(KlinickiCentar klinickiCentar) {
 		this.klinickiCentar = klinickiCentar;
+	}
+
+	public String getOpis() {
+		return opis;
+	}
+
+	public void setOpis(String opis) {
+		this.opis = opis;
 	}
 }
