@@ -111,6 +111,7 @@ Vue.component('navig-bar', {
 						  	</a>
 						  	<div class="dropdown-menu">
 						  		<a class="dropdown-item" data-toggle="modal" data-target="#profilModal" href='#'>Pregled profila</a>
+						  		<a class="dropdown-item" data-toggle="modal" data-target="#profilModal" href='#'>Pregled profila klinike</a>
 					        	<a class="dropdown-item" v-on:click="odjaviSe" href="#">Odjavi se</a>
 					        </div>
 			            </li>

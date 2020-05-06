@@ -99,13 +99,16 @@ Vue.component("tipoviPregleda", {
 					if(response.data==true){
 						toast("Uspešno izbrisan tip pregleda "+tipPregleda.naziv+".");
 						this.dobaviSve();
+						this.$router.go();
 					}
 					else{
 						toast("Tip pregleda nije moguce izbrisati.");
 						this.dobaviSve();
+						this.$router.go();
 					}
 				})
 				.catch(function (error) { console.log(error); });
+				this.$router.go();
 			}
 
 		},
@@ -131,8 +134,6 @@ Vue.component("tipoviPregleda", {
 					}
 					else{
 						toast("Tip pregleda nije moguce izmeniti.");
-						this.izabraniTipPregleda = JSON.parse(JSON.stringify(this.noviTipPregleda));
-						this.dobaviSve();
 						// ugasi modal
 					}
 				})
