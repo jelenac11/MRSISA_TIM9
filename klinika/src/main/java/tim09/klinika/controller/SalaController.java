@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.SalaDTO;
+import tim09.klinika.dto.SlobodanTerminDTO;
+import tim09.klinika.model.AdminKlinike;
+import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Sala;
+import tim09.klinika.service.AdminKlinikeService;
 import tim09.klinika.service.SalaService;
 
 @RestController
@@ -27,6 +31,9 @@ public class SalaController {
 
 	@Autowired
 	private SalaService salaService;
+	
+	@Autowired
+	private AdminKlinikeService adminKlinikeService;
 
 	@GetMapping(value = "/ucitajSve")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
@@ -86,5 +93,18 @@ public class SalaController {
 			return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(false, HttpStatus.CREATED);
+	}
+	
+	@PostMapping(value="dobaviSlobodneSaleZaPregled",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> dobaviSlobodneSaleZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO){
+		AdminKlinike admin=adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		Klinika k=admin.getKlinika();
+		List<Sala> sale=salaService.findByIdKlinikaAndVremeAndTipPregleda(k.getId(),slobodanTerminDTO.getDatumiVreme(),slobodanTerminDTO.getTipPregleda(),slobodanTerminDTO.getTrajanje());
+		List<SalaDTO> saleDTO=new ArrayList<SalaDTO>();
+		for(Sala sala:sale) {
+			saleDTO.add(new SalaDTO(sala));
+		}
+		return new ResponseEntity<List<SalaDTO>>(saleDTO,HttpStatus.OK);
 	}
 }

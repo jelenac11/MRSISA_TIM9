@@ -31,6 +31,7 @@ const ZahteviRegistracija = {template: '<zahtevi-registracija></zahtevi-registra
 const ProveriEmail = {template: '<proveri-email></proveri-email>'}
 const PromenaLozinke = {template: '<promena-lozinke></promena-lozinke>'}
 const PretragaKlinika = {template : '<pretraga-klinika></pretraga-klinika>'}
+const DefinisanjeSlobodnogTermina = {template: '<definisanje-slobodnog-termina></definisanje-slobodnog-termina>'}
 
 const router = new VueRouter({
 	mode: 'hash',
@@ -199,6 +200,11 @@ const router = new VueRouter({
 		path: '/tipoviPregleda',
 		name: 'tipoviPregleda',
 		component:TipoviPregleda
+	},
+	{
+		path: '/definisanjeSlobodnogTermina',
+		name: 'definisanjeSlobodnogTermina',
+		component: DefinisanjeSlobodnogTermina
 	}]
 });
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.AdminKlinikeDTO;
 import tim09.klinika.dto.LekarDTO;
+import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.dto.TipPregledaDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Autoritet;
@@ -139,6 +140,19 @@ public class LekarController {
 
 		korisnik = lekarService.save(korisnik);
 		return new ResponseEntity<>(new LekarDTO(korisnik), HttpStatus.OK);
+	}
+	
+	@PostMapping(value="dobaviSlobodneLekareZaPregled",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<LekarDTO>> dobaviSlobodneLekareZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO){
+		AdminKlinike admin=adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		Klinika k=admin.getKlinika();
+		List<Lekar> lekari=lekarService.findByIdKlinikaAndVremeAndTipPregleda(k.getId(),slobodanTerminDTO.getDatumiVreme(),slobodanTerminDTO.getTipPregleda(),slobodanTerminDTO.getTrajanje());
+		List<LekarDTO> lekariDTO=new ArrayList<LekarDTO>();
+		for(Lekar lekar:lekari) {
+			lekariDTO.add(new LekarDTO(lekar));
+		}
+		return new ResponseEntity<List<LekarDTO>>(lekariDTO,HttpStatus.OK);
 	}
 	
 }
