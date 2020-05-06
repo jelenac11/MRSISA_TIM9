@@ -27,73 +27,75 @@ Vue.component("definisanje-slobodnog-termina", {
 		<navig-bar v-bind:token="this.token"></navig-bar>
 			<main class="content" role="content">	
 				<section id="section1">
-					<div class="container-fluid col-md-6 col-md-offset-3">
-						<form id="regForm">
-						  <h1>Odabir datuma i tipa pregleda:</h1>
-						  <div class="tab">
-								<div class="form-row">
-									<div class="col">
-										<label for="datum" class="mt-1">Datum i vrijeme pregleda</label>
-										<input type="datetime-local" v-model="terminPregleda.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid':!odabranDatum}" required>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
+					<div class="container d-flex justify-content-center">
+						<div class="card mt-5" style="width: 47rem;">
+							<form class="needs-validation mb-4" id="regForm">
+							  <h4 class="card-header">Odabir datuma i tipa pregleda:</h4>
+							  <div class="tab">
+									<div class="form-row mb-3">
+										<div class="col">
+											<label for="datum" class="mt-1">Datum i vreme pregleda</label>
+											<input type="datetime-local" v-model="terminPregleda.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid':!odabranDatum}" required>
+											<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
+										</div>
 									</div>
-								</div>
-								<div class="form-row">
-									<div class="col">
-										<label for="trajanje" class="mt-1">Trajanje pregleda (u minutama)</label>
-										<input type="number" min=1 max=120 v-model="terminPregleda.trajanje" class="form-control" id="datum" v-on:change="promjenaTrajanja" v-bind:class="{ 'is-invalid':!odabranoTrajanje}" required>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Pogresna vrednost.</div>
+									<div class="form-row">
+										<div class="col">
+											<label for="trajanje" class="mt-1">Trajanje pregleda (u minutama)</label>
+											<input type="number" min=1 max=120 v-model="terminPregleda.trajanje" class="form-control" id="datum" v-on:change="promjenaTrajanja" v-bind:class="{ 'is-invalid':!odabranoTrajanje}" required>
+											<div class="invalid-feedback" id="dodavanjeInvalid">Pogresna vrednost.</div>
+										</div>
 									</div>
-								</div>
-								<div class="form-row">
-									<div class="col">
-										<label for="tipPregleda" class="mt-1">Tip pregleda</label>
-									    <select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
-									    	<option v-for="tip in tipoviPregleda" :value="tip">
-												{{ tip.naziv }}
-									    	</option>
-								  		</select>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
+									<div class="form-row">
+										<div class="col">
+											<label for="tipPregleda" class="mt-1">Tip pregleda</label>
+										    <select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
+										    	<option v-for="tip in tipoviPregleda" :value="tip">
+													{{ tip.naziv }}
+										    	</option>
+									  		</select>
+											<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
+										</div>
 									</div>
-								</div>
-						  </div>
-						  
-						  <div class="tab">
-								<div class="form-row">
-									<div class="col">
-										<label for="lekar" class="mt-1">Lekar</label>
-									    <select class="custom-select mt-0" v-model="terminPregleda.lekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
-									    	<option v-for="lekar in lekari" :value="lekar">
-												{{ lekar.ime}} {{lekar.prezime }}
-									    	</option>
-								  		</select>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
+							  </div>
+							  
+							  <div class="tab">
+									<div class="form-row">
+										<div class="col">
+											<label for="lekar" class="mt-1">Lekar</label>
+										    <select class="custom-select mt-0" v-model="terminPregleda.lekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
+										    	<option v-for="lekar in lekari" :value="lekar">
+													{{ lekar.ime}} {{lekar.prezime }}
+										    	</option>
+									  		</select>
+											<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
+										</div>
 									</div>
-								</div>
-								<div class="form-row">
-									<div class="col">
-										<label for="sala" class="mt-1">Sala</label>
-									    <select class="custom-select mt-0" v-model="terminPregleda.sala" v-bind:class="{ 'is-invalid':!odabranaSala}" required>
-									    	<option v-for="sala in sale" :value="sala">
-												{{ sala.naziv }}
-									    	</option>
-								  		</select>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali salu.</div>
+									<div class="form-row">
+										<div class="col">
+											<label for="sala" class="mt-1">Sala</label>
+										    <select class="custom-select mt-0" v-model="terminPregleda.sala" v-bind:class="{ 'is-invalid':!odabranaSala}" required>
+										    	<option v-for="sala in sale" :value="sala">
+													{{ sala.naziv }}
+										    	</option>
+									  		</select>
+											<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali salu.</div>
+										</div>
 									</div>
-								</div>
-						  </div>
-						  
-						  <div style="overflow:auto;">
-						    <div style="float:right;">
-						      <button type="button" id="prevBtn" v-on:click="prev">Previous</button>
-						      <button type="button" id="nextBtn" v-on:click="next">Next</button>
-						    </div>
-						  </div>
-						  <div style="text-align:center;margin-top:40px;">
-						    <span class="step"></span>
-						    <span class="step"></span>
-						  </div>
-						</form>
+							  </div>
+							  
+							  <div style="overflow:auto;">
+							    <div style="float:right;">
+							      <button type="button" id="prevBtn" v-on:click="prev" class="btn btn-secondary  btn-lg">Previous</button>
+							      <button type="button" id="nextBtn" v-on:click="next" class="btn btn-primary  btn-lg">Next</button>
+							    </div>
+							  </div>
+							  <div style="text-align:center;margin-top:40px;">
+							    <span class="step"></span>
+							    <span class="step"></span>
+							  </div>
+							</form>
+						</div>
 					</div>
 				</section>
 			</main>
@@ -104,73 +106,11 @@ Vue.component("definisanje-slobodnog-termina", {
 	},
 	mounted: function(){
 		var css_text = `
-	        body {
-				/*font: normal 1em 'font';*/
-				background-color: #ecfab6;
-			}
-			
-			main {
-			/*	margin-top: 4.5em; */
-			}
-			#section1 {
-				height: 30em;
-			}
-			
-			
-			/* Multi-Step Form */
-			* {
-			  box-sizing: border-box;
-			}
-			
-			#regForm {
-			  background-color: #fff;
-			  margin: 100px auto;
-			  font-family: Raleway;
-			  padding: 40px;
-			  width: 100%;
-			  min-width: 600px;
-			}
-			
-			h1 {
-			  text-align: center;  
-			}
-			
-			input {
-			  padding: 10px;
-			  width: 100%;
-			  font-size: 17px;
-			  font-family: Raleway;
-			  border: 1px solid #aaaaaa;
-			}
-			
-			/* Mark input boxes that get errors during validation: */
-			input.invalid {
-			  background-color: #ffdddd;
-			}
-			
-			/* Hide all steps by default: */
+
+		/* Hide all steps by default: */
 			.tab {
 			  display: none;
 			}
-			
-			button {
-			  background-color: #4CAF50;
-			  color: #ffffff;
-			  border: none;
-			  padding: 10px 20px;
-			  font-size: 17px;
-			  font-family: Raleway;
-			  cursor: pointer;
-			}
-			
-			button:hover {
-			  opacity: 0.8;
-			}
-			
-			#prevBtn {
-			  background-color: #bbbbbb;
-			}
-			
 			/* Step marker: Place in the form. */
 			.step {
 			  height: 15px;
