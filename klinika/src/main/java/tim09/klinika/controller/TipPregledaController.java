@@ -133,4 +133,11 @@ public class TipPregledaController {
 		}
 		return new ResponseEntity<>(tipoviDTO, HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/ucitajTipoveKlinike/{id}")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<List<TipPregledaDTO>> ucitajTipovePregledaKlinike(@PathVariable("id") long id) {
+		return new ResponseEntity<>(tipPregledaService.vratiTipoveKlinike(id), HttpStatus.OK);
+	}
 }
+

@@ -1,6 +1,7 @@
 package tim09.klinika.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.AdminKlinikeDTO;
+import tim09.klinika.dto.KlinikaDTO;
 import tim09.klinika.dto.LekarDTO;
+import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.dto.TipPregledaDTO;
 import tim09.klinika.model.AdminKlinike;
@@ -155,4 +158,21 @@ public class LekarController {
 		return new ResponseEntity<List<LekarDTO>>(lekariDTO,HttpStatus.OK);
 	}
 	
+	@PutMapping(value="/vratiSlobodneTermine",consumes="application/json")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<List<Long>> vratiSlobodneTermine(@RequestBody PretragaLekaraDTO pldto){
+		return new ResponseEntity<>(lekarService.vratiSlobodneTermine(pldto), HttpStatus.OK);
+	}
+	
+	@GetMapping("/ucitajSveLekareKlinike/{id}")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<List<LekarDTO>> ucitajLekareKlinike(@PathVariable Long id) {
+		return new ResponseEntity<>(lekarService.vratiLekareKlinike(id), HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "/proveriTipIVremeLekara", consumes = "application/json")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<Boolean> imaLiVremenaLekar(@RequestBody PretragaLekaraDTO pldto){
+		return new ResponseEntity<>(lekarService.proveriTipIVreme(pldto), HttpStatus.OK);
+	}
 }

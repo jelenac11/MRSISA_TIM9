@@ -1,5 +1,6 @@
 package tim09.klinika.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;

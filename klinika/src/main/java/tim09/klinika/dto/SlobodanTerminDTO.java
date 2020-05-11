@@ -8,6 +8,7 @@ public class SlobodanTerminDTO {
 	private SalaDTO sala;
 	private LekarDTO lekar;
 	private int trajanje;
+	
 	public SlobodanTerminDTO() {
 		super();
 	}

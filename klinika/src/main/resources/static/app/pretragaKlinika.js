@@ -15,6 +15,7 @@ Vue.component("pretraga-klinika", {
 			datum : null,
 			tip: "",
 			tipovi: [],
+			milisekunde: 0,
 		} 
 	},
 	template: `
@@ -83,7 +84,7 @@ Vue.component("pretraga-klinika", {
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="kl in filtriraneKlinike">
+			  		<tr v-for="kl in filtriraneKlinike" v-on:click="izaberiKliniku(kl)">
 				      	<td width="30%">{{ kl.naziv }}</td>
 				      	<td width="30%">{{ kl.lokacija }}</td>
 				      	<td width="20%">{{ kl.ocena }}</td>
@@ -97,6 +98,15 @@ Vue.component("pretraga-klinika", {
 	,
 	
 	methods : {
+		izaberiKliniku : function(klinika) {
+			if (this.tip != "" && this.datum != null) {
+				datum = new Date(this.datum+"");
+		    	timestamp = datum.getTime() - 7200000;
+		    	this.$router.push({ name: 'pretragaLekara', params: {id: klinika.id, vreme : timestamp, tip : this.tip }})
+			} else {
+				this.$router.push({ name: 'zaposleni', params: {id: klinika.id }})
+			}
+		},
 		zadovoljavaOcenu : function (klinika) {
 	    	if (this.ocenaFilter) {
 	    		if (klinika.ocena >= this.ocenaDonja && klinika.ocena <= this.ocenaGornja) {
@@ -125,7 +135,7 @@ Vue.component("pretraga-klinika", {
 	    	if (this.tip != "") {
 	    		axios
 	    		.put('/klinike/zadovoljavaTip', { id: klinika.id, datum: timestamp, tipPregleda: this.tip}, { headers: { Authorization: 'Bearer ' + this.token }})
-	    		.then(response => {klinika.zadovoljava = response.data;})
+	    		.then(response => {klinika.zadovoljava = response.data})
 	            .catch(function (error) { console.log(error); })
 	    	} else {
 	    		klinika.zadovoljava = true;
@@ -138,7 +148,7 @@ Vue.component("pretraga-klinika", {
 			if (this.tip != "" && this.datum != null) {
 	    		axios
 	    		.put('/stavkeCenovnika/dobaviCenuPregleda', { id: klinika.id, datum: timestamp, tipPregleda: this.tip}, { headers: { Authorization: 'Bearer ' + this.token }})
-	    		.then(response => { this.$set(this.klinike[indeks], 'cenaPregleda', response.data); })
+	    		.then(response => {this.$set(this.klinike[indeks], 'cenaPregleda', response.data);})
 	            .catch(function (error) { console.log(error); })
 	    	} else {
 	    		this.$set(this.klinike[indeks], 'cenaPregleda', 0);
@@ -150,7 +160,7 @@ Vue.component("pretraga-klinika", {
 			} else {
 				return "";
 			}
-		}
+		},
 	},
 	
 	computed: {

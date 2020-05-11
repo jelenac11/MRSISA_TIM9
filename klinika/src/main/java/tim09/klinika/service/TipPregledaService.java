@@ -1,5 +1,6 @@
 package tim09.klinika.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -68,5 +69,16 @@ public class TipPregledaService {
 		} else {
 			return false;
 		}
+	}
+
+	public List<TipPregledaDTO> vratiTipoveKlinike(long id) {
+		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaId(id);
+		List<TipPregledaDTO> tipovidto = new ArrayList<TipPregledaDTO>();
+		if (tipovi != null) {
+			for (TipPregleda tp : tipovi) {
+				tipovidto.add(new TipPregledaDTO(tp));
+			}
+		}
+		return tipovidto;
 	}
 }

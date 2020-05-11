@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.KlinikaDTO;
+import tim09.klinika.dto.LekarDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.model.Cenovnik;
 import tim09.klinika.model.Klinika;
@@ -85,6 +86,12 @@ public class KlinikaController {
 		boolean uspesno=klinikaService.update(klinikaDTO);
 		
 		return new ResponseEntity<Boolean>(uspesno,HttpStatus.OK);
+	}
+	
+	@PutMapping(value="/ucitajSlobodneLekare",consumes="application/json")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<List<LekarDTO>> ucitajSlobodneLekare(@RequestBody PretragaKlinikeDTO pkdto){
+		return new ResponseEntity<>(klinikaService.vratiSlobodneLekare(pkdto), HttpStatus.OK);
 	}
 	
 }

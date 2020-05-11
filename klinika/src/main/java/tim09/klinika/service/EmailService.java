@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.dto.PredefinisaniDTO;
 import tim09.klinika.model.Pacijent;
 import tim09.klinika.model.VerifikacioniToken;
 

@@ -32,6 +32,9 @@ const ZahteviRegistracija = {template: '<zahtevi-registracija></zahtevi-registra
 const ProveriEmail = {template: '<proveri-email></proveri-email>'}
 const PromenaLozinke = {template: '<promena-lozinke></promena-lozinke>'}
 const PretragaKlinika = {template : '<pretraga-klinika></pretraga-klinika>'}
+const PretragaLekara = {template : '<pretraga-lekara></pretraga-lekara>'}
+const PotvrdaZakazivanja = {template : '<potvrda-zakazivanja></potvrda-zakazivanja>'}
+const Zaposleni = {template : '<zaposleni></zaposleni>'}
 const DefinisanjeSlobodnogTermina = {template: '<definisanje-slobodnog-termina></definisanje-slobodnog-termina>'}
 
 const router = new VueRouter({
@@ -203,9 +206,27 @@ const router = new VueRouter({
 		component: PretragaKlinika
 	},
 	{
+		path: '/pretragaLekara',
+		name: 'pretragaLekara',
+		component: PretragaLekara,
+		props : true
+	},
+	{
+		path: '/potvrdaZakazivanja',
+		name: 'potvrdaZakazivanja',
+		component: PotvrdaZakazivanja,
+		props : true
+	},
+	{
 		path: '/tipoviPregleda',
 		name: 'tipoviPregleda',
 		component:TipoviPregleda
+	},
+	{
+		path: '/zaposleni',
+		name: 'zaposleni',
+		component:Zaposleni,
+		props : true
 	},
 	{
 		path: '/definisanjeSlobodnogTermina',

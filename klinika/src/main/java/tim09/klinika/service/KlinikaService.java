@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.KlinikaDTO;
+import tim09.klinika.dto.LekarDTO;
 import tim09.klinika.dto.OperacijaDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.model.Klinika;
@@ -70,92 +71,16 @@ public class KlinikaService {
 			for (Lekar l : lekari) {
 				long pocetakRadnog = l.getPocetakRadnogVremena();
 				long krajRadnog = l.getKrajRadnogVremena();
-				//operacije dana kad se zeli pregled poredjane u rastucem redosledu, isto vazi i za preglede
 				List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pretragaKlinikeDTO.getDatum(), pretragaKlinikeDTO.getDatum() + 86400000);
 				List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pretragaKlinikeDTO.getDatum(), pretragaKlinikeDTO.getDatum() + 86400000);
-				//sve je prazno
-				if (operacije.isEmpty() && pregledi.isEmpty()) {
+				int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
+				for (int i = 0; i <= pregledi.size() - 1; i++) {
+					if (pregledi.get(i).getPacijent() == null) {
+						pregledi.remove(i);
+					}
+				}
+				if ((operacije.size() + pregledi.size()) < sati) {
 					return true;
-				}
-				//prazne samo operacije
-				if (operacije.isEmpty()) {
-					if (pregledi.get(0).getVreme() >= (pretragaKlinikeDTO.getDatum() + pocetakRadnog + 1800000)) {
-						return true;
-					}
-					if (pregledi.get(pregledi.size()-1).getVreme() <= (pretragaKlinikeDTO.getDatum() + krajRadnog - 1800000)) {
-						return true;
-					}
-					for (int i = 0; i <= pregledi.size()-2; i++) {
-						if (pregledi.get(i).getVreme()<=(pregledi.get(i+1).getVreme()-1800000)) {
-							return true;
-						}
-					}
-					return false;
-				}
-				//prazni samo pregledi
-				if (pregledi.isEmpty()) {
-					if (operacije.get(0).getVreme() >= (pretragaKlinikeDTO.getDatum() + pocetakRadnog + 1800000)) {
-						return true;
-					}
-					if (operacije.get(operacije.size()-1).getVreme() <= (pretragaKlinikeDTO.getDatum() + krajRadnog - 4500000)) {
-						return true;
-					}
-					for (int i = 0; i <= operacije.size()-2; i++) {
-						if (operacije.get(i).getVreme()<=(operacije.get(i+1).getVreme()-4500000)) {
-							return true;
-						}
-					}
-					return false;
-				}
-				//nista nije prazno
-				if ((pregledi.get(0).getVreme() <= operacije.get(0).getVreme()) && (pregledi.get(0).getVreme() >= (pretragaKlinikeDTO.getDatum() + pocetakRadnog + 1800000))) {
-					return true;
-				}
-				if ((pregledi.get(0).getVreme() >= operacije.get(0).getVreme()) && (operacije.get(0).getVreme() >= (pretragaKlinikeDTO.getDatum() + pocetakRadnog + 1800000))) {
-					return true;
-				}	
-				if ((pregledi.get(0).getVreme() >= operacije.get(0).getVreme()) && (pregledi.get(0).getVreme() <= (pretragaKlinikeDTO.getDatum() + krajRadnog - 1800000))) {
-					return true;
-				}
-				if ((pregledi.get(0).getVreme() <= operacije.get(0).getVreme()) && (operacije.get(0).getVreme() <= (pretragaKlinikeDTO.getDatum() + krajRadnog + 4500000))) {
-					return true;
-				}
-				for (int i = 0; i <= pregledi.size()-2; i++) {
-					//pregled pocinje minimum 30 minuta pre prve operacije i minimum 30 min pre prvog sledeceg pregleda
-					if (pregledi.get(i).getVreme() <= (operacije.get(0).getVreme() - 1800000)){
-						if (pregledi.get(i).getVreme() <= (pregledi.get(i+1).getVreme() - 1800000)) {
-							return true;
-						}
-					}
-					//pregled pocinje nakon poslednje operacije i barem 30 minuta pre sledeceg pregleda
-					if (pregledi.get(i).getVreme() >= operacije.get(operacije.size()-1).getVreme()) {
-						if ((pregledi.get(i).getVreme() + 1800000) <= pregledi.get(i+1).getVreme()) {
-							return true;
-						}
-					}
-					//pregled je izmedju dve operacije
-					OperacijaDTO oMIN = new OperacijaDTO(operacije.get(0));
-					OperacijaDTO oMAX = new OperacijaDTO(operacije.get(0));
-					for (Operacija operac : operacije) {
-						if ((operac.getVreme() >= pregledi.get(i).getVreme()) && (operac.getVreme()<= oMAX.getVreme().getTime())){
-							oMAX = new OperacijaDTO(operac);
-						}
-						if ((operac.getVreme() <= pregledi.get(i).getVreme()) && (operac.getVreme()<= oMIN.getVreme().getTime())) {
-							oMIN = new OperacijaDTO(operac);
-						}
-					}
-					if ((oMIN.getVreme().getTime() <= pregledi.get(i-1).getVreme()) && ((pregledi.get(i-1).getVreme()+1800000) <= pregledi.get(i).getVreme())){
-						return true;
-					}
-					if ((oMIN.getVreme().getTime() >= pregledi.get(i-1).getVreme()) && ((oMIN.getVreme().getTime()+4500000) <= pregledi.get(i).getVreme())) {
-						return true;
-					}
-					if ((oMAX.getVreme().getTime() <= pregledi.get(i+1).getVreme()) && (oMAX.getVreme().getTime() >= (pregledi.get(i).getVreme()+1800000))){
-						return true;
-					}
-					if ((oMAX.getVreme().getTime() >= pregledi.get(i+1).getVreme()) && ((pregledi.get(i).getVreme()+1800000) <= pregledi.get(i+1).getVreme())) {
-						return true;
-					}
 				}
 			}
 		}
@@ -180,6 +105,30 @@ public class KlinikaService {
 			return false;
 		}
 		return true;
+	}
+
+	public List<LekarDTO> vratiSlobodneLekare(PretragaKlinikeDTO pkdto) {
+		ArrayList<LekarDTO> lekariDTO = new ArrayList<LekarDTO>();
+		TipPregleda tp = tipPregledaRepository.findByIdAndNaziv(pkdto.getId(), pkdto.getTipPregleda());
+		if ( tp != null) {
+			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pkdto.getId(), tp.getId(), pkdto.getDatum()); 
+			for (Lekar l : lekari) {
+				long pocetakRadnog = l.getPocetakRadnogVremena();
+				long krajRadnog = l.getKrajRadnogVremena();
+				List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
+				List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
+				int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
+				for (int i = 0; i <= pregledi.size() - 1; i++) {
+					if (pregledi.get(i).getPacijent() == null) {
+						pregledi.remove(i);
+					}
+				}
+				if ((operacije.size() + pregledi.size()) < sati) {
+					lekariDTO.add(new LekarDTO(l));
+				}
+			}
+		}
+		return lekariDTO;
 	}
 }
 
