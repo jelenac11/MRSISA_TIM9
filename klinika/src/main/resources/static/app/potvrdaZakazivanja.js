@@ -3,6 +3,7 @@ Vue.component('potvrda-zakazivanja', {
 		return {
 			token: "",
 			pregled : {},
+			zaposleni: false,
 		} 
 	},
 	template: `
@@ -84,12 +85,18 @@ Vue.component('potvrda-zakazivanja', {
 			datum = this.pregled.datum - dani - 7200000;
 			axios
 			.put("/pregledi/potvrdiZakazivanje", this.pregled, { headers: { Authorization: 'Bearer ' + this.token }} )
-			.then(response => {toast("Uspešno potvrđeno zakazivanje!"); this.$router.push({ name: 'pretragaLekara', params: {id: this.pregled.lokacija.id, vreme : datum, tip : this.pregled.tip.naziv}});})
+			.then(response => {toast("Uspešno potvrđeno zakazivanje!"); 
+			if (this.zaposleni){
+				this.$router.push({ name: 'zaposleni', params: {id: this.pregled.lokacija.id}});
+			} else {
+				this.$router.push({ name: 'pretragaLekara', params: {id: this.pregled.lokacija.id, vreme : datum, tip : this.pregled.tip.naziv}});
+			}})
 			.catch(function (error) { console.log(error); });
 		},
 	},
 	created() {
 		this.token = localStorage.getItem("token");
 		this.pregled = this.$route.params.pregled;
+		this.zaposleni = this.$route.params.zaposleni;
 	}
 })

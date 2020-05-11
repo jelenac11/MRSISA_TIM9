@@ -220,7 +220,7 @@ Vue.component('zaposleni', {
 		zakazivanjeSlobodnog: function(termin) {
 			axios
 			.put("/pregledi/zakaziTermin", { id: this.lekar, datum: termin, tipPregleda: this.tip, pacijent: this.ulogovan.id, klinika : this.klinika.id}, { headers: { Authorization: 'Bearer ' + this.token }})
-			.then(response => {this.potvrda = response.data; $('#iksic').click(); this.$router.push({ name: 'potvrdaZakazivanja', params: {pregled : this.potvrda}});})
+			.then(response => {this.potvrda = response.data; $('#iksic').click(); this.$router.push({ name: 'potvrdaZakazivanja', params: {pregled : this.potvrda, zaposleni: true}});})
 		    .catch(function (error) { console.log(error); });
 		},
 	},
