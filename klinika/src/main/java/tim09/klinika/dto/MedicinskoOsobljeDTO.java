@@ -21,6 +21,9 @@ public class MedicinskoOsobljeDTO extends KorisnikDTO {
 
 	public MedicinskoOsobljeDTO(MedicinskoOsoblje osoblje) {
 		super(osoblje);
+		if(osoblje==null) {
+			return;
+		}
 		this.klinika = osoblje.getKlinika().getNaziv();
 		this.odsustva = new ArrayList<OdsustvoDTO>();
 		this.pocetakRadnogVremena = osoblje.getPocetakRadnogVremena();

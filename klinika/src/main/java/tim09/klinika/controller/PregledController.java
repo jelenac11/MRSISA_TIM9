@@ -1,5 +1,7 @@
 package tim09.klinika.controller;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +22,9 @@ import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
+import tim09.klinika.model.AdminKlinike;
+import tim09.klinika.model.Pregled;
+import tim09.klinika.service.AdminKlinikeService;
 import tim09.klinika.service.PregledService;
 
 @RestController
@@ -27,6 +33,9 @@ public class PregledController {
 
 	@Autowired
 	private PregledService pregledService;
+	
+	@Autowired
+	private AdminKlinikeService adminKlinikeService;
 	
 	@PostMapping(value="dodajSlobodanTerminZaPregled",consumes="application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
@@ -39,6 +48,13 @@ public class PregledController {
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<List<PredefinisaniDTO>> ucitajPredefinisane(@RequestBody PretragaKlinikeDTO pkdto){
 		return new ResponseEntity<>(pregledService.ucitajPredefinisane(pkdto), HttpStatus.OK);
+	}
+	
+	@PostMapping(value="dodijeliSaluPregledu",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<Boolean> dodijeliSaluPregledu(@RequestBody SlobodanTerminDTO slobodanTerminDTO){
+		pregledService.dodijeliSalu(slobodanTerminDTO);
+		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
 	@PutMapping(value="/zakaziPredefinisani",consumes="application/json")
@@ -57,5 +73,44 @@ public class PregledController {
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<Boolean> potvrdiZakazivanje(@RequestBody PredefinisaniDTO predef) throws MailException, InterruptedException {
 		return new ResponseEntity<>(pregledService.potvrdiZakazivanje(predef), HttpStatus.OK);
+	}
+	
+	@GetMapping(value="ucitajSveZakazanePreglede/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<PregledDTO>> ucitajSveZakazanePreglede(@PathVariable("id") long id){
+		AdminKlinike admin=adminKlinikeService.findOne(id);
+		List<Pregled> pregledi=pregledService.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(admin.getKlinika().getId(), false, true,new Date().getTime(),true);
+		
+		List<PregledDTO> preglediDTO=new ArrayList<PregledDTO>();
+		for(Pregled pregled : pregledi) {
+			preglediDTO.add(new PregledDTO(pregled));
+		}
+		return new ResponseEntity<List<PregledDTO>>(preglediDTO,HttpStatus.OK);
+	}
+	
+	@GetMapping(value="ucitajSveSlobodnePreglede/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<PregledDTO>> ucitajSveSlobodnePreglede(@PathVariable("id") long id){
+		AdminKlinike admin=adminKlinikeService.findOne(id);
+		List<Pregled> pregledi=pregledService.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(admin.getKlinika().getId(), false, false,new Date().getTime(),true);
+		
+		List<PregledDTO> preglediDTO=new ArrayList<PregledDTO>();
+		for(Pregled pregled : pregledi) {
+			preglediDTO.add(new PregledDTO(pregled));
+		}
+		return new ResponseEntity<List<PregledDTO>>(preglediDTO,HttpStatus.OK);
+	}
+	
+	@GetMapping(value="ucitajSvePregledeNaCekanju/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<PregledDTO>> ucitajSvePregledeNaCekanju(@PathVariable("id") long id){
+		AdminKlinike admin=adminKlinikeService.findOne(id);
+		List<Pregled> pregledi=pregledService.findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(admin.getKlinika().getId(), new Date().getTime(),false);
+		
+		List<PregledDTO> preglediDTO=new ArrayList<PregledDTO>();
+		for(Pregled pregled : pregledi) {
+			preglediDTO.add(new PregledDTO(pregled));
+		}
+		return new ResponseEntity<List<PregledDTO>>(preglediDTO,HttpStatus.OK);
 	}
 }

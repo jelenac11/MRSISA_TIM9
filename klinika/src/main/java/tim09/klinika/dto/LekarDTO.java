@@ -18,6 +18,9 @@ public class LekarDTO extends MedicinskoOsobljeDTO {
 
 	public LekarDTO(Lekar l) {
 		super(l);
+		if(l==null) {
+			return;
+		}
 		this.specijalnosti = new ArrayList<TipPregledaDTO>();
 		for (TipPregleda tp : l.getSpecijalnosti()) {
 			this.specijalnosti.add(new TipPregledaDTO(tp));

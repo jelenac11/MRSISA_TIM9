@@ -17,6 +17,7 @@ import tim09.klinika.dto.PredefinisaniDTO;
 import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.dto.PretragaLekaraDTO;
+import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.dto.TipPregledaDTO;
 import tim09.klinika.model.AdminKlinike;
@@ -26,6 +27,7 @@ import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Pacijent;
 import tim09.klinika.model.Popust;
 import tim09.klinika.model.Pregled;
+import tim09.klinika.model.Sala;
 import tim09.klinika.model.TipPregleda;
 import tim09.klinika.repository.AdminKlinikeRepository;
 import tim09.klinika.repository.KlinikaRepository;
@@ -44,6 +46,12 @@ public class PregledService {
 	
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
+	
+	@Autowired
+	private SalaService salaService;
+	
+	@Autowired
+	private LekarService lekarService;
 	
 	@Autowired
 	private TipPregledaRepository tipoviRepository;
@@ -97,6 +105,38 @@ public class PregledService {
 		return false;
 	}
 
+	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(long id, boolean b, boolean c,long vreme,boolean potvrdjen) {
+		return pregledRepository.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(b,c,id,vreme,potvrdjen);
+		
+	}
+
+	public List<Pregled> findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(Long id, long time, boolean potvrdjen) {
+		// TODO Auto-generated method stub
+		return pregledRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndPotvrdjen(id,time,potvrdjen);
+		
+	}
+
+	public List<RadniKalendarDTO> kreirajRadniKalendar(Long id, long time) {
+		List<Pregled> pregledi= pregledRepository.findBySalaIdAndVremeAfter(id,time);
+		List<RadniKalendarDTO> kalendar= new ArrayList<RadniKalendarDTO>();
+		for(Pregled pregled:pregledi) {
+			kalendar.add(new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme()+pregled.getTrajanje(), "Pregled"));
+		}
+		return kalendar;
+	}
+
+	public void dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO){
+		Sala sala=salaService.findOne(slobodanTerminDTO.getSala().getId());
+		Pregled pregled=pregledRepository.findById(slobodanTerminDTO.getPregledId()).orElseGet(null);
+		pregled.setSala(sala);
+		pregled.setVreme(slobodanTerminDTO.getDatumiVreme());
+		Lekar lekar=lekarService.findOne(slobodanTerminDTO.getLekar().getId());
+		pregled.setLekar(lekar);
+		emailService.posaljiLinkPotvrdePregleda(pregled, pregled.getPacijent().getEmail());
+		pregledRepository.save(pregled);
+		
+	}
+	
 	public ArrayList<PredefinisaniDTO> ucitajPredefinisane(PretragaKlinikeDTO pkdto) {
 		TipPregleda tp = tipoviRepository.findByNaziv(pkdto.getTipPregleda());
 		ArrayList<PredefinisaniDTO> predefinisaniPregledi = new ArrayList<PredefinisaniDTO>();

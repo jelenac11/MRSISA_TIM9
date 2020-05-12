@@ -15,6 +15,9 @@ public class SalaDTO {
 	}
 
 	public SalaDTO(Sala sala) {
+		if(sala==null) {
+			return;
+		}
 		this.id = sala.getId();
 		this.broj = sala.getBroj();
 		this.naziv = sala.getNaziv();

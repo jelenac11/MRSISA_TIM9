@@ -8,6 +8,7 @@ public class SlobodanTerminDTO {
 	private SalaDTO sala;
 	private LekarDTO lekar;
 	private int trajanje;
+	private long pregledId;
 	
 	public SlobodanTerminDTO() {
 		super();
@@ -57,5 +58,11 @@ public class SlobodanTerminDTO {
 	}
 	public void setTrajanje(int trajanje) {
 		this.trajanje = trajanje;
+	}
+	public long getPregledId() {
+		return pregledId;
+	}
+	public void setPregledId(long pregledId) {
+		this.pregledId = pregledId;
 	}
 }

@@ -52,8 +52,15 @@ public class LekarService {
 		return lekarRepository.save(lekar);
 	}
 
-	public void remove(Long id) {
-		lekarRepository.deleteById(id);
+	public boolean remove(Long id) {
+		int broj=0;
+		//broj=lekarRepository.deleteById(id,new Date().getTime());
+		if(broj==0) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	public List<Lekar> findByIdKlinikaAndVremeAndTipPregleda(Long klinikaId, long datumiVreme, TipPregledaDTO tipPregleda,int trajanje) {		

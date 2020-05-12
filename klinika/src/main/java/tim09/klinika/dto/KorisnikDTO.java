@@ -22,6 +22,9 @@ public class KorisnikDTO {
 	}
 
 	public KorisnikDTO(Korisnik k) {
+		if(k==null) {
+			return;
+		}
 		this.id = k.getId();
 		this.email = k.getEmail();
 		this.lozinka = k.getLozinka();

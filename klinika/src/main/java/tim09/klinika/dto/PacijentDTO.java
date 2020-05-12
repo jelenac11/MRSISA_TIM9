@@ -18,6 +18,9 @@ public class PacijentDTO extends KorisnikDTO {
 	
 	public PacijentDTO(Pacijent p) {
 		super(p);
+		if(p==null) {
+			return;
+		}
 		this.jbo = p.getJbo();
 	}
 

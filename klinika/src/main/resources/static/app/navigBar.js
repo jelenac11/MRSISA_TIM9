@@ -79,7 +79,7 @@ Vue.component('navig-bar', {
 							<router-link :to="{ name: 'cenovnik' }" data-toggle="pill" class="nav-link">Cenovnik</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-							<router-link :to="{ name: 'definisanjeSlobodnogTermina' }" data-toggle="pill" class="nav-link">Termini</router-link>
+							<router-link :to="{ name: 'zakazaniPregledi' }" data-toggle="pill" class="nav-link">Termini</router-link>
 						</li>
 						<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
 							<router-link :to="{ name: 'poslovanje' }" data-toggle="pill" class="nav-link">Poslovanje</router-link>

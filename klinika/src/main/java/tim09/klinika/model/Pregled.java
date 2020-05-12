@@ -48,6 +48,12 @@ public class Pregled {
 
 	@Column(name = "otkazan")
 	private boolean otkazan;
+	
+	@Column(name = "zauzet")
+	private boolean zauzet;
+	
+	@Column(name = "potvrdjen")
+	private boolean potvrdjen;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
@@ -120,4 +126,37 @@ public class Pregled {
 	public void setOtkazan(boolean otkazan) {
 		this.otkazan = otkazan;
 	}
+
+	public int getTrajanje() {
+		return trajanje;
+	}
+
+	public void setTrajanje(int trajanje) {
+		this.trajanje = trajanje;
+	}
+
+	public boolean isZauzet() {
+		return zauzet;
+	}
+
+	public void setZauzet(boolean zauzet) {
+		this.zauzet = zauzet;
+	}
+
+	public boolean isPotvrdjen() {
+		return potvrdjen;
+	}
+
+	public void setPotvrdjen(boolean potvrdjen) {
+		this.potvrdjen = potvrdjen;
+	}
+
+	public Klinika getKlinika() {
+		return klinika;
+	}
+
+	public void setKlinika(Klinika klinika) {
+		this.klinika = klinika;
+	}
+	
 }

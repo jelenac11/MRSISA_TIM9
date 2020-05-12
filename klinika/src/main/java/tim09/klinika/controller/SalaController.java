@@ -1,6 +1,7 @@
 package tim09.klinika.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SalaDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.model.AdminKlinike;
@@ -23,6 +25,8 @@ import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Sala;
 import tim09.klinika.service.AdminKlinikeService;
+import tim09.klinika.service.OperacijaService;
+import tim09.klinika.service.PregledService;
 import tim09.klinika.service.SalaService;
 
 @RestController
@@ -34,6 +38,12 @@ public class SalaController {
 	
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
+	
+	@Autowired
+	private PregledService pregledService;
+
+	@Autowired
+	private OperacijaService operacijaService;
 
 	@GetMapping(value = "/ucitajSve")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
@@ -106,5 +116,18 @@ public class SalaController {
 			saleDTO.add(new SalaDTO(sala));
 		}
 		return new ResponseEntity<List<SalaDTO>>(saleDTO,HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/dobaviRadniKalendar/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<RadniKalendarDTO>> dobaviRadniKalendar(@PathVariable("id") long id) {
+		Sala sala = salaService.findOne(id);
+		if (sala == null) {
+			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+		}
+		List<RadniKalendarDTO>listOne= pregledService.kreirajRadniKalendar(sala.getId(),new Date().getTime());
+		List<RadniKalendarDTO>listTwo=operacijaService.kreirajRadniKalendar(sala.getId(),new Date().getTime());
+		listOne.addAll(listTwo);
+		return new ResponseEntity<>(listOne, HttpStatus.CREATED);
 	}
 }

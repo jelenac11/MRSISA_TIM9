@@ -20,11 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.view.RedirectView;
 import tim09.klinika.dto.KorisnikTokenDTO;
+import tim09.klinika.dto.OdgovorPregledDTO;
 import tim09.klinika.dto.PacijentDTO;
 import tim09.klinika.dto.PorukaDTO;
+import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.model.Autoritet;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Pacijent;
+import tim09.klinika.model.Pregled;
+import tim09.klinika.model.TokenPotvrdePregleda;
 import tim09.klinika.model.VerifikacioniToken;
 import tim09.klinika.model.ZdravstveniKarton;
 import tim09.klinika.repository.AutoritetRepository;
@@ -42,6 +46,9 @@ public class AutoritetService {
 
 	@Autowired
 	private PacijentService pacijentService;
+	
+	@Autowired
+	private PregledService pregledService;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -54,6 +61,9 @@ public class AutoritetService {
 
 	@Autowired
 	private VerifikacioniTokenService verifikacioniTokenService;
+
+	@Autowired
+	private TokenPotvrdePregledaService tokenPotvrdePregledaService;
 
 	public Object createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest,
 			HttpServletResponse response) throws AuthenticationException, IOException {
@@ -133,6 +143,16 @@ public class AutoritetService {
 		}
 		return null;
 	}
+	
+	public RedirectView potvrdaTerminaPregleda(String token) {
+		TokenPotvrdePregleda tpp = tokenPotvrdePregledaService.findByToken(token);
+		
+		if (tpp != null) {
+			return new RedirectView("http://localhost:8081/#/potvrdaTerminaPregleda/"+token);
+		}
+		return null;
+	}
+
 
 	public List<Autoritet> findById(Long id) {
 		Autoritet aut = autoritetRepository.getOne(id);
@@ -146,6 +166,28 @@ public class AutoritetService {
 		List<Autoritet> autoriteti = new ArrayList<>();
 		autoriteti.add(aut);
 		return autoriteti;
+	}
+	
+	public RedirectView odgovorNaPotvrduTerminaPregleda(OdgovorPregledDTO odgovorPregledDTO) {
+		TokenPotvrdePregleda tpp = tokenPotvrdePregledaService.findByToken(odgovorPregledDTO.getToken());
+		
+		if (tpp != null) {
+			Pregled pregled=tpp.getPregled();
+			emailService.obavijestiLekara(pregled, pregled.getLekar().getEmail());
+			pregled.setZauzet(odgovorPregledDTO.isOdgovor());
+			pregled.setPotvrdjen(true);
+			pregledService.save(pregled);
+			tokenPotvrdePregledaService.deleteById(tpp.getId());
+			return new RedirectView("http://localhost:8081/#/");
+		}
+		return null;
+	}
+
+	public ResponseEntity<PregledDTO> dobaviPodatkeoPregledu(String token) {
+		// TODO Auto-generated method stub
+		TokenPotvrdePregleda tpp=tokenPotvrdePregledaService.findByToken(token);
+		Pregled pregled=tpp.getPregled();
+		return new ResponseEntity<PregledDTO>(new PregledDTO(pregled),HttpStatus.OK);
 	}
 
 }

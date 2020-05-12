@@ -175,4 +175,11 @@ public class LekarController {
 	public ResponseEntity<Boolean> imaLiVremenaLekar(@RequestBody PretragaLekaraDTO pldto){
 		return new ResponseEntity<>(lekarService.proveriTipIVreme(pldto), HttpStatus.OK);
 	}
+	
+	@PostMapping(value="izbrisiLekara",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<Boolean> izbrisiLekara(@RequestBody LekarDTO lekarDTO){
+		boolean uspesno =lekarService.remove(lekarDTO.getId());		
+		return new ResponseEntity<Boolean>(uspesno,HttpStatus.OK);
+	}
 }

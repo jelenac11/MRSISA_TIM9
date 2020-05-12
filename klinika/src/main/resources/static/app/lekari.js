@@ -13,26 +13,28 @@ Vue.component("lekari", {
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
-				      	<th scope="col" width="12%">Ime</th>
-				      	<th scope="col" width="12%">Prezime</th>
+				      	<th scope="col" width="10%">Ime</th>
+				      	<th scope="col" width="10%">Prezime</th>
 				      	<th scope="col" width="20%">Email</th>
-				      	<th scope="col" width="12%">Adresa</th>
+				      	<th scope="col" width="10%">Adresa</th>
 				      	<th scope="col" width="10%">Grad</th>
 				      	<th scope="col" width="10%">Država</th>
-				      	<th scope="col" width="12%">Broj telefona</th>
-				      	<th scope="col" width="12%">Radno vreme</th>
+				      	<th scope="col" width="10%">Broj telefona</th>
+				      	<th scope="col" width="10%">Radno vreme</th>
+				      	<th scope="col" width="10%"></th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
 			  		<tr v-for="lekar in lekari" data-toggle="modal" data-target="#" v-on:click="">
-				      	<td width="12%">{{ lekar.ime }}</td>
-				      	<td width="12%">{{ lekar.prezime }}</td>
+				      	<td width="10%">{{ lekar.ime }}</td>
+				      	<td width="10%">{{ lekar.prezime }}</td>
 				      	<td width="20%">{{ lekar.email }}</td>
-				      	<td width="12%">{{ lekar.adresa }}</td>
+				      	<td width="10%">{{ lekar.adresa }}</td>
 				      	<td width="10%">{{ lekar.grad }}</td>
 				      	<td width="10%">{{ lekar.drzava }}</td>
-				      	<td width="12%">{{ lekar.brojTelefona }}</td>
-				      	<td width="12%">{{ radnoVreme(lekar.pocetakRadnogVremena, lekar.krajRadnogVremena) }}</td>
+				      	<td width="10%">{{ lekar.brojTelefona }}</td>
+				      	<td width="10%">{{ radnoVreme(lekar.pocetakRadnogVremena, lekar.krajRadnogVremena) }}</td>
+			    		<td width="10%"><button class="btn btn-danger btn-sm" v-on:click="obrisiLekara(lekar)" id="brisanjeTipa">Ukloni</button></td>
 			    	</tr>
 			  	</tbody>
 			</table>
@@ -56,6 +58,28 @@ Vue.component("lekari", {
 			minutesKraj = (minutesKraj < 10) ? "0" + minutesKraj : minutesKraj;
 
 			return hoursPoc + ":" + minutesPoc + " - " + hoursKraj + ":" + minutesKraj;
+		},
+		obrisiLekara: function(lekar){
+			var hoceDaBrise = confirm("Da li ste sigurni da želite izbrisati lekara "+ lekar.ime+" "+lekar.prezime +"?");
+			if (hoceDaBrise == true) {
+				axios
+				.post('lekari/izbrisiLekara', lekar, { headers: { Authorization: 'Bearer ' + this.token }})
+				.then(response => {
+					if(response.data==true){
+						toast("Uspešno izbrisan lekar "+ lekar.ime+" "+lekar.prezime +".");
+						axios
+				        .get('lekari/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
+				        .then(response => (this.lekari = response.data))
+				        .catch(function (error) { console.log(error); });
+						
+					}
+					else{
+						toast("Nije moguce izbrisati izabranog lekara.");
+						
+					}
+				})
+				.catch(function (error) { console.log(error); });
+			}
 		},
 	},
 	created() {

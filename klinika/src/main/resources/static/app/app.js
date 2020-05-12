@@ -36,6 +36,9 @@ const PretragaLekara = {template : '<pretraga-lekara></pretraga-lekara>'}
 const PotvrdaZakazivanja = {template : '<potvrda-zakazivanja></potvrda-zakazivanja>'}
 const Zaposleni = {template : '<zaposleni></zaposleni>'}
 const DefinisanjeSlobodnogTermina = {template: '<definisanje-slobodnog-termina></definisanje-slobodnog-termina>'}
+const ZakazaniPregledi = {template : '<zakazani-pregledi></zakazani-pregledi>'}
+const NaCekanjuTermini = {template : '<na-cekanju-termini></na-cekanju-termini>'}
+const PotvrdaTerminaPregleda = {template: '<potvrda-termina-pregleda></potvrda-termina-pregleda>'}
 
 const router = new VueRouter({
 	mode: 'hash',
@@ -229,13 +232,30 @@ const router = new VueRouter({
 		props : true
 	},
 	{
+		path: '/zakazaniPregledi',
+		name: 'zakazaniPregledi',
+		component: ZakazaniPregledi
+	},
+	{
+		path: '/naCekanjuTermini',
+		name: 'naCekanjuTermini',
+		component: NaCekanjuTermini
+	},
+	{
 		path: '/definisanjeSlobodnogTermina',
 		name: 'definisanjeSlobodnogTermina',
 		component: DefinisanjeSlobodnogTermina
-	}]
+	},
+	{
+		path: '/potvrdaTerminaPregleda/:token',
+		name: 'potvrdaTerminaPregleda',
+		component: PotvrdaTerminaPregleda
+	},
+	]
 });
 
 var app = new Vue({
 	router,
-	el: '#login'
+	el: '#login',
+	vuetify:new Vuetify(),
 });

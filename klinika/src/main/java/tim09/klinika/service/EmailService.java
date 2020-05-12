@@ -1,5 +1,6 @@
 package tim09.klinika.service;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.hibernate.cfg.Environment;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.PredefinisaniDTO;
 import tim09.klinika.model.Pacijent;
+import tim09.klinika.model.Pregled;
+import tim09.klinika.model.TokenPotvrdePregleda;
 import tim09.klinika.model.VerifikacioniToken;
 
 @EnableAsync
@@ -24,6 +27,9 @@ public class EmailService {
 
 	@Autowired
 	private VerifikacioniTokenService verifikacioniTokenService;
+
+	@Autowired
+	private TokenPotvrdePregledaService tokenPotvrdePregledaService;
 
 	@Async
 	public void posaljiEmail(String to, String subject, String text) throws MailException, InterruptedException {
@@ -52,6 +58,34 @@ public class EmailService {
 		email.setSubject(subject);
 		email.setText("Poštovani, da biste se uspešno registrovali, kliknite na sledeći link " + "\r\n"
 				+ "http://localhost:8081" + confirmationUrl);
+		javaMailSender.send(email);
+	}
+	
+	@Async
+	public void posaljiLinkPotvrdePregleda(Pregled pregled,String prima){
+		String token = UUID.randomUUID().toString();
+		TokenPotvrdePregleda tokenpp = new TokenPotvrdePregleda();
+		tokenpp.setId(null);
+		tokenpp.setToken(token);
+		tokenpp.setPregled(pregled);
+		tokenPotvrdePregledaService.saveToken(tokenpp);
+		String subject = "Potvrda termina pregleda";
+		String confirmationUrl = "/auth/potvrdaTerminaPregleda/" + token;
+		SimpleMailMessage email = new SimpleMailMessage();
+		email.setTo(prima);
+		email.setSubject(subject);
+		email.setText("Poštovani, molimo Vas da potvrdite ili odbijete dodijeljeni termin za pregled na sljedećem linku " + "\r\n"
+				+ "http://localhost:8081" + confirmationUrl);
+		javaMailSender.send(email);
+	}
+
+	@Async
+	public void obavijestiLekara(Pregled pregled, String mail) {
+		// TODO Auto-generated method stub
+		SimpleMailMessage email = new SimpleMailMessage();
+		email.setTo(mail);
+		email.setSubject("Obavestenje o novom zakazanom pregledu");
+		email.setText("Postovani, obavestavamo Vas, da "+new Date(pregled.getVreme())+" imate zakazan pregled.");
 		javaMailSender.send(email);
 	}
 

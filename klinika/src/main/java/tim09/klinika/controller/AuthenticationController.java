@@ -28,7 +28,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import tim09.klinika.dto.KorisnikDTO;
 import tim09.klinika.dto.KorisnikTokenDTO;
+import tim09.klinika.dto.OdgovorPregledDTO;
 import tim09.klinika.dto.PacijentDTO;
+import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Pacijent;
 import tim09.klinika.security.TokenUtils;
@@ -137,6 +139,21 @@ public class AuthenticationController {
 		return autoritetService.potvrdaRegistracije(url);
 	}
 
+	@GetMapping(value = "/potvrdaTerminaPregleda/{token}")
+	public RedirectView potvrdaTerminaPregleda(@PathVariable("token") String url) {
+		return autoritetService.potvrdaTerminaPregleda(url);
+	}
+	
+	@GetMapping(value = "/dobaviPodatkeoPregledu/{token}")
+	public ResponseEntity<PregledDTO> dobaviPodatkeoPregledu(@PathVariable("token") String token){
+		return autoritetService.dobaviPodatkeoPregledu(token);
+	}
+	
+	@PostMapping(value = "/odgovorNaPotvrduTerminaPregleda")
+	public RedirectView odgovorNaPotvrduTerminaPregleda(@RequestBody OdgovorPregledDTO odgovorPregledDTO) {
+		return autoritetService.odgovorNaPotvrduTerminaPregleda(odgovorPregledDTO);
+	}
+	
 	@PostMapping(value = "/refresh")
 	public ResponseEntity<KorisnikTokenDTO> refreshAuthenticationToken(HttpServletRequest request) {
 

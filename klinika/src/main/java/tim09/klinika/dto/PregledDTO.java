@@ -15,6 +15,9 @@ public class PregledDTO {
 	private Date vreme;
 	private boolean otkazan;
 	private KlinikaDTO klinika;
+	private boolean zauzet;
+	private long trajanje;
+	private long vreme2;
 
 	public PregledDTO() {
 
@@ -22,6 +25,16 @@ public class PregledDTO {
 
 	public PregledDTO(Pregled os) {
 		// TODO Auto-generated constructor stub
+		this.id=os.getId();
+		this.lekar=new LekarDTO(os.getLekar());
+		this.pacijent=new PacijentDTO(os.getPacijent());
+		this.tipPregleda=new TipPregledaDTO(os.getTipPregleda());
+		this.sala=new SalaDTO(os.getSala());
+		this.vreme=new Date(os.getVreme());
+		this.otkazan=os.isOtkazan();
+		this.zauzet=os.isZauzet();
+		this.trajanje=os.getTrajanje();
+		this.vreme2=os.getVreme();
 	}
 
 	public LekarDTO getLekar() {
@@ -95,4 +108,29 @@ public class PregledDTO {
 	public void setKlinika(KlinikaDTO klinika) {
 		this.klinika = klinika;
 	}
+
+	public boolean isZauzet() {
+		return zauzet;
+	}
+
+	public void setZauzet(boolean zauzet) {
+		this.zauzet = zauzet;
+	}
+
+	public long getTrajanje() {
+		return trajanje;
+	}
+
+	public void setTrajanje(long trajanje) {
+		this.trajanje = trajanje;
+	}
+
+	public long getVreme2() {
+		return vreme2;
+	}
+
+	public void setVreme2(long vreme2) {
+		this.vreme2 = vreme2;
+	}
+	
 }
