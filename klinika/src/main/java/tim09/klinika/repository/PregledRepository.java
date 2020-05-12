@@ -31,7 +31,7 @@ public interface PregledRepository extends JpaRepository<Pregled, Long> {
 	
 	@Modifying
 	@Transactional
-	@Query(value = "insert into pregled(lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, sala_id, otkazan) values (?1, ?2, ?3, ?4, 3600000, ?5, null, false)",nativeQuery = true)
+	@Query(value = "insert into pregled(lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, sala_id, otkazan, zauzet, potvrdjen) values (?1, ?2, ?3, ?4, 3600000, ?5, null, false, true, false)",nativeQuery = true)
 	public void insertZakazaniPregled(long lekar, long pacijent, long tip, long vreme, long klinika_id);
 	
 	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(boolean b, boolean c, long id,long vreme,boolean potvrdjen);

@@ -63,7 +63,6 @@ public class KlinikaService {
 	public Boolean proveriTip(PretragaKlinikeDTO pretragaKlinikeDTO) {
 		TipPregleda tp = tipPregledaRepository.findByIdAndNaziv(pretragaKlinikeDTO.getId(), pretragaKlinikeDTO.getTipPregleda());
 		if ( tp != null) {
-			//lekari koji zadovoljavaju tip pregleda, kliniku i nisu tada odsutni
 			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pretragaKlinikeDTO.getId(), tp.getId(), pretragaKlinikeDTO.getDatum());
 			if (lekari == null) {
 				return false;
@@ -113,18 +112,20 @@ public class KlinikaService {
 		if ( tp != null) {
 			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pkdto.getId(), tp.getId(), pkdto.getDatum()); 
 			for (Lekar l : lekari) {
-				long pocetakRadnog = l.getPocetakRadnogVremena();
-				long krajRadnog = l.getKrajRadnogVremena();
-				List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
-				List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
-				int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
-				for (int i = 0; i <= pregledi.size() - 1; i++) {
-					if (pregledi.get(i).getPacijent() == null) {
-						pregledi.remove(i);
+				if (l.isAktivan()) {
+					long pocetakRadnog = l.getPocetakRadnogVremena();
+					long krajRadnog = l.getKrajRadnogVremena();
+					List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
+					List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
+					int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
+					for (int i = 0; i <= pregledi.size() - 1; i++) {
+						if (pregledi.get(i).getPacijent() == null) {
+							pregledi.remove(i);
+						}
 					}
-				}
-				if ((operacije.size() + pregledi.size()) < sati) {
-					lekariDTO.add(new LekarDTO(l));
+					if ((operacije.size() + pregledi.size()) < sati) {
+						lekariDTO.add(new LekarDTO(l));
+					}
 				}
 			}
 		}

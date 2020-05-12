@@ -3,6 +3,7 @@ package tim09.klinika.model;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
@@ -29,6 +30,9 @@ public class Lekar extends MedicinskoOsoblje {
 
 	@OneToMany(mappedBy = "lekar", cascade = CascadeType.ALL)
 	private Set<OcenaLekara> ocene;
+	
+	@Column(name = "aktivan")
+	private boolean aktivan;
 
 	public Lekar() {
 
@@ -64,6 +68,14 @@ public class Lekar extends MedicinskoOsoblje {
 
 	public void setPregledi(Set<Pregled> pregledi) {
 		this.pregledi = pregledi;
+	}
+
+	public boolean isAktivan() {
+		return aktivan;
+	}
+
+	public void setAktivan(boolean aktivan) {
+		this.aktivan = aktivan;
 	}
 
 }

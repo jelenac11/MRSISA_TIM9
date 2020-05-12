@@ -166,10 +166,12 @@ public class PregledService {
 		Pregled p = pregledRepository.findPregledByVremeAndLekarId(predef.getDatum(), predef.getLekar().getId());
 		Optional<Pacijent> pa = pacijentRepository.findById(predef.getPacijent().getId());
 		p.setPacijent(pa.get());
+		p.setZauzet(true);
+		p.setPotvrdjen(true);
 		pregledRepository.save(p);
 		String text = "Poštovani, \nUspešno ste zakazali pregled.\nPodaci o pregledu: \nKlinika: " + predef.getLekar().getKlinika() + "\nLokacija: " + predef.getLokacija().getLokacija() + "\nVreme: " + new Date(predef.getDatum()).toString() + "\nLekar: " + predef.getLekar().getIme() + " " + 
 		predef.getLekar().getPrezime() + "\nTip pregleda: " + predef.getTip().getNaziv() + "\nBroj sale: " + predef.getSala() + "\nCena: " + (predef.getCena()/100.00)*(100-predef.getPopust());
-		emailService.posaljiEmail("jelenacupac99@gmail.com", "Potvrda o zakazanom pregledu", text);
+		emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Potvrda o zakazanom pregledu", text);
 		return true;
 	}
 
@@ -201,7 +203,7 @@ public class PregledService {
 			for (AdminKlinike ak : admini) {
 				String text = "Poštovani, \nPristigao je zahtev za zakazivanje pregleda.\nPodaci o pregledu:\nPacijent: " + predef.getPacijent().getEmail() + "\nVreme: " + new Date(predef.getDatum()).toString() + "\nLekar: " + predef.getLekar().getIme() + " " + 
 					predef.getLekar().getPrezime() + "\nTip pregleda: " + predef.getTip().getNaziv();
-				emailService.posaljiEmail("jelenacupac99@gmail.com", "Zahtev za zakazivanje pregleda", text);
+				emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Zahtev za zakazivanje pregleda", text);
 			}
 		}
 		return true;

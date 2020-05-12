@@ -107,6 +107,7 @@ public class LekarController {
 		lekar.setKrajRadnogVremena(lekarDTO.getKrajRadnogVremena());
 		lekar.setAutoriteti(autoritetService.findByName("ROLE_LEKAR"));
 		lekar.setAktiviran(true);
+		lekar.setAktivan(true);
 		lekar.setVerifikovan(true);
 		lekar.setPromenjenaLozinka(false);
 		Klinika k = klinikaService.findByNaziv(lekarDTO.getKlinika());

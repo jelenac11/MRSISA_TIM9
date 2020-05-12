@@ -53,13 +53,14 @@ public class LekarService {
 	}
 
 	public boolean remove(Long id) {
-		int broj=0;
-		//broj=lekarRepository.deleteById(id,new Date().getTime());
-		if(broj==0) {
-			return false;
-		}
-		else {
+		Optional<Lekar> l = lekarRepository.findById(id);
+		
+		if (l != null) {
+			Lekar lekar = l.get();
+			lekar.setAktivan(false);
 			return true;
+		} else {
+			return false;
 		}
 	}
 	
