@@ -44,7 +44,6 @@ public class EmailService {
 		message.setSubject(subject);
 		message.setText(text);
 		javaMailSender.send(message);
-
 	}
 
 	@Async
@@ -80,7 +79,7 @@ public class EmailService {
 		email.setTo(prima);
 		email.setSubject(subject);
 		email.setText(
-				"Poštovani, molimo Vas da potvrdite ili odbijete dodijeljeni termin za pregled na sljedećem linku "
+				"Poštovani, molimo Vas da potvrdite ili odbijete dodeljeni termin za pregled na sledećem linku "
 						+ "\r\n" + "http://localhost:8081" + confirmationUrl);
 		javaMailSender.send(email);
 	}

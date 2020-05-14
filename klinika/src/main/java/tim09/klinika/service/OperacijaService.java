@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import tim09.klinika.dto.LekarDTO;
 import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
+import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Operacija;
 import tim09.klinika.model.Sala;
@@ -25,7 +26,10 @@ public class OperacijaService {
 	
 	@Autowired
 	private LekarService lekarService;
-
+	
+	@Autowired
+	private AdminKlinikeService adminKlinikeService;
+	
 	@Autowired
 	private EmailService emailService;
 
@@ -55,7 +59,7 @@ public class OperacijaService {
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
-		List<Operacija> operacije = operacijaRepository.findByLekariAndVremeAfter(id, time);
+		List<Operacija> operacije = operacijaRepository.findByLekar(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Operacija operacija : operacije) {
 			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija"));
@@ -71,6 +75,8 @@ public class OperacijaService {
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
 		Operacija operacija = operacijaRepository.findById(slobodanTerminDTO.getOperacijaId()).orElseGet(null);
 		operacija.setSala(sala);
+		AdminKlinike ak = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		operacija.setKlinika(ak.getKlinika());
 		operacija.setVreme(slobodanTerminDTO.getDatumiVreme());
 		for (LekarDTO lekarDTO : slobodanTerminDTO.getLekari()) {
 			Lekar lekar = lekarService.findOne(lekarDTO.getId());

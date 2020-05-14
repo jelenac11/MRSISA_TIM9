@@ -33,84 +33,101 @@ public class PregledController {
 
 	@Autowired
 	private PregledService pregledService;
-	
+
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-	
-	@PostMapping(value="dodajSlobodanTerminZaPregled",consumes="application/json")
+
+	@PostMapping(value = "dodajSlobodanTerminZaPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<Boolean> dodajSlobodanTerminZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO){
-		boolean uspesno=pregledService.insertPregled(slobodanTerminDTO);
-		return new ResponseEntity<Boolean>(uspesno,HttpStatus.OK);
+	public ResponseEntity<Boolean> dodajSlobodanTerminZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
+		boolean uspesno = pregledService.insertPregled(slobodanTerminDTO);
+		return new ResponseEntity<Boolean>(uspesno, HttpStatus.OK);
 	}
-	
-	@PutMapping(value="/ucitajPredefinisanePreglede",consumes="application/json")
+
+	@PutMapping(value = "/otkaziPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<List<PredefinisaniDTO>> ucitajPredefinisane(@RequestBody PretragaKlinikeDTO pkdto){
+	public ResponseEntity<Boolean> otkaziPregled(@RequestBody PregledDTO pregled) {
+		return new ResponseEntity<>(pregledService.otkaziPregledPacijenta(pregled), HttpStatus.OK);
+	}
+
+	@GetMapping(value = "ucitajSvePregledePacijenta/{id}")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<List<PregledDTO>> ucitajSvePregledePacijenta(@PathVariable("id") long id) {
+		return new ResponseEntity<>(pregledService.vratiPregledePacijenta(id), HttpStatus.OK);
+	}
+
+	@PutMapping(value = "/ucitajPredefinisanePreglede", consumes = "application/json")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<List<PredefinisaniDTO>> ucitajPredefinisane(@RequestBody PretragaKlinikeDTO pkdto) {
 		return new ResponseEntity<>(pregledService.ucitajPredefinisane(pkdto), HttpStatus.OK);
 	}
-	
-	@PostMapping(value="dodijeliSaluPregledu",consumes="application/json")
+
+	@PostMapping(value = "dodijeliSaluPregledu", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<Boolean> dodijeliSaluPregledu(@RequestBody SlobodanTerminDTO slobodanTerminDTO){
+	public ResponseEntity<Boolean> dodijeliSaluPregledu(@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
 		pregledService.dodijeliSalu(slobodanTerminDTO);
-		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
-	
-	@PutMapping(value="/zakaziPredefinisani",consumes="application/json")
+
+	@PutMapping(value = "/zakaziPredefinisani", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<Boolean> zakaziPredefinisani(@RequestBody PredefinisaniDTO predef) throws MailException, InterruptedException{
+	public ResponseEntity<Boolean> zakaziPredefinisani(@RequestBody PredefinisaniDTO predef)
+			throws MailException, InterruptedException {
 		return new ResponseEntity<>(pregledService.zakaziPredefinisani(predef), HttpStatus.OK);
 	}
-	
+
 	@PutMapping(value = "/zakaziTermin", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<PredefinisaniDTO> zakaziTermin(@RequestBody PretragaLekaraDTO pldto){
+	public ResponseEntity<PredefinisaniDTO> zakaziTermin(@RequestBody PretragaLekaraDTO pldto) {
 		return new ResponseEntity<>(pregledService.zakaziTermin(pldto), HttpStatus.OK);
 	}
-	
+
 	@PutMapping(value = "/potvrdiZakazivanje", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<Boolean> potvrdiZakazivanje(@RequestBody PredefinisaniDTO predef) throws MailException, InterruptedException {
+	public ResponseEntity<Boolean> potvrdiZakazivanje(@RequestBody PredefinisaniDTO predef)
+			throws MailException, InterruptedException {
 		return new ResponseEntity<>(pregledService.potvrdiZakazivanje(predef), HttpStatus.OK);
 	}
-	
-	@GetMapping(value="ucitajSveZakazanePreglede/{id}")
+
+	@GetMapping(value = "ucitajSveZakazanePreglede/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<List<PregledDTO>> ucitajSveZakazanePreglede(@PathVariable("id") long id){
-		AdminKlinike admin=adminKlinikeService.findOne(id);
-		List<Pregled> pregledi=pregledService.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(admin.getKlinika().getId(), false, true,new Date().getTime(),true);
-		
-		List<PregledDTO> preglediDTO=new ArrayList<PregledDTO>();
-		for(Pregled pregled : pregledi) {
+	public ResponseEntity<List<PregledDTO>> ucitajSveZakazanePreglede(@PathVariable("id") long id) {
+		AdminKlinike admin = adminKlinikeService.findOne(id);
+		List<Pregled> pregledi = pregledService.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(
+				admin.getKlinika().getId(), false, true, new Date().getTime(), true);
+
+		List<PregledDTO> preglediDTO = new ArrayList<PregledDTO>();
+		for (Pregled pregled : pregledi) {
 			preglediDTO.add(new PregledDTO(pregled));
 		}
-		return new ResponseEntity<List<PregledDTO>>(preglediDTO,HttpStatus.OK);
+		return new ResponseEntity<List<PregledDTO>>(preglediDTO, HttpStatus.OK);
 	}
-	
-	@GetMapping(value="ucitajSveSlobodnePreglede/{id}")
+
+	@GetMapping(value = "ucitajSveSlobodnePreglede/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<List<PregledDTO>> ucitajSveSlobodnePreglede(@PathVariable("id") long id){
-		AdminKlinike admin=adminKlinikeService.findOne(id);
-		List<Pregled> pregledi=pregledService.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(admin.getKlinika().getId(), false, false,new Date().getTime(),true);
-		
-		List<PregledDTO> preglediDTO=new ArrayList<PregledDTO>();
-		for(Pregled pregled : pregledi) {
+	public ResponseEntity<List<PregledDTO>> ucitajSveSlobodnePreglede(@PathVariable("id") long id) {
+		AdminKlinike admin = adminKlinikeService.findOne(id);
+		List<Pregled> pregledi = pregledService.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(
+				admin.getKlinika().getId(), false, false, new Date().getTime(), true);
+
+		List<PregledDTO> preglediDTO = new ArrayList<PregledDTO>();
+		for (Pregled pregled : pregledi) {
 			preglediDTO.add(new PregledDTO(pregled));
 		}
-		return new ResponseEntity<List<PregledDTO>>(preglediDTO,HttpStatus.OK);
+		return new ResponseEntity<List<PregledDTO>>(preglediDTO, HttpStatus.OK);
 	}
-	
-	@GetMapping(value="ucitajSvePregledeNaCekanju/{id}")
+
+	@GetMapping(value = "ucitajSvePregledeNaCekanju/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<List<PregledDTO>> ucitajSvePregledeNaCekanju(@PathVariable("id") long id){
-		AdminKlinike admin=adminKlinikeService.findOne(id);
-		List<Pregled> pregledi=pregledService.findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(admin.getKlinika().getId(), new Date().getTime(),false);
-		
-		List<PregledDTO> preglediDTO=new ArrayList<PregledDTO>();
-		for(Pregled pregled : pregledi) {
+	public ResponseEntity<List<PregledDTO>> ucitajSvePregledeNaCekanju(@PathVariable("id") long id) {
+		AdminKlinike admin = adminKlinikeService.findOne(id);
+		List<Pregled> pregledi = pregledService.findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(
+				admin.getKlinika().getId(), new Date().getTime(), false);
+
+		List<PregledDTO> preglediDTO = new ArrayList<PregledDTO>();
+		for (Pregled pregled : pregledi) {
 			preglediDTO.add(new PregledDTO(pregled));
 		}
-		return new ResponseEntity<List<PregledDTO>>(preglediDTO,HttpStatus.OK);
+		return new ResponseEntity<List<PregledDTO>>(preglediDTO, HttpStatus.OK);
 	}
 }

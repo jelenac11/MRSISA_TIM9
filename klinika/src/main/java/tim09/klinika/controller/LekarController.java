@@ -71,6 +71,13 @@ public class LekarController {
 		return new ResponseEntity<LekarDTO>(le, HttpStatus.OK);
 	}
 
+	@GetMapping("/ucitajSveLekareKlinikeByAdmin/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<LekarDTO>> ucitajLekareKlinikeByAdmin(@PathVariable Long id) {
+		Klinika k=adminKlinikeService.findOne(id).getKlinika();
+		return new ResponseEntity<>(lekarService.vratiLekareKlinike(k.getId()), HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/ucitajSve")
 	@PreAuthorize("hasAnyRole('PACIJENT', 'ADMIN_KLINIKE')")
 	public ResponseEntity<List<LekarDTO>> ucitajSveLekare() {
@@ -179,7 +186,7 @@ public class LekarController {
 	}
 
 	@PutMapping(value = "/vratiSlobodneTermine", consumes = "application/json")
-	@PreAuthorize("hasRole('PACIJENT')")
+	@PreAuthorize("hasAnyRole('PACIJENT', 'ADMIN_KLINIKE')")
 	public ResponseEntity<List<Long>> vratiSlobodneTermine(@RequestBody PretragaLekaraDTO pldto) {
 		return new ResponseEntity<>(lekarService.vratiSlobodneTermine(pldto), HttpStatus.OK);
 	}
@@ -201,5 +208,17 @@ public class LekarController {
 	public ResponseEntity<Boolean> izbrisiLekara(@RequestBody LekarDTO lekarDTO) {
 		boolean uspesno = lekarService.remove(lekarDTO.getId());
 		return new ResponseEntity<Boolean>(uspesno, HttpStatus.OK);
+	}
+	
+	@GetMapping("/dobaviTipovePregledaZaLekara/{id}")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<TipPregledaDTO>> dobaviTipovePregledaZaLekara(@PathVariable Long id){
+		Lekar l=lekarService.findOne(id);
+		Set<TipPregleda> tip=l.getSpecijalnosti();
+		List<TipPregledaDTO> dto=new ArrayList<>();
+		for(TipPregleda pregled:tip) {
+			dto.add(new TipPregledaDTO(pregled));
+		}
+		return new ResponseEntity<List<TipPregledaDTO>>(dto, HttpStatus.OK);
 	}
 }

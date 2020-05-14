@@ -44,7 +44,7 @@ insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_gr
 insert into sala (broj, naziv, klinika_id,aktivan) values(1, 'Sala 1', 1,true);
 insert into sala (broj, naziv, klinika_id,aktivan) values(2, 'Sala 2', 1,true);
 insert into sala (broj, naziv, klinika_id,aktivan) values(3, 'Sala 3', 1,true);
-insert into sala (broj, naziv, klinika_id,aktivan) values(4, 'Sala 4', 1,true);
+insert into sala (broj, naziv, klinika_id,aktivan) values(4, 'Sala 4', 1,false);
 insert into sala (broj, naziv, klinika_id,aktivan) values(5, 'Sala 5', 1,false);
 
 insert into sifrarnik (naziv, tip_sifrarnika) values('Šifrarnik lekova', 'LEKOVI');
@@ -81,8 +81,8 @@ insert into specijalizovan (lekar_id, tip_pregleda_id) values (9, 6);
 insert into odsustvo (podnosilac_id, klinika_id, pocetak, kraj, odgovoreno, odobreno) values (8, 2, 1588456800000, 1589493600000, true, true);
 
 -- potvrdjeni pregledi
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 1, 1, 1590127200000, 3600000, 1, false, true, true);
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1589979600000, 3600000, 1, false, true, true);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590127200000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589979600000, 3600000, 1, false, true, true, 2);
 
 -- zahtevi nepotvrdjeni
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1590645600000, 3600000, 1, false, false, true);
@@ -90,6 +90,7 @@ insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, kl
 -- predefinisani
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, null, 1, 1590562800000, 3600000, 1, false, false, false, 1);
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 1, 1590562800000, 3600000, 1, false, false, false, 2);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (8, null, 1, 1590562800000, 3600000, 1, false, false, false, 3);
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 3, 1590559200000, 3600000, 1, false, false, false, 1);
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 3, 1590912000000, 3600000, 1, false, false, false, 1);
 
@@ -99,7 +100,6 @@ insert into operacija (pacijent_id, vreme, klinika_id) values (1, 1590562800000,
 
 insert into operisali (lekar_id, operacija_id) values (6, 1);
 insert into operisali (lekar_id, operacija_id) values (7, 1);
-insert into operisali (lekar_id, operacija_id) values (8, 1);
 insert into operisali (lekar_id, operacija_id) values (6, 2);
 insert into operisali (lekar_id, operacija_id) values (7, 3);
 

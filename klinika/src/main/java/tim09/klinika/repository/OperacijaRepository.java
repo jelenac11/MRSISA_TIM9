@@ -15,8 +15,11 @@ public interface OperacijaRepository extends JpaRepository<Operacija, Long> {
 
 	List<Operacija> findBySalaIdAndVremeAfter(Long id, long time);
 
-	@Query(value = "SELECT * FROM operacija op WHERE op.vreme <= ?2 and (select count(o) from operisali o where operacija_id = op.operacija_id and lekar_id = ?1)=1", nativeQuery = true)
-	List<Operacija> findByLekariAndVremeAfter(Long id, long time);
-	
+	@Query(value = "SELECT * FROM operacija op WHERE (select count(o) from operisali o where operacija_id = op.operacija_id and lekar_id = ?1)=1", nativeQuery = true)
+	List<Operacija> findByLekar(Long id);
+
 	public List<Operacija> findByKlinikaIdAndSalaIdIsNullAndVremeAfter(Long id, long time);
+
+	@Query(value = "SELECT * FROM operacija op WHERE  (op.vreme >= ?2 or (op.vreme not between ?2 and (?2 + 3600000))) and (select count(o) from operisali o where operacija_id = op.operacija_id and lekar_id = ?1)>=1", nativeQuery = true)
+	List<Operacija> findByLekarIdAndVremeAfterOrBetween(Long id, long time);
 }

@@ -67,7 +67,7 @@ public class OdsustvoController {
 		odsustvo.setOdgovoreno(odsustvoDTO.isOdgovoreno());
 		odsustvo.setOdobreno(odsustvoDTO.isOdobreno());
 		
-		odsustvo = service.updateOdsustvo(odsustvo);
+		odsustvo = service.save(odsustvo);
 		
 		odsustvoDTO.setId(odsustvo.getId());
 		odsustvoDTO.setKraj(odsustvo.getKraj());

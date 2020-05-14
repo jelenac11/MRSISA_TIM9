@@ -5,7 +5,7 @@ Vue.component("radni-kalendar", {
 			ulogovan : {},
 			type: 'month',
 		    types: ['month', 'week', '4day', 'day'],
-		    weekday: [1, 2, 3, 4, 5],
+		    weekday: [0, 1, 2, 3, 4, 5, 6],
 		    value: '',
 		    events: [],
 		} 
@@ -84,11 +84,19 @@ Vue.component("radni-kalendar", {
 			let events = response.data;
 			const kalendar = [];
 			for (let e of events) {
+				let kolor = "";
+				if (e.naziv == "Godisnji odmor") {
+					kolor = "yellow";
+				} else if (e.naziv == "Operacija") {
+					kolor = "green";
+				} else if (e.naziv == "Pregled") {
+					kolor = "blue";
+				} 
 				kalendar.push({
 		            name: e.naziv,
 		            start: this.formatDatumKalendar(new Date(e.start)),
 	            	end: this.formatDatumKalendar(new Date(e.end)),
-	            	color: e.naziv == "Operacija" ? "green" : "blue",
+	            	color: kolor,
 		        });
 			}
 			this.events = kalendar;

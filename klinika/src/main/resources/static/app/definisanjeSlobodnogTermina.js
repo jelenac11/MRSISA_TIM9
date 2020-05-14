@@ -21,10 +21,14 @@ Vue.component("definisanje-slobodnog-termina", {
 			odabraniTipPregleda:true,
 			odabraniLekar:true,
 			odabranaSala:true,
+			odabraniTermin:true,
 			odabranoTrajanje:true,
 			dijalog: false,
 			e6:1,
 			activeTab:"2",
+			termini:[],
+			termin:null,
+			pretragaTermina:{id:0,datum:0,tipPregleda:'',pacijent:0,klinika:0}
 		} 
 	},
 	template: `
@@ -74,45 +78,14 @@ Vue.component("definisanje-slobodnog-termina", {
 		</div>
 		
 		<v-dialog v-model="dijalog">
+		
+		
 			<v-stepper v-model="e6">
 				<v-stepper-step :complete="e6 > 1" step="1">
-			        Odabir datuma i tipa pregleda
+			        Odabir lekara i datuma pregleda
 			    </v-stepper-step>
 			    	<v-stepper-content step="1">
-			    		<div class="form-row mb-3">
-							<div class="col">
-								<label for="datum" class="mt-1">Datum i vreme pregleda</label>
-								<input type="datetime-local" v-model="terminPregleda.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid':!odabranDatum}" required>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
-							</div>
-						</div>
-								<div class="form-row">
-									<div class="col">
-										<label for="trajanje" class="mt-1">Trajanje pregleda (u minutama)</label>
-										<input type="number" min=1 max=120 v-model="terminPregleda.trajanje" class="form-control" id="datum" v-on:change="promjenaTrajanja" v-bind:class="{ 'is-invalid':!odabranoTrajanje}" required>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Pogresna vrednost.</div>
-									</div>
-								</div>
-								<div class="form-row">
-									<div class="col">
-										<label for="tipPregleda" class="mt-1">Tip pregleda</label>
-										<select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
-											<option v-for="tip in tipoviPregleda" :value="tip">
-												{{ tip.naziv }}
-											</option>
-										</select>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
-									</div>
-								</div>
-        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
-					</v-stepper-content>
-					<v-divider></v-divider>
-					<v-stepper-step :complete="e6 > 2" step="2">
-						Odabir lekara i sale
-					</v-stepper-step>
-					
-					<v-stepper-content step="2">
-						<div class="form-row">
+			    	<div class="form-row">
 							<div class="col">
 								<label for="lekar" class="mt-1">Lekar</label>
 								<select class="custom-select mt-0" v-model="terminPregleda.lekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
@@ -123,6 +96,57 @@ Vue.component("definisanje-slobodnog-termina", {
 								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
 							</div>
 						</div>
+						<div class="form-row mb-3">
+							<div class="col">
+								<label for="datum" class="mt-1">Datum pregleda</label>
+								<input type="date" v-model="terminPregleda.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid':!odabranDatum}" required>
+								<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
+							</div>
+						</div>
+        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
+					</v-stepper-content>
+					<v-divider></v-divider>
+					
+					
+					<v-stepper-step :complete="e6 > 2" step="2">
+						Odabir termina pregleda i tipa pregleda
+					</v-stepper-step>
+					
+					
+					<v-stepper-content step="2">
+						<div class="form-row">
+									<div class="col">
+										<label for="tipPregleda" class="mt-1">Tip pregleda</label>
+										<select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
+											<option v-for="tip in tipoviPregleda" :value="tip">
+												{{ tip.naziv }}
+											</option>
+										</select>
+										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
+									</div>
+						</div>
+						
+						<div class="form-row">
+									<div class="col">
+										<label for="termin" class="mt-1">Termin</label>
+										<select class="custom-select mt-0" v-model="termin" id="termin" v-bind:class="{ 'is-invalid':!odabraniTermin}" required>
+											<option v-for="termin in termini" :value="termin">
+												{{ urediDatum(termin) }}
+											</option>
+										</select>
+										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali termin.</div>
+									</div>
+						</div>
+						
+			        	<v-btn v-on:click="next2" class="primary">Next</v-btn>
+			        	<v-btn v-on:click="prev">Nazad</v-btn>
+			        </v-stepper-content>
+			        
+			        <v-stepper-step :complete="e6 > 3" step="3">
+						Odabir sale
+					</v-stepper-step>
+					
+			      <v-stepper-content step="3">
 						<div class="form-row">
 							<div class="col">
 								<label for="sala" class="mt-1">Sala</label>
@@ -135,9 +159,8 @@ Vue.component("definisanje-slobodnog-termina", {
 							</div>
 						</div>
 			        	<v-btn v-on:click="finish" class="primary">Finish</v-btn>
-			        	<v-btn v-on:click="prev">Nazad</v-btn>
+			        	<v-btn v-on:click="prev2">Nazad</v-btn>
 			      	</v-stepper-content>
-			      	
 			      </v-stepper>
 				</v-dialog>
 	</div>
@@ -166,6 +189,14 @@ Vue.component("definisanje-slobodnog-termina", {
         .catch(function (error) { console.log(error); });
 	},
 	methods: {
+		urediDatum: function(datum){
+	        var date = new Date(datum);
+	        datum = date.toLocaleDateString('en-GB', {
+	        day: 'numeric', month: 'short', year: 'numeric'
+	        }).replace(/ /g, '-');
+	        vreme = date.toLocaleTimeString();
+	        return datum + " " + vreme
+		},
 		formatVreme:function(datum){
             var date = new Date(datum);
             datum = date.toLocaleDateString('en-GB', {
@@ -179,10 +210,15 @@ Vue.component("definisanje-slobodnog-termina", {
 			  this.dobaviPodatke();
 
 		},
+		next2:function(){
+			 if (!this.validateForm2()) return false;
+			 	this.dobaviPodatke2();
+		},
 		finish:function(){
-			  if (!this.validateForm2()) return false;
+			  if (!this.validateForm3()) return false;
 			  let termin=JSON.parse(JSON.stringify(this.terminPregleda))
-			  termin.datumiVreme=Date.parse(termin.datumiVreme)
+			  termin.datumiVreme=this.termin
+			  termin.trajanje=3600000
 			  axios
 			  .post("/pregledi/dodajSlobodanTerminZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
 			  .then(response=>{
@@ -207,11 +243,16 @@ Vue.component("definisanje-slobodnog-termina", {
 				});
 		},
 		prev: function(){
-			 this.terminPregleda.lekar=null;
-			 this.terminPregleda.sala=null;
-			 this.e6=1;
+			this.termin=null;
+			this.terminPregleda.tipPregleda=null;
+			this.e6=1;
+		},
+		prev2:function(){
+			this.terminPregleda.sala=null;
+			this.e6=2;
 		},
 		reset: function(){
+			this.termin=null;
 			this.terminPregleda={
 				idAdmina:this.terminPregleda.idAdmina,
 				datumiVreme:0,
@@ -220,15 +261,24 @@ Vue.component("definisanje-slobodnog-termina", {
 				lekar:null,
 				sala:null
 			};
+			axios
+			.get("/lekari/ucitajSveLekareKlinikeByAdmin/"+this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }})
+			.then(response=>{
+				this.lekari=response.data;
+			})
+			.catch(function (error) { console.log(error); });
 			this.e6=1;
 		},
 		validateForm1:function(){
-			
-			this.promjenaTipaPregleda();
 			this.promjenaDatuma();
-			this.promjenaTrajanja();
+			if(this.terminPregleda.lekar==null){
+				this.odabraniLekar=false;
+			}
+			else{
+				this.odabraniLekar=true;
+			}
 			
-			if(this.odabraniTipPregleda && this.odabranDatum && this.odabranoTrajanje){
+			if(this.odabraniLekar && this.odabranDatum){
 				return true;
 			}
 			else{
@@ -239,22 +289,35 @@ Vue.component("definisanje-slobodnog-termina", {
 		validateForm2:function(){
 			this.promjenaTipaPregleda();
 			this.promjenaDatuma();
-			
-			if(this.terminPregleda.lekar==null){
-				this.odabraniLekar=false;
+			if(this.termin==null){
+				this.odabraniTermin=false;
 			}
 			else{
-				this.odabraniLekar=true;
+				this.odabraniTermin=true;
 			}
-			
+			if(this.odabraniTipPregleda && this.odabranDatum && this.odabraniTermin && this.odabraniLekar){
+				return true;
+			}
+			else{
+				return false;
+			}	
+		},
+		validateForm3:function(){
+			this.promjenaTipaPregleda();
+			this.promjenaDatuma();
+			if(this.termin==null){
+				this.odabraniTermin=false;
+			}
+			else{
+				this.odabraniTermin=true;
+			}
 			if(this.terminPregleda.sala==null){
 				this.odabranaSala=false;
 			}
 			else{
 				this.odabranaSala=true;
 			}
-			
-			if(this.odabraniTipPregleda && this.odabranDatum && this.odabranaSala && this.odabraniLekar){
+			if(this.odabraniTipPregleda && this.odabranDatum && this.odabraniTermin && this.odabraniLekar && this.odabranaSala){
 				return true;
 			}
 			else{
@@ -296,31 +359,46 @@ Vue.component("definisanje-slobodnog-termina", {
 			let termin=JSON.parse(JSON.stringify(this.terminPregleda))
 			termin.datumiVreme=Date.parse(termin.datumiVreme)
 			axios
-			.post("/lekari/dobaviSlobodneLekareZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
+			.get('/lekari/dobaviTipovePregledaZaLekara/'+this.terminPregleda.lekar.id, { headers: { Authorization: 'Bearer ' + this.token }})
 			.then(response=>{
-				this.lekari=response.data;
+				this.tipoviPregleda=response.data;
+				if(this.tipoviPregleda.length==0){
+					toast("Lekar nije specijalizovan ni za jedan tip pregleda.")
+					return;
+				}
+				this.pretragaTermina.id=this.terminPregleda.lekar.id
+				this.pretragaTermina.datum=termin.datumiVreme
+				axios
+				.put('lekari/vratiSlobodneTermine',this.pretragaTermina, { headers: { Authorization: 'Bearer ' + this.token }})
+				.then(response=>{
+					this.termini=response.data;
+					if(this.termini.length==0){
+						toast("Nema slobodnih termina za izabrani datum.")
+					}
+					else{
+						this.e6=2;
+					}
+				})
+				.catch(function (error) { console.log(error); });
+			})
+			.catch(function (error) { console.log(error); });
+			
+		},
+		dobaviPodatke2: function(){
+			let termin=JSON.parse(JSON.stringify(this.terminPregleda))
+			termin.datumiVreme=this.termin
 				axios
 				.post("/sale/dobaviSlobodneSaleZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
 				.then(response=>{
 					this.sale=response.data;
-					if(this.lekari.length==0 && this.sale.length==0){
-						  toast("Nema slobodnih sala i lekara za izabrani termin.");
-						  return false;
-					  }
-					  if(this.lekari.length==0){
-						  toast("Nema slobodnih lekara za izabrani termin i tip pregleda.");
-						  return false;
-					  }
-					  
 					  if(this.sale.length==0){
 						  toast("Nema slobodnih sala za izabrani termin.");
 						  return false;
 					  }
-					  this.e6=2;
+					  this.e6=3;
 					})
 				.catch(function (error) { console.log(error); });
-				})
-			.catch(function (error) { console.log(error); });
+			
 		},
 		formatTrajanje: function(trajanje){
 			return parseInt(trajanje)/60000+ " minuta"

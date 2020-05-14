@@ -60,6 +60,7 @@ Vue.component('potvrda-zakazivanja', {
 					  	</li>
 					  	<li class="list-group-item">
 					  		<div class="d-flex w-20 justify-content-between">
+					  			<button type="button" class="btn btn-secondary" v-on:click="nazad()">Nazad</button>
 					  			<button type="button" class="btn btn-success" v-on:click="potvrdi()">Potvrdi</button>
 					  		</div>
 					  	</li>
@@ -92,6 +93,15 @@ Vue.component('potvrda-zakazivanja', {
 				this.$router.push({ name: 'pretragaLekara', params: {id: this.pregled.lokacija.id, vreme : datum, tip : this.pregled.tip.naziv}});
 			}})
 			.catch(function (error) { console.log(error); });
+		},
+		nazad: function() {
+			dani = this.pregled.datum % 86400000;
+			datum = this.pregled.datum - dani - 7200000;
+			if (this.zaposleni){
+				this.$router.push({ name: 'zaposleni', params: {id: this.pregled.lokacija.id}});
+			} else {
+				this.$router.push({ name: 'pretragaLekara', params: {id: this.pregled.lokacija.id, vreme : datum, tip : this.pregled.tip.naziv}});
+			}
 		},
 	},
 	created() {

@@ -17,7 +17,7 @@ Vue.component("tipoviPregleda", {
 		<div class="naviga tab-content">
 			<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
 				<div class="input-group">
-					<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Pretraga..."/>
+					<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Naziv..."/>
 				</div>
 			</div>
 			<table class="table table-hover table-striped">

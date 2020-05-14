@@ -176,6 +176,9 @@ public class AutoritetService {
 			emailService.obavijestiLekara(pregled, pregled.getLekar().getEmail());
 			pregled.setZauzet(odgovorPregledDTO.isOdgovor());
 			pregled.setPotvrdjen(true);
+			if (!odgovorPregledDTO.isOdgovor()) {
+				pregled.setPacijent(null);
+			}
 			pregledService.save(pregled);
 			tokenPotvrdePregledaService.deleteById(tpp.getId());
 			return new RedirectView("http://localhost:8081/#/");

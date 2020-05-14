@@ -60,7 +60,7 @@ Vue.component("na-cekanju-operacije", {
 		    e6: 1,
 		    type: 'month',
 		    types: ['month', 'week', '4day', 'day'],
-		    weekday: [1, 2, 3, 4, 5],
+		    weekday: [0, 1, 2, 3, 4, 5, 6],
 		    value: '',
 		    events: [],
 		    activeTab: '4',

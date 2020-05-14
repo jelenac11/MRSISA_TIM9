@@ -80,13 +80,9 @@ public class MedicinskoOsoblje {
 		}
 		List<RadniKalendarDTO> listOne = pregledService.kreirajRadniKalendarRadnika(k.getId(), new Date().getTime());
 		List<RadniKalendarDTO> listTwo = operacijaService.kreirajRadniKalendarRadnika(k.getId(), new Date().getTime());
-		//List<RadniKalendarDTO> listThree = odsustvoService.kreirajRadniKalendarRadnika(k.getId(), new Date().getTime());
+		List<RadniKalendarDTO> listThree = odsustvoService.kreirajRadniKalendarRadnika(k.getId(), new Date().getTime());
 		listOne.addAll(listTwo);
-		//listOne.addAll(listThree);
-//		System.out.println("***************************************************************************************");
-//		for (RadniKalendarDTO radniKalendarDTO : listOne) {
-//			System.out.println(radniKalendarDTO.getNaziv());
-//		}
+		listOne.addAll(listThree);
 		return new ResponseEntity<>(listOne, HttpStatus.CREATED);
 	}
 

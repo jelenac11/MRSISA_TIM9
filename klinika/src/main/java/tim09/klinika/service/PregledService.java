@@ -112,7 +112,6 @@ public class PregledService {
 			long vreme, boolean potvrdjen) {
 		return pregledRepository.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(b, c, id,
 				vreme, potvrdjen);
-
 	}
 
 	public List<Pregled> findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(Long id, long time, boolean potvrdjen) {
@@ -131,7 +130,7 @@ public class PregledService {
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
-		List<Pregled> pregledi = pregledRepository.findByLekarIdAndVremeAfter(id, time);
+		List<Pregled> pregledi = pregledRepository.findByLekarId(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Pregled pregled : pregledi) {
 			kalendar.add(
@@ -144,6 +143,8 @@ public class PregledService {
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
 		Pregled pregled = pregledRepository.findById(slobodanTerminDTO.getPregledId()).orElseGet(null);
 		pregled.setSala(sala);
+		AdminKlinike ak = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		pregled.setKlinika(ak.getKlinika());
 		pregled.setVreme(slobodanTerminDTO.getDatumiVreme());
 		Lekar lekar = lekarService.findOne(slobodanTerminDTO.getLekar().getId());
 		pregled.setLekar(lekar);
@@ -154,7 +155,7 @@ public class PregledService {
 	}
 
 	public ArrayList<PredefinisaniDTO> ucitajPredefinisane(PretragaKlinikeDTO pkdto) {
-		TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pkdto.getTipPregleda(),true);
+		TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pkdto.getTipPregleda(), true);
 		ArrayList<PredefinisaniDTO> predefinisaniPregledi = new ArrayList<PredefinisaniDTO>();
 		ArrayList<Pregled> pregledi = new ArrayList<Pregled>();
 		if (tp != null) {
@@ -201,7 +202,7 @@ public class PregledService {
 		p.setDatum(pldto.getDatum());
 		Optional<Lekar> le = lekarRepository.findById(pldto.getId());
 		p.setLekar(new LekarDTO(le.get()));
-		TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pldto.getTipPregleda(),true);
+		TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pldto.getTipPregleda(), true);
 		p.setTip(new TipPregledaDTO(tp));
 		p.setCena(tp.getStavkaCenovnika().getCena());
 		Popust popust = popustRepository.nadjiPopust(tp.getStavkaCenovnika().getId(), pldto.getDatum(),
@@ -216,6 +217,29 @@ public class PregledService {
 		Optional<Korisnik> pa = korisniciRepository.findById(pldto.getPacijent());
 		p.setPacijent(new KorisnikDTO(pa.get()));
 		return p;
+	}
+
+	public List<PregledDTO> vratiPregledePacijenta(long id) {
+		List<Pregled> pregledi = pregledRepository.findByPacijentIdAndPotvrdjenAndOtkazan(id, true, false);
+		List<PregledDTO> pregledidto = new ArrayList<PregledDTO>();
+		if (pregledi != null) {
+			for (Pregled p : pregledi) {
+				pregledidto.add(new PregledDTO(p));
+			}
+		}
+		return pregledidto;
+	}
+
+	public Boolean otkaziPregledPacijenta(PregledDTO pregled) {
+		Optional<Pregled> p = pregledRepository.findById(pregled.getId());
+		if (p != null) {
+			Pregled pr = p.get();
+			pr.setOtkazan(true);
+			pr.setPacijent(null);
+			pregledRepository.save(pr);
+			return true;
+		}
+		return false;
 	}
 
 	public Boolean potvrdiZakazivanje(PredefinisaniDTO predef) throws MailException, InterruptedException {

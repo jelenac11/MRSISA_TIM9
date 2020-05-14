@@ -37,7 +37,7 @@ public class LekarService {
 	private PregledRepository pregledRepository;
 
 	public List<Lekar> findAllByKlinika(Klinika k) {
-		return lekarRepository.findAllByKlinika(k);
+		return lekarRepository.findAllByKlinikaAndAktivan(k, true);
 	}
 
 	public Lekar findOne(Long id) {
@@ -53,12 +53,18 @@ public class LekarService {
 	}
 
 	public boolean remove(Long id) {
+		Date sad = new Date();
 		Optional<Lekar> l = lekarRepository.findById(id);
-
 		if (l != null) {
 			Lekar lekar = l.get();
-			lekar.setAktivan(false);
-			return true;
+			List<Pregled> pregledi = pregledRepository.findByLekarIdAndVremeAfterOrBetween(id, sad.getTime());
+			List<Operacija> operacije = operacijaRepository.findByLekarIdAndVremeAfterOrBetween(id, sad.getTime());
+			if (pregledi.size() == 0 && operacije.size() == 0) {
+				lekar.setAktivan(false);
+				lekarRepository.save(lekar);
+				return true;
+			}
+			return false;
 		} else {
 			return false;
 		}

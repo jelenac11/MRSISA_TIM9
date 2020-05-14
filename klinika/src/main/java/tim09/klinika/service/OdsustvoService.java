@@ -45,7 +45,7 @@ public class OdsustvoService {
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
-		List<Odsustvo> odsustva = odsustvoRepository.findByPodnosilacAndKrajAfter(id, time);
+		List<Odsustvo> odsustva = odsustvoRepository.findByPodnosilacIdAndOdobreno(id, true);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Odsustvo odsustvo : odsustva) {
 			kalendar.add(new RadniKalendarDTO(odsustvo.getPocetak(), odsustvo.getKraj(), "Godisnji odmor"));

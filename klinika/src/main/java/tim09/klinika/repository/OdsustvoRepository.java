@@ -10,5 +10,5 @@ public interface OdsustvoRepository extends JpaRepository<Odsustvo, Long> {
 
 	List<Odsustvo> findByOdgovorenoFalseAndKlinikaId(long id);
 
-	public List<Odsustvo> findByPodnosilacAndKrajAfter(Long id, long time);
+	public List<Odsustvo> findByPodnosilacIdAndOdobreno(Long id, boolean odob);
 }

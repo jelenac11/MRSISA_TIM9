@@ -21,7 +21,7 @@ public interface LekarRepository extends JpaRepository<Lekar, Long> {
 	@Query(value = "SELECT * FROM korisnici k WHERE k.tip = 'LE' and k.klinika_id = ?1 and k.aktivan = true", nativeQuery = true)
 	List<Lekar> findByKlinikaId(Long id);
 
-	List<Lekar> findAllByKlinika(Klinika k);
+	List<Lekar> findAllByKlinikaAndAktivan(Klinika k, boolean akt);
 
 	@Query(value = "select * from korisnici l where l.tip='LE' and l.aktivan = true and l.klinika_id=?1 and ?3 between l.pocetak_radnog_vremena and l.kraj_radnog_vremena and "
 			+ "(select count(svi) from specijalizovan svi where svi.lekar_id=l.korisnik_id and svi.tip_pregleda_id=?4)=1 and "

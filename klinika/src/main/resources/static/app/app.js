@@ -9,6 +9,7 @@ const SifrarnikDijagnoza = {template: '<sifrarnik-dijagnoza></sifrarnik-dijagnoz
 const AdminiKlinike = { template: '<admini-klinike></admini-klinike>' }
 const AdminiCentra = { template: '<admini-centra></admini-centra>' }
 const KlinikeAdmin = { template: '<klinike-admin></klinike-admin>' }
+const IstorijaPregleda = { template: '<istorija-pregleda></istorija-pregleda>' }
 const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>' }
 const RadniKalendar = { template: '<radni-kalendar></radni-kalendar>' }
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
@@ -257,6 +258,11 @@ const router = new VueRouter({
 		path: '/definisanjeSlobodnogTermina',
 		name: 'definisanjeSlobodnogTermina',
 		component: DefinisanjeSlobodnogTermina
+	},
+	{
+		path: '/istorijaPregleda',
+		name: 'istorijaPregleda',
+		component: IstorijaPregleda
 	},
 	{
 		path: '/potvrdaTerminaPregleda/:token',
