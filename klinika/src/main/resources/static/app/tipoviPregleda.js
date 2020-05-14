@@ -8,13 +8,18 @@ Vue.component("tipoviPregleda", {
 			submitovano : false,
 	    	uspesnaIzmena : true,
 	    	token: "",
+	    	search:'',
 		} 
 	},
 	template: `
 	<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
-		
 		<div class="naviga tab-content">
+			<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
+				<div class="input-group">
+					<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Pretraga..."/>
+				</div>
+			</div>
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
@@ -24,7 +29,7 @@ Vue.component("tipoviPregleda", {
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="tipPregleda in tipoviPregleda" data-toggle="modal" data-target="#izmenaTipaPregledaModal"  v-on:click="izaberiTipPregleda(tipPregleda)">
+			  		<tr v-for="tipPregleda in filtriraniTipovi" data-toggle="modal" data-target="#izmenaTipaPregledaModal"  v-on:click="izaberiTipPregleda(tipPregleda)">
 				      	<td width="30%">{{ tipPregleda.naziv }}</td>
 				      	<td width="50%">{{ tipPregleda.opis }}</td>
 				      	<td width="20%"><button class="btn btn-danger btn-sm" v-on:click="obrisiTipPregleda(tipPregleda)" id="brisanjeTipa">Ukloni</button></td>
@@ -148,6 +153,22 @@ Vue.component("tipoviPregleda", {
 		izaberiTipPregleda: function(tipPregleda){
 			this.noviTipPregleda=JSON.parse(JSON.stringify(tipPregleda));
 			this.izabraniTipPregleda=JSON.parse(JSON.stringify(tipPregleda));
+		}
+	},
+	computed:{
+		filtriraniTipovi: function(){
+			return this.tipoviPregleda.filter(tipPregleda => {
+				if(this.search==""){
+					return true;
+				}
+				if(tipPregleda.naziv.toLowerCase().includes(this.search.toLowerCase()) || tipPregleda.opis.toLowerCase().includes(this.search.toLowerCase()))
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			})
 		}
 	}
 });

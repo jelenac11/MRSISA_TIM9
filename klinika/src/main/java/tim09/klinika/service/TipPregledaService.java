@@ -26,15 +26,15 @@ public class TipPregledaService {
 	}
 
 	public TipPregleda findOneByNaziv(String naziv) {
-		return tipPregledaRepository.findByNaziv(naziv);
+		return tipPregledaRepository.findByNazivAndAktivan(naziv, true);
 	}
 
 	public List<TipPregleda> findAll() {
-		return tipPregledaRepository.findAll();
+		return tipPregledaRepository.findAllByAktivan(true);
 	}
 
 	public List<TipPregleda> findAllByKlinikaId(long id) {
-		return tipPregledaRepository.findByKlinikaId(id);
+		return tipPregledaRepository.findByKlinikaIdAndAktivan(id, true);
 	}
 
 	public TipPregleda save(TipPregleda tipPregleda) {
@@ -44,8 +44,11 @@ public class TipPregledaService {
 	public boolean remove(Long id) {
 		List<Pregled> pregledi = pregledService.findByTipPregledaIdAndOtkazanAndVremeGreaterThan(id, false,
 				new Date().getTime());
+		
 		if (pregledi.isEmpty()) {
-			tipPregledaRepository.deleteById(id);
+			TipPregleda pregled=findOne(id);
+			pregled.setAktivan(false);
+			tipPregledaRepository.save(pregled);
 			return true;
 		} else {
 			return false;
@@ -57,7 +60,7 @@ public class TipPregledaService {
 				false, new Date().getTime());
 		TipPregleda postojiNaziv = null;
 		if (!tipPregledaDTO.getNaziv().equals(tipPregleda.getNaziv())) {
-			postojiNaziv = tipPregledaRepository.findByNaziv(tipPregledaDTO.getNaziv());
+			postojiNaziv = tipPregledaRepository.findByNazivAndAktivan(tipPregledaDTO.getNaziv(),true);
 		}
 		if (pregledi.isEmpty() && postojiNaziv == null) {
 			TipPregleda pregled = tipPregledaRepository.findById(tipPregledaDTO.getId()).orElseGet(null);
@@ -72,7 +75,7 @@ public class TipPregledaService {
 	}
 
 	public List<TipPregledaDTO> vratiTipoveKlinike(long id) {
-		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaId(id);
+		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaIdAndAktivan(id,true);
 		List<TipPregledaDTO> tipovidto = new ArrayList<TipPregledaDTO>();
 		if (tipovi != null) {
 			for (TipPregleda tp : tipovi) {

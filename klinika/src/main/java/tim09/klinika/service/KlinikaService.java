@@ -61,7 +61,7 @@ public class KlinikaService {
 	}
 
 	public Boolean proveriTip(PretragaKlinikeDTO pretragaKlinikeDTO) {
-		TipPregleda tp = tipPregledaRepository.findByIdAndNaziv(pretragaKlinikeDTO.getId(), pretragaKlinikeDTO.getTipPregleda());
+		TipPregleda tp = tipPregledaRepository.findByIdAndNazivAndAktivan(pretragaKlinikeDTO.getId(), pretragaKlinikeDTO.getTipPregleda());
 		if ( tp != null) {
 			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pretragaKlinikeDTO.getId(), tp.getId(), pretragaKlinikeDTO.getDatum());
 			if (lekari == null) {
@@ -108,7 +108,7 @@ public class KlinikaService {
 
 	public List<LekarDTO> vratiSlobodneLekare(PretragaKlinikeDTO pkdto) {
 		ArrayList<LekarDTO> lekariDTO = new ArrayList<LekarDTO>();
-		TipPregleda tp = tipPregledaRepository.findByIdAndNaziv(pkdto.getId(), pkdto.getTipPregleda());
+		TipPregleda tp = tipPregledaRepository.findByIdAndNazivAndAktivan(pkdto.getId(), pkdto.getTipPregleda());
 		if ( tp != null) {
 			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pkdto.getId(), tp.getId(), pkdto.getDatum()); 
 			for (Lekar l : lekari) {

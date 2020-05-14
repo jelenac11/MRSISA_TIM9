@@ -20,23 +20,32 @@ public class SalaService {
 	private FormatDatumaService datumService;
 
 	public Sala findByBroj(int broj) {
-		return salaRepository.findByBroj(broj);
+		return salaRepository.findByBrojAndAktivan(broj,true);
 	}
 
 	public Sala findOne(Long id) {
-		return salaRepository.findById(id).orElseGet(null);
+		return salaRepository.findByIdAndAktivan(id, true);
 	}
 
 	public List<Sala> findAll() {
-		return salaRepository.findAll();
+		return salaRepository.findAllByAktivan(true);
 	}
 
 	public Sala save(Sala sala) {
 		return salaRepository.save(sala);
 	}
 
-	public void remove(Long id) {
-		salaRepository.deleteById(id);
+	public boolean remove(Long id) {
+		Sala s=findOne(id);
+		if(s!=null) {
+			if(!salaRepository.findBySalaIdAndVreme(id,new Date().getTime()).isEmpty()) {
+				s.setAktivan(false);
+				save(s);
+				
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public List<Sala> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, long trajanje) {

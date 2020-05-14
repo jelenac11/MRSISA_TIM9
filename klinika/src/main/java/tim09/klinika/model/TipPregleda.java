@@ -28,6 +28,9 @@ public class TipPregleda {
 
 	@Column(name = "opis", nullable = true, unique = false)
 	private String opis;
+	
+	@Column(name = "aktivan")
+	private boolean aktivan;
 
 	@OneToOne(mappedBy = "tipPregleda", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private StavkaCenovnika stavkaCenovnika;
@@ -101,4 +104,13 @@ public class TipPregleda {
 	public void setPregledi(Set<Pregled> pregledi) {
 		this.pregledi = pregledi;
 	}
+
+	public boolean isAktivan() {
+		return aktivan;
+	}
+
+	public void setAktivan(boolean aktivan) {
+		this.aktivan = aktivan;
+	}
+	
 }

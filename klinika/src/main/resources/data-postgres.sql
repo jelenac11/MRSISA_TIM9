@@ -41,10 +41,11 @@ insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (10, 5);
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (1, 180, 72, 0.5, 'A+');
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (2, 177, 75, 0.2, 'AB');
 
-insert into sala (broj, naziv, klinika_id) values(1, 'Sala 1', 1);
-insert into sala (broj, naziv, klinika_id) values(2, 'Sala 2', 1);
-insert into sala (broj, naziv, klinika_id) values(3, 'Sala 3', 1);
-insert into sala (broj, naziv, klinika_id) values(4, 'Sala 4', 1);
+insert into sala (broj, naziv, klinika_id,aktivan) values(1, 'Sala 1', 1,true);
+insert into sala (broj, naziv, klinika_id,aktivan) values(2, 'Sala 2', 1,true);
+insert into sala (broj, naziv, klinika_id,aktivan) values(3, 'Sala 3', 1,true);
+insert into sala (broj, naziv, klinika_id,aktivan) values(4, 'Sala 4', 1,true);
+insert into sala (broj, naziv, klinika_id,aktivan) values(5, 'Sala 5', 1,false);
 
 insert into sifrarnik (naziv, tip_sifrarnika) values('Šifrarnik lekova', 'LEKOVI');
 insert into sifrarnik (naziv, tip_sifrarnika) values('Šifrarnik dijagnoza', 'DIJAGNOZE');
@@ -61,12 +62,12 @@ insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika
 insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591084800000, 1, 7);
 insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591084800000, 1, 8);
 
-insert into tip_pregleda (naziv, opis, klinika_id) values ('Uklanjanje mekih naslaga', 'Dečija stomatologija', 1);
-insert into tip_pregleda (naziv, opis, klinika_id) values ('Stomatološki pregled', 'Klinički pregled zuba, uzimanje statusa svakog zuba pojedinačno', 1);
-insert into tip_pregleda (naziv, opis, klinika_id) values ('Uklanjanje zubnog kamenca', 'Parodontologija', 1);
-insert into tip_pregleda (naziv, opis, klinika_id) values ('Zalivanje fisura', 'Dečija stomatologija', 1);
-insert into tip_pregleda (naziv, opis, klinika_id) values ('Specijalistički pregled psihijatra', 'Kognitivno-bihejvioralna psihoterapija', 2);
-insert into tip_pregleda (naziv, opis, klinika_id) values ('Specijalistički pregled neurologa', 'Određivanje individualnih terapijskih procedura usmerenih ka prevenciji i smanjenju broja glavobolja', 2);
+insert into tip_pregleda (naziv, opis, klinika_id,aktivan) values ('Uklanjanje mekih naslaga', 'Dečija stomatologija', 1,true);
+insert into tip_pregleda (naziv, opis, klinika_id,aktivan) values ('Stomatološki pregled', 'Klinički pregled zuba, uzimanje statusa svakog zuba pojedinačno', 1,true);
+insert into tip_pregleda (naziv, opis, klinika_id,aktivan) values ('Uklanjanje zubnog kamenca', 'Parodontologija', 1,true);
+insert into tip_pregleda (naziv, opis, klinika_id,aktivan) values ('Zalivanje fisura', 'Dečija stomatologija', 1,true);
+insert into tip_pregleda (naziv, opis, klinika_id,aktivan) values ('Specijalistički pregled psihijatra', 'Kognitivno-bihejvioralna psihoterapija', 2,true);
+insert into tip_pregleda (naziv, opis, klinika_id,aktivan) values ('Specijalistički pregled neurologa', 'Određivanje individualnih terapijskih procedura usmerenih ka prevenciji i smanjenju broja glavobolja', 2,true);
 
 insert into specijalizovan (lekar_id, tip_pregleda_id) values (6, 1);
 insert into specijalizovan (lekar_id, tip_pregleda_id) values (6, 2);

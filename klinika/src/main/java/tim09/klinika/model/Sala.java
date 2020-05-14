@@ -36,6 +36,9 @@ public class Sala {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
+	
+	@Column(name = "aktivan")
+	private boolean aktivan;
 
 	public Sala() {
 
@@ -87,5 +90,13 @@ public class Sala {
 
 	public void setKlinika(Klinika klinika) {
 		this.klinika = klinika;
+	}
+
+	public boolean isAktivan() {
+		return aktivan;
+	}
+
+	public void setAktivan(boolean aktivan) {
+		this.aktivan = aktivan;
 	}
 }

@@ -10,11 +10,13 @@ import tim09.klinika.model.TipPregleda;
 
 public interface TipPregledaRepository extends JpaRepository<TipPregleda, Long> {
 
-	public TipPregleda findByNaziv(String naziv);
+	public TipPregleda findByNazivAndAktivan(String naziv,boolean aktivan);
 	
-	public List<TipPregleda> findByKlinikaId(long id);
+	public List<TipPregleda> findByKlinikaIdAndAktivan(long id,boolean aktivan);
 
-	@Query(value = "SELECT * FROM tip_pregleda WHERE klinika_id = ?1  and naziv = ?2", nativeQuery = true)
-	public TipPregleda findByIdAndNaziv(long id, String tipPregleda);
+	@Query(value = "SELECT * FROM tip_pregleda WHERE klinika_id = ?1  and naziv = ?2 and aktivan=true", nativeQuery = true)
+	public TipPregleda findByIdAndNazivAndAktivan(long id, String tipPregleda);
+
+	public List<TipPregleda> findAllByAktivan(boolean aktivan);
 	
 }

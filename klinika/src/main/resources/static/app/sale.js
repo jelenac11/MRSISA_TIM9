@@ -16,12 +16,14 @@ Vue.component("sale", {
 			    	<tr>
 				      	<th scope="col" width="20%">Broj</th>
 				      	<th scope="col" width="80%">Naziv</th>
+				      	<th></th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
 			  		<tr v-for="sala in sale" data-toggle="modal" data-target="#" v-on:click="">
-				      	<td width="20%">{{ sala.broj }}</td>
-				      	<td width="80%">{{ sala.naziv }}</td>
+				      	<td width="33%">{{ sala.broj }}</td>
+				      	<td width="33%">{{ sala.naziv }}</td>
+				      	<td width="33%"><button class="btn btn-danger btn-sm" v-on:click="obrisiSalu(sala)" id="brisanjeSale">Ukloni</button></td>
 			    	</tr>
 			  	</tbody>
 			</table>
@@ -30,6 +32,25 @@ Vue.component("sale", {
 	</div>
 	`
 	,
+	methods:{
+		obrisiSalu:function(sala){
+			axios
+			.delete('sale/'+sala.id, { headers: { Authorization: 'Bearer ' + this.token }})
+			.then(response => {
+				if(response.data==true){
+					toast("Uspesno izbrisana sala!");
+					axios
+			        .get('/sale/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
+			        .then(response => (this.sale = response.data))
+			        .catch(function (error) { console.log(error); });
+				}
+				else{
+					toast("Nije moguce izbrisati salu!")
+				}
+			})
+	        .catch(function (error) { console.log(error); });
+		}
+	},
 	created() {
 		this.token = localStorage.getItem("token");
 		axios

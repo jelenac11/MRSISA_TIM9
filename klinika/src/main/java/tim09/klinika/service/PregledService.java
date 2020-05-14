@@ -154,7 +154,7 @@ public class PregledService {
 	}
 
 	public ArrayList<PredefinisaniDTO> ucitajPredefinisane(PretragaKlinikeDTO pkdto) {
-		TipPregleda tp = tipoviRepository.findByNaziv(pkdto.getTipPregleda());
+		TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pkdto.getTipPregleda(),true);
 		ArrayList<PredefinisaniDTO> predefinisaniPregledi = new ArrayList<PredefinisaniDTO>();
 		ArrayList<Pregled> pregledi = new ArrayList<Pregled>();
 		if (tp != null) {
@@ -201,7 +201,7 @@ public class PregledService {
 		p.setDatum(pldto.getDatum());
 		Optional<Lekar> le = lekarRepository.findById(pldto.getId());
 		p.setLekar(new LekarDTO(le.get()));
-		TipPregleda tp = tipoviRepository.findByNaziv(pldto.getTipPregleda());
+		TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pldto.getTipPregleda(),true);
 		p.setTip(new TipPregledaDTO(tp));
 		p.setCena(tp.getStavkaCenovnika().getCena());
 		Popust popust = popustRepository.nadjiPopust(tp.getStavkaCenovnika().getId(), pldto.getDatum(),

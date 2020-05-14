@@ -68,6 +68,7 @@ public class TipPregledaController {
 		TipPregleda tipPregleda = new TipPregleda();
 		tipPregleda.setNaziv(tipPregledaDTO.getNaziv());
 		tipPregleda.setOpis(tipPregledaDTO.getOpis());
+		tipPregleda.setAktivan(true);
 		Klinika k = klinikaService.findByNaziv(tipPregledaDTO.getKlinika());
 		tipPregleda.setKlinika(k);
 		
@@ -108,6 +109,7 @@ public class TipPregledaController {
 			l.getSpecijalnosti().remove(pregled);
 		}
 		boolean uspesno = tipPregledaService.remove(pregled.getId());
+		
 		return new ResponseEntity<>(uspesno, HttpStatus.OK);
 	}
 

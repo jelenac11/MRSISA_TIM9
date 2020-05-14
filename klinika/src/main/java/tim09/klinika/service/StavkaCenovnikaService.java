@@ -47,7 +47,7 @@ public class StavkaCenovnikaService {
 
 	public double vratiCenuPregleda(PretragaKlinikeDTO pretragaKlinikeDTO) {
 		double cena = 0;
-		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaId(pretragaKlinikeDTO.getId());
+		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaIdAndAktivan(pretragaKlinikeDTO.getId(),true);
 		if (tipovi != null) {
 			for (TipPregleda tp : tipovi) {
 				if (tp.getNaziv().equals(pretragaKlinikeDTO.getTipPregleda())) {

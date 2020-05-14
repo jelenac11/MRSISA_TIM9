@@ -64,7 +64,7 @@ public class SalaController {
 		Sala sala = new Sala();
 		sala.setBroj(salaDTO.getBroj());
 		sala.setNaziv(salaDTO.getNaziv());
-
+		sala.setAktivan(true);
 		sala = salaService.save(sala);
 		return new ResponseEntity<>(new SalaDTO(sala), HttpStatus.CREATED);
 	}
@@ -85,14 +85,14 @@ public class SalaController {
 
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<Void> izbrisiSalu(@PathVariable Long id) {
+	public ResponseEntity<Boolean> izbrisiSalu(@PathVariable Long id) {
 		Sala sala = salaService.findOne(id);
 
 		if (sala != null) {
-			salaService.remove(id);
-			return new ResponseEntity<>(HttpStatus.OK);
+			boolean odg=salaService.remove(id);
+			return new ResponseEntity<>(odg,HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(false,HttpStatus.NOT_FOUND);
 		}
 	}
 
