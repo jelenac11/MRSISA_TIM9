@@ -73,4 +73,10 @@ public class PacijentController {
 		return new ResponseEntity<>(new PacijentDTO(korisnik), HttpStatus.OK);
 	}
 	
+	@GetMapping("dobaviSvePoIdKlinike/{id}")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<List<PacijentDTO>> dobaviSvePoIdKlinike(@PathVariable Long id){
+		List<PacijentDTO> p=pacijentService.findByKlinikaID(id);
+		return new ResponseEntity<List<PacijentDTO>>(p, HttpStatus.OK);
+	}
 }

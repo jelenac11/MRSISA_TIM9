@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tim09.klinika.dto.LekarPacijentDTO;
 import tim09.klinika.dto.PredefinisaniDTO;
 import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
@@ -129,5 +130,20 @@ public class PregledController {
 			preglediDTO.add(new PregledDTO(pregled));
 		}
 		return new ResponseEntity<List<PregledDTO>>(preglediDTO, HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/provjeraPregledaZaPacijentaOdLekara")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> provjeraPregledaZaPacijentaOdLekara(@RequestBody LekarPacijentDTO lekarPacijentDTO){
+		List<Pregled> pregledi=pregledService.findByLekarIdAndPacijentIdAndVreme(lekarPacijentDTO.getIdLekara(),lekarPacijentDTO.getIdPacijenta(),new Date().getTime());
+		boolean odgovor;
+		if(pregledi.isEmpty()) {
+			odgovor=false;
+		}
+		else {
+			odgovor=true;
+		}
+		return new ResponseEntity<Boolean>(odgovor, HttpStatus.OK);
+		
 	}
 }

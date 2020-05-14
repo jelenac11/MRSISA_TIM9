@@ -42,7 +42,7 @@ const ZakazaniPregledi = {template : '<zakazani-pregledi></zakazani-pregledi>'}
 const NaCekanjuTermini = {template : '<na-cekanju-termini></na-cekanju-termini>'}
 const NaCekanjuOperacije = {template : '<na-cekanju-operacije></na-cekanju-operacije>'}
 const PotvrdaTerminaPregleda = {template: '<potvrda-termina-pregleda></potvrda-termina-pregleda>'}
-
+const ProfilPacijenta= {template: '<profil-pacijenta></profil-pacijenta>'}
 const router = new VueRouter({
 	mode: 'hash',
 		routes: [
@@ -268,6 +268,11 @@ const router = new VueRouter({
 		path: '/potvrdaTerminaPregleda/:token',
 		name: 'potvrdaTerminaPregleda',
 		component: PotvrdaTerminaPregleda
+	},
+	{
+		path: '/profilPacijenta',
+		name: 'profilPacijenta',
+		component: ProfilPacijenta
 	},
 	]
 });

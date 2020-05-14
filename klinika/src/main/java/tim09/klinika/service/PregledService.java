@@ -257,4 +257,9 @@ public class PregledService {
 		}
 		return true;
 	}
+
+	public List<Pregled> findByLekarIdAndPacijentIdAndVreme(long idLekara, long idPacijenta, long time) {
+		return pregledRepository.findByLekarIdAndPacijentIdAndVreme(idLekara,idPacijenta,time);
+		
+	}
 }
