@@ -23,7 +23,7 @@ Vue.component('zaposleni', {
 	template: `
 		<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
-		<div class="tab-pane fade show active" id="pills-pk" role="tabpanel" >
+		<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
 			<div class="input-group">
 				<label for="naziv" class="mt-3 ml-2">Naziv</label>
 				<input type="text" v-model="klinika.naziv" class="form-control  m-2" style="background-color: #fff;" id="naziv" readonly>

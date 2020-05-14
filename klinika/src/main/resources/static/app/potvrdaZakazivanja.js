@@ -9,7 +9,7 @@ Vue.component('potvrda-zakazivanja', {
 	template: `
 		<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
-			<div class="container d-flex justify-content-center">
+			<div class="naviga container d-flex justify-content-center">
 			<div class="card mt-5" style="width: 50rem;">
 				<h4 class="card-header">Detalji o pregledu</h4>
 				<div class="card-body">

@@ -24,7 +24,6 @@ public class PregledDTO {
 	}
 
 	public PregledDTO(Pregled os) {
-		// TODO Auto-generated constructor stub
 		this.id=os.getId();
 		this.lekar=new LekarDTO(os.getLekar());
 		this.pacijent=new PacijentDTO(os.getPacijent());
@@ -32,6 +31,7 @@ public class PregledDTO {
 		this.sala=new SalaDTO(os.getSala());
 		this.vreme=new Date(os.getVreme());
 		this.otkazan=os.isOtkazan();
+		this.klinika = new KlinikaDTO(os.getKlinika());
 		this.zauzet=os.isZauzet();
 		this.trajanje=os.getTrajanje();
 		this.vreme2=os.getVreme();

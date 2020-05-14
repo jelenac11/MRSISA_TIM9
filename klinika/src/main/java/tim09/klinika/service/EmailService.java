@@ -13,8 +13,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.PredefinisaniDTO;
+import tim09.klinika.model.Operacija;
 import tim09.klinika.model.Pacijent;
 import tim09.klinika.model.Pregled;
+import tim09.klinika.model.TokenPotvrdeOperacije;
 import tim09.klinika.model.TokenPotvrdePregleda;
 import tim09.klinika.model.VerifikacioniToken;
 
@@ -30,6 +32,9 @@ public class EmailService {
 
 	@Autowired
 	private TokenPotvrdePregledaService tokenPotvrdePregledaService;
+
+	@Autowired
+	private TokenPotvrdeOperacijeService tokenPotvrdeOperacijeService;
 
 	@Async
 	public void posaljiEmail(String to, String subject, String text) throws MailException, InterruptedException {
@@ -60,9 +65,9 @@ public class EmailService {
 				+ "http://localhost:8081" + confirmationUrl);
 		javaMailSender.send(email);
 	}
-	
+
 	@Async
-	public void posaljiLinkPotvrdePregleda(Pregled pregled,String prima){
+	public void posaljiLinkPotvrdePregleda(Pregled pregled, String prima) {
 		String token = UUID.randomUUID().toString();
 		TokenPotvrdePregleda tokenpp = new TokenPotvrdePregleda();
 		tokenpp.setId(null);
@@ -74,18 +79,42 @@ public class EmailService {
 		SimpleMailMessage email = new SimpleMailMessage();
 		email.setTo(prima);
 		email.setSubject(subject);
-		email.setText("Poštovani, molimo Vas da potvrdite ili odbijete dodijeljeni termin za pregled na sljedećem linku " + "\r\n"
-				+ "http://localhost:8081" + confirmationUrl);
+		email.setText(
+				"Poštovani, molimo Vas da potvrdite ili odbijete dodijeljeni termin za pregled na sljedećem linku "
+						+ "\r\n" + "http://localhost:8081" + confirmationUrl);
+		javaMailSender.send(email);
+	}
+
+	@Async
+	public void obavestiPacijentaZaOperaciju(Operacija operacija, String prima) {
+		String subject = "Zakazana operacija";
+		SimpleMailMessage email = new SimpleMailMessage();
+		email.setTo(prima);
+		email.setSubject(subject);
+		email.setText("Poštovani, obaveštavamo vas da imate zakazanu operaciju datuma: "
+				+ new Date(operacija.getVreme()).toString() + ", u klinici " + operacija.getKlinika().getNaziv()
+				+ " koja se nalazi na lokaciji " + operacija.getKlinika().getLokacija() + ".");
+		javaMailSender.send(email);
+	}
+	
+	@Async
+	public void obavestiLekaraZaOperaciju(Operacija operacija, String prima) {
+		String subject = "Zakazana operacija";
+		SimpleMailMessage email = new SimpleMailMessage();
+		email.setTo(prima);
+		email.setSubject(subject);
+		email.setText("Poštovani, obaveštavamo vas da imate zakazanu operaciju datuma: "
+				+ new Date(operacija.getVreme()).toString() + ", u klinici " + operacija.getKlinika().getNaziv()
+				+ " koja se nalazi na lokaciji " + operacija.getKlinika().getLokacija() + ". Operaciji prisustvuje " + operacija.getLekari().size() + " lekara.");
 		javaMailSender.send(email);
 	}
 
 	@Async
 	public void obavijestiLekara(Pregled pregled, String mail) {
-		// TODO Auto-generated method stub
 		SimpleMailMessage email = new SimpleMailMessage();
 		email.setTo(mail);
 		email.setSubject("Obavestenje o novom zakazanom pregledu");
-		email.setText("Postovani, obavestavamo Vas, da "+new Date(pregled.getVreme())+" imate zakazan pregled.");
+		email.setText("Postovani, obavestavamo Vas, da " + new Date(pregled.getVreme()) + " imate zakazan pregled.");
 		javaMailSender.send(email);
 	}
 

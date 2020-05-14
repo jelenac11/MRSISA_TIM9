@@ -10,6 +10,7 @@ const AdminiKlinike = { template: '<admini-klinike></admini-klinike>' }
 const AdminiCentra = { template: '<admini-centra></admini-centra>' }
 const KlinikeAdmin = { template: '<klinike-admin></klinike-admin>' }
 const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>' }
+const RadniKalendar = { template: '<radni-kalendar></radni-kalendar>' }
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
 const IzmenaProfilaKlinike = { template: '<izmena-profilaKlinike></izmena-profilaKlinike>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
@@ -38,6 +39,7 @@ const Zaposleni = {template : '<zaposleni></zaposleni>'}
 const DefinisanjeSlobodnogTermina = {template: '<definisanje-slobodnog-termina></definisanje-slobodnog-termina>'}
 const ZakazaniPregledi = {template : '<zakazani-pregledi></zakazani-pregledi>'}
 const NaCekanjuTermini = {template : '<na-cekanju-termini></na-cekanju-termini>'}
+const NaCekanjuOperacije = {template : '<na-cekanju-operacije></na-cekanju-operacije>'}
 const PotvrdaTerminaPregleda = {template: '<potvrda-termina-pregleda></potvrda-termina-pregleda>'}
 
 const router = new VueRouter({
@@ -232,6 +234,11 @@ const router = new VueRouter({
 		props : true
 	},
 	{
+		path: '/radniKalendar',
+		name: 'radniKalendar',
+		component: RadniKalendar
+	},
+	{
 		path: '/zakazaniPregledi',
 		name: 'zakazaniPregledi',
 		component: ZakazaniPregledi
@@ -240,6 +247,11 @@ const router = new VueRouter({
 		path: '/naCekanjuTermini',
 		name: 'naCekanjuTermini',
 		component: NaCekanjuTermini
+	},
+	{
+		path: '/naCekanjuOperacije',
+		name: 'naCekanjuOperacije',
+		component: NaCekanjuOperacije
 	},
 	{
 		path: '/definisanjeSlobodnogTermina',

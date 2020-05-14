@@ -10,7 +10,7 @@ Vue.component("zakazani-pregledi", {
 	<v-app>
 	<div data-app> 
 	<navig-bar v-bind:token="this.token"></navig-bar>
-		<div>			    
+		<div class="naviga">			    
 			<v-tabs v-model="activeTab" centered>
 		      <v-tab href="#1" v-on:click="promijeniTab(1)">
 				<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
@@ -21,9 +21,12 @@ Vue.component("zakazani-pregledi", {
 		      <v-tab href="#3" v-on:click="promijeniTab(3)">
 				<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
 		      </v-tab>
+		      <v-tab href="#4" v-on:click="promijeniTab(4)">
+				<router-link :to="{ name: 'naCekanjuOperacije' }">Operacije bez sale</router-link>
+		      </v-tab>
 		    </v-tabs>
 		</div>
-		<div class="tab-content">
+		<div class="naviga tab-content">
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
@@ -76,8 +79,11 @@ Vue.component("zakazani-pregledi", {
 			else if(a==2){
 				this.$router.replace({ name: 'definisanjeSlobodnogTermina' });
 			}
-			else{
+			else if (a==3){
 				this.$router.replace({ name: 'naCekanjuTermini' });
+			} 
+			else {
+				this.$router.replace({ name: 'naCekanjuOperacije' });
 			}
 		}
 	},

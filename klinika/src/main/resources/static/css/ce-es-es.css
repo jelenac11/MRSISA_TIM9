@@ -1,16 +1,146 @@
+body {
+  font-family: "Poppins" !important;
+  background-color: #f5f5f5;
+}
+
+.navig {
+  margin-left: 0px;
+}
+
+#sidebar {
+  width: 200px;
+  position: fixed;
+  top: 0px;
+  background: #343a40;
+  z-index: 10;
+  height: 100vh;
+  margin-left: -200px;
+}
+
+.navig,
+.activenavig,
+.naviga,
+#sidebar {
+  transition: 0.4s ease;
+}
+
+.icon-toggle {
+  color: #005240;
+  font-size: 1.3em;
+}
+
+#sidebar.active {
+  margin-left: 0px;
+}
+
+#sidebarCollapse {
+  border: 1px solid #005240;
+}
+#sidebarCollapse:focus, #sidebarCollapse.focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.0);	
+}
+
+#sidebar.active ~ .navig {
+  margin-left: 200px;
+}
+
+.activenavig {
+  margin-left: 200px;
+}
+
+@media (min-width: 768px) {
+  
+  #sidebar {
+    margin-left: -250px;
+  }
+  
+  #sidebar.active {
+    width: 250px;
+    margin-left: 0px;
+  }
+  
+  .navig {
+    margin-left: 0;
+  }
+
+  #sidebar.active ~ .navig {
+    margin-left: 250px;
+  }
+  
+  .activenavig {
+	margin-left: 250px;
+  }
+  
+}
+
+i {
+  margin-right: 10px;
+}
+
+.bg-dark {
+	background-color : #005240 !important;
+}
+
 .nav-link {
 	color: white;
 }
+
 .nav-link:hover {
 	color: silver;
 }
+
 .nav-link:active {
-	color: gray;
+	color: grey;
 }
 
-.nav-pills li {
-    margin-left: 8px; 
-} 
+.btn-primary {
+  color: #fff;
+  background-color: #008040;
+  border-color: #008040;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #008025;
+  border-color: #008025;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.btn-primary:focus, .btn-primary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(130, 200, 130, 0.8);
+}
+
+.btn-primary:focus:hover, .btn-primary.focus:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.btn-primary.disabled, .btn-primary:disabled {
+  color: #fff;
+  background-color: #008040;
+  border-color: #008040;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #008000;
+  border-color: #008000;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-primary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(130, 200, 130, 0.8);
+}
+
+.card {
+	margin-bottom: 50px;
+	border: 2.3px solid green;
+}
+
+.alert-danger {
+	border: 2px solid #ac2a37;
+}
+
 
 #obrazlozenjeOdbijanjaZahtjeva{
 	display: none;
@@ -75,15 +205,6 @@ div .text-center {
   text-align: left;
 }
 
-.nav-link {
-	color: white;
-}
-.nav-link:hover {
-	color: silver;
-}
-.nav-link:active {
-	color: gray;
-}
 .dropdown-menu {
 	background-color: #212529;
 }

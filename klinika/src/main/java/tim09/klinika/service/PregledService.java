@@ -43,37 +43,37 @@ public class PregledService {
 
 	@Autowired
 	private PregledRepository pregledRepository;
-	
+
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-	
+
 	@Autowired
 	private SalaService salaService;
-	
+
 	@Autowired
 	private LekarService lekarService;
-	
+
 	@Autowired
 	private TipPregledaRepository tipoviRepository;
-	
+
 	@Autowired
 	private PopustRepository popustRepository;
-	
+
 	@Autowired
 	private PacijentRepository pacijentRepository;
-	
+
 	@Autowired
 	private EmailService emailService;
-	
+
 	@Autowired
 	private LekarRepository lekarRepository;
-	
+
 	@Autowired
 	private AdminKlinikeRepository adminKlinikeRepository;
-	
+
 	@Autowired
 	private KorisnikRepository korisniciRepository;
-	
+
 	@Autowired
 	private KlinikaRepository klinikaRepository;
 
@@ -92,57 +92,74 @@ public class PregledService {
 	public void remove(Long id) {
 		pregledRepository.deleteById(id);
 	}
-	public List<Pregled> findByTipPregledaIdAndOtkazanAndVremeGreaterThan(long id,boolean otkazano,long vreme){
-		return pregledRepository.findByTipPregledaIdAndOtkazanAndVremeGreaterThan(id,otkazano,vreme);
+
+	public List<Pregled> findByTipPregledaIdAndOtkazanAndVremeGreaterThan(long id, boolean otkazano, long vreme) {
+		return pregledRepository.findByTipPregledaIdAndOtkazanAndVremeGreaterThan(id, otkazano, vreme);
 	}
-	
+
 	public boolean insertPregled(SlobodanTerminDTO slobodanTerminDTO) {
-		Klinika klinika= adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina()).getKlinika();
-		int i=pregledRepository.insertPregled(slobodanTerminDTO.getLekar().getId(), slobodanTerminDTO.getTipPregleda().getId(), slobodanTerminDTO.getSala().getId(), slobodanTerminDTO.getDatumiVreme(), slobodanTerminDTO.getTrajanje(),klinika.getId());
-		if(i==1) {
+		Klinika klinika = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina()).getKlinika();
+		int i = pregledRepository.insertPregled(slobodanTerminDTO.getLekar().getId(),
+				slobodanTerminDTO.getTipPregleda().getId(), slobodanTerminDTO.getSala().getId(),
+				slobodanTerminDTO.getDatumiVreme(), slobodanTerminDTO.getTrajanje(), klinika.getId());
+		if (i == 1) {
 			return true;
 		}
 		return false;
 	}
 
-	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(long id, boolean b, boolean c,long vreme,boolean potvrdjen) {
-		return pregledRepository.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(b,c,id,vreme,potvrdjen);
-		
+	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(long id, boolean b, boolean c,
+			long vreme, boolean potvrdjen) {
+		return pregledRepository.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(b, c, id,
+				vreme, potvrdjen);
+
 	}
 
 	public List<Pregled> findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(Long id, long time, boolean potvrdjen) {
-		// TODO Auto-generated method stub
-		return pregledRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndPotvrdjen(id,time,potvrdjen);
-		
+		return pregledRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndPotvrdjen(id, time, potvrdjen);
+
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendar(Long id, long time) {
-		List<Pregled> pregledi= pregledRepository.findBySalaIdAndVremeAfter(id,time);
-		List<RadniKalendarDTO> kalendar= new ArrayList<RadniKalendarDTO>();
-		for(Pregled pregled:pregledi) {
-			kalendar.add(new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme()+pregled.getTrajanje(), "Pregled"));
+		List<Pregled> pregledi = pregledRepository.findBySalaIdAndVremeAfter(id, time);
+		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
+		for (Pregled pregled : pregledi) {
+			kalendar.add(
+					new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme() + pregled.getTrajanje(), "Pregled"));
 		}
 		return kalendar;
 	}
 
-	public void dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO){
-		Sala sala=salaService.findOne(slobodanTerminDTO.getSala().getId());
-		Pregled pregled=pregledRepository.findById(slobodanTerminDTO.getPregledId()).orElseGet(null);
+	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
+		List<Pregled> pregledi = pregledRepository.findByLekarIdAndVremeAfter(id, time);
+		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
+		for (Pregled pregled : pregledi) {
+			kalendar.add(
+					new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme() + pregled.getTrajanje(), "Pregled"));
+		}
+		return kalendar;
+	}
+
+	public void dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO) {
+		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
+		Pregled pregled = pregledRepository.findById(slobodanTerminDTO.getPregledId()).orElseGet(null);
 		pregled.setSala(sala);
 		pregled.setVreme(slobodanTerminDTO.getDatumiVreme());
-		Lekar lekar=lekarService.findOne(slobodanTerminDTO.getLekar().getId());
+		Lekar lekar = lekarService.findOne(slobodanTerminDTO.getLekar().getId());
 		pregled.setLekar(lekar);
-		emailService.posaljiLinkPotvrdePregleda(pregled, pregled.getPacijent().getEmail());
+		emailService.posaljiLinkPotvrdePregleda(pregled, "aleksa.goljovic4@gmail.com");
+		emailService.obavijestiLekara(pregled, "aleksa.goljovic4@gmail.com");
 		pregledRepository.save(pregled);
-		
+
 	}
-	
+
 	public ArrayList<PredefinisaniDTO> ucitajPredefinisane(PretragaKlinikeDTO pkdto) {
 		TipPregleda tp = tipoviRepository.findByNaziv(pkdto.getTipPregleda());
 		ArrayList<PredefinisaniDTO> predefinisaniPregledi = new ArrayList<PredefinisaniDTO>();
 		ArrayList<Pregled> pregledi = new ArrayList<Pregled>();
 		if (tp != null) {
-			pregledi = (ArrayList<Pregled>) pregledRepository.findByKlinikaAndVremeAndTip(pkdto.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000, tp.getId());
+			pregledi = (ArrayList<Pregled>) pregledRepository.findByKlinikaAndVremeAndTip(pkdto.getId(),
+					pkdto.getDatum(), pkdto.getDatum() + 86400000, tp.getId());
 			for (Pregled pr : pregledi) {
 				PredefinisaniDTO p = new PredefinisaniDTO();
 				p.setLekar(new LekarDTO(pr.getLekar()));
@@ -150,7 +167,8 @@ public class PregledService {
 				p.setTip(new TipPregledaDTO(tp));
 				p.setDatum(pr.getVreme());
 				p.setCena(tp.getStavkaCenovnika().getCena());
-				Popust popust = popustRepository.nadjiPopust(tp.getStavkaCenovnika().getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
+				Popust popust = popustRepository.nadjiPopust(tp.getStavkaCenovnika().getId(), pkdto.getDatum(),
+						pkdto.getDatum() + 86400000);
 				if (popust == null) {
 					p.setPopust(0);
 				} else {
@@ -169,8 +187,11 @@ public class PregledService {
 		p.setZauzet(true);
 		p.setPotvrdjen(true);
 		pregledRepository.save(p);
-		String text = "Poštovani, \nUspešno ste zakazali pregled.\nPodaci o pregledu: \nKlinika: " + predef.getLekar().getKlinika() + "\nLokacija: " + predef.getLokacija().getLokacija() + "\nVreme: " + new Date(predef.getDatum()).toString() + "\nLekar: " + predef.getLekar().getIme() + " " + 
-		predef.getLekar().getPrezime() + "\nTip pregleda: " + predef.getTip().getNaziv() + "\nBroj sale: " + predef.getSala() + "\nCena: " + (predef.getCena()/100.00)*(100-predef.getPopust());
+		String text = "Poštovani, \nUspešno ste zakazali pregled.\nPodaci o pregledu: \nKlinika: "
+				+ predef.getLekar().getKlinika() + "\nLokacija: " + predef.getLokacija().getLokacija() + "\nVreme: "
+				+ new Date(predef.getDatum()).toString() + "\nLekar: " + predef.getLekar().getIme() + " "
+				+ predef.getLekar().getPrezime() + "\nTip pregleda: " + predef.getTip().getNaziv() + "\nBroj sale: "
+				+ predef.getSala() + "\nCena: " + (predef.getCena() / 100.00) * (100 - predef.getPopust());
 		emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Potvrda o zakazanom pregledu", text);
 		return true;
 	}
@@ -183,7 +204,8 @@ public class PregledService {
 		TipPregleda tp = tipoviRepository.findByNaziv(pldto.getTipPregleda());
 		p.setTip(new TipPregledaDTO(tp));
 		p.setCena(tp.getStavkaCenovnika().getCena());
-		Popust popust = popustRepository.nadjiPopust(tp.getStavkaCenovnika().getId(), pldto.getDatum(), pldto.getDatum() + 86400000);
+		Popust popust = popustRepository.nadjiPopust(tp.getStavkaCenovnika().getId(), pldto.getDatum(),
+				pldto.getDatum() + 86400000);
 		if (popust == null) {
 			p.setPopust(0);
 		} else {
@@ -197,12 +219,15 @@ public class PregledService {
 	}
 
 	public Boolean potvrdiZakazivanje(PredefinisaniDTO predef) throws MailException, InterruptedException {
-		 pregledRepository.insertZakazaniPregled(predef.getLekar().getId(), predef.getPacijent().getId(), predef.getTip().getId(), predef.getDatum(), predef.getLokacija().getId());
+		pregledRepository.insertZakazaniPregled(predef.getLekar().getId(), predef.getPacijent().getId(),
+				predef.getTip().getId(), predef.getDatum(), predef.getLokacija().getId());
 		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(predef.getLokacija().getId());
 		if (admini != null) {
 			for (AdminKlinike ak : admini) {
-				String text = "Poštovani, \nPristigao je zahtev za zakazivanje pregleda.\nPodaci o pregledu:\nPacijent: " + predef.getPacijent().getEmail() + "\nVreme: " + new Date(predef.getDatum()).toString() + "\nLekar: " + predef.getLekar().getIme() + " " + 
-					predef.getLekar().getPrezime() + "\nTip pregleda: " + predef.getTip().getNaziv();
+				String text = "Poštovani, \nPristigao je zahtev za zakazivanje pregleda.\nPodaci o pregledu:\nPacijent: "
+						+ predef.getPacijent().getEmail() + "\nVreme: " + new Date(predef.getDatum()).toString()
+						+ "\nLekar: " + predef.getLekar().getIme() + " " + predef.getLekar().getPrezime()
+						+ "\nTip pregleda: " + predef.getTip().getNaziv();
 				emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Zahtev za zakazivanje pregleda", text);
 			}
 		}

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SalaDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
+import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Korisnik;
@@ -35,10 +36,10 @@ public class SalaController {
 
 	@Autowired
 	private SalaService salaService;
-	
+
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-	
+
 	@Autowired
 	private PregledService pregledService;
 
@@ -56,7 +57,7 @@ public class SalaController {
 		}
 		return new ResponseEntity<>(salaDTO, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<SalaDTO> kreirajSalu(@RequestBody SalaDTO salaDTO) {
@@ -77,7 +78,7 @@ public class SalaController {
 		}
 		sala.setBroj(salaDTO.getBroj());
 		sala.setNaziv(salaDTO.getNaziv());
-		
+
 		sala = salaService.save(sala);
 		return new ResponseEntity<>(new SalaDTO(sala), HttpStatus.OK);
 	}
@@ -94,7 +95,7 @@ public class SalaController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@GetMapping(value = "/proveriBroj/{broj}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> proveriBroj(@PathVariable("broj") int broj) {
@@ -104,20 +105,36 @@ public class SalaController {
 		}
 		return new ResponseEntity<>(false, HttpStatus.CREATED);
 	}
-	
-	@PostMapping(value="dobaviSlobodneSaleZaPregled",consumes="application/json")
+
+	@PostMapping(value = "dobaviSlobodneSaleZaPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<List<SalaDTO>> dobaviSlobodneSaleZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO){
-		AdminKlinike admin=adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
-		Klinika k=admin.getKlinika();
-		List<Sala> sale=salaService.findByIdKlinikaAndVremeAndTipPregleda(k.getId(),slobodanTerminDTO.getDatumiVreme(),slobodanTerminDTO.getTipPregleda(),slobodanTerminDTO.getTrajanje());
-		List<SalaDTO> saleDTO=new ArrayList<SalaDTO>();
-		for(Sala sala:sale) {
+	public ResponseEntity<List<SalaDTO>> dobaviSlobodneSaleZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
+		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		Klinika k = admin.getKlinika();
+		List<Sala> sale = salaService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme(),
+				slobodanTerminDTO.getTrajanje());
+		List<SalaDTO> saleDTO = new ArrayList<SalaDTO>();
+		for (Sala sala : sale) {
 			saleDTO.add(new SalaDTO(sala));
 		}
-		return new ResponseEntity<List<SalaDTO>>(saleDTO,HttpStatus.OK);
+		return new ResponseEntity<List<SalaDTO>>(saleDTO, HttpStatus.OK);
 	}
-	
+
+	@PostMapping(value = "dobaviSlobodneSaleZaOperaciju", consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<SalaDTO>> dobaviSlobodneSaleZaOperaciju(
+			@RequestBody SlobodanTerminOperacijaDTO slobodanTerminDTO) {
+		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		Klinika k = admin.getKlinika();
+		List<Sala> sale = salaService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme(),
+				slobodanTerminDTO.getTrajanje());
+		List<SalaDTO> saleDTO = new ArrayList<SalaDTO>();
+		for (Sala sala : sale) {
+			saleDTO.add(new SalaDTO(sala));
+		}
+		return new ResponseEntity<List<SalaDTO>>(saleDTO, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/dobaviRadniKalendar/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<List<RadniKalendarDTO>> dobaviRadniKalendar(@PathVariable("id") long id) {
@@ -125,8 +142,8 @@ public class SalaController {
 		if (sala == null) {
 			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 		}
-		List<RadniKalendarDTO>listOne= pregledService.kreirajRadniKalendar(sala.getId(),new Date().getTime());
-		List<RadniKalendarDTO>listTwo=operacijaService.kreirajRadniKalendar(sala.getId(),new Date().getTime());
+		List<RadniKalendarDTO> listOne = pregledService.kreirajRadniKalendar(sala.getId(), new Date().getTime());
+		List<RadniKalendarDTO> listTwo = operacijaService.kreirajRadniKalendar(sala.getId(), new Date().getTime());
 		listOne.addAll(listTwo);
 		return new ResponseEntity<>(listOne, HttpStatus.CREATED);
 	}

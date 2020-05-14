@@ -11,16 +11,17 @@ public class TokenPotvrdePregledaService {
 
 	@Autowired
 	private TokenPotvrdePregledaRepository tokenPotvrdePregledaRepository;
-	
+
 	public TokenPotvrdePregleda findByToken(String token) {
 		return tokenPotvrdePregledaRepository.findByToken(token);
 	}
-	
+
 	public void saveToken(TokenPotvrdePregleda token) {
 		tokenPotvrdePregledaRepository.save(token);
 	}
+
 	public void deleteById(long token) {
 		tokenPotvrdePregledaRepository.deleteById(token);
 	}
-	
+
 }

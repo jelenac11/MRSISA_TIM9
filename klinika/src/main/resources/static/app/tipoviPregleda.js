@@ -14,7 +14,7 @@ Vue.component("tipoviPregleda", {
 	<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		
-		<div class="tab-content">
+		<div class="naviga tab-content">
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>

@@ -3,6 +3,7 @@ package tim09.klinika.dto;
 import java.util.ArrayList;
 import java.util.Date;
 
+import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Operacija;
 
 public class OperacijaDTO {
@@ -12,15 +13,24 @@ public class OperacijaDTO {
 	private PacijentDTO pacijent;
 	private SalaDTO sala;
 	private Date vreme;
+	private long vreme2;
 	private KlinikaDTO klinika;
 
 	public OperacijaDTO() {
 
 	}
 
-
-	public OperacijaDTO(Operacija os) {
-		// TODO Auto-generated constructor stub
+	public OperacijaDTO(Operacija o) {
+		this.id = o.getId();
+		this.lekari = new ArrayList<LekarDTO>();
+		for (Lekar l : o.getLekari()) {
+			this.lekari.add(new LekarDTO(l));
+		}
+		this.sala = new SalaDTO(o.getSala());
+		this.vreme = new Date(o.getVreme());
+		this.vreme2 = o.getVreme();
+		this.klinika = new KlinikaDTO(o.getKlinika());
+		this.pacijent = new PacijentDTO(o.getPacijent());
 	}
 
 	public Long getId() {
@@ -35,11 +45,9 @@ public class OperacijaDTO {
 		return lekari;
 	}
 
-
 	public void setLekari(ArrayList<LekarDTO> lekari) {
 		this.lekari = lekari;
 	}
-
 
 	public PacijentDTO getPacijent() {
 		return pacijent;
@@ -57,6 +65,14 @@ public class OperacijaDTO {
 		this.sala = sala;
 	}
 
+	public long getVreme2() {
+		return vreme2;
+	}
+
+	public void setVreme2(long vreme2) {
+		this.vreme2 = vreme2;
+	}
+
 	public Date getVreme() {
 		return vreme;
 	}
@@ -65,13 +81,12 @@ public class OperacijaDTO {
 		this.vreme = vreme;
 	}
 
-
 	public KlinikaDTO getKlinika() {
 		return klinika;
 	}
 
-
 	public void setKlinika(KlinikaDTO klinika) {
 		this.klinika = klinika;
 	}
+
 }

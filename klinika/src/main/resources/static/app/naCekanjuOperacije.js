@@ -1,53 +1,69 @@
-Vue.component("na-cekanju-termini", {
+Vue.component("na-cekanju-operacije", {
 	data : function() {
 		return {
 			token: "",
-			naCekanjuTermini:[],
-			dialog:false,
-			dialog2:false,
-			dialog3:false,
-			sale:[],
-			noveSale:[],
+			naCekanjuOperacije: [],
+			dialog: false,
+			dialog2: false,
+			dialog3: false,
+			dialog4: false,
+			sale: [],
+			moguciLekari: [],
+			izabraniLekari: [],
+			noveSale: [],
 			search: '',
 			searchBroj: '',
-			brojManje:'',
-			brojVece:'',
-		   terminPregleda:{
-				idAdmina:0,
-				datumiVreme:0,
-				tipPregleda:null,
-				trajanje:0,
-				lekar:null,
-				sala:null,
-				pregledId:null
+			brojManje: '',
+			brojVece: '',
+			zaglavljeLekari: [
+				{
+					text: 'Ime',
+					align: 'start',
+					sortable: true,
+					value: 'ime',
+		        },
+		        { 
+		        	text: 'Prezime',
+		        	sortable: true,
+		        	value: 'prezime',
+		        },
+	        ],
+		    terminOperacije: {
+				idAdmina: 0,
+				datumiVreme: 0,
+				trajanje: 3600000,
+				lekari: [],
+				sala: null,
+				operacijaId: null,
 			},
-			noviTerminPregleda:{
-				idAdmina:0,
-				datumiVreme:0,
-				tipPregleda:null,
-				trajanje:0,
-				lekar:null,
-				sala:null,
-				pregledId:null
+			noviTerminOperacije: {
+				idAdmina: 0,
+				datumiVreme: 0,
+				trajanje: 3600000,
+				lekari: [],
+				sala: null,
+				operacijaId: null,
 			},
-			ulogovan:{},
+			noviPocetniLekar: {},
+			ulogovan: {},
+			dodatiLekari: [],
 			selected: [],
-			kreirana:0,
+			kreirana: 0,
 			date: new Date().toISOString().substr(0, 10),
 		    menu: false,
-		    menu2:false,
+		    menu2: false,
 		    time: null,
-		    lekar:null,
-		    lekari:null,
-		    odabranDatum:true,
-		    odabraniLekar:true,
-		    e6:1,
+		    lekari: null,
+		    lekariOp: null,
+		    odabranDatum: true,
+		    odabraniLekar: true,
+		    e6: 1,
 		    type: 'month',
 		    types: ['month', 'week', '4day', 'day'],
 		    weekday: [1, 2, 3, 4, 5],
 		    value: '',
 		    events: [],
-		    activeTab:'3',
+		    activeTab: '4',
 		} 
 	},
 	template: `
@@ -74,20 +90,18 @@ Vue.component("na-cekanju-termini", {
 				<table class="table table-hover table-striped">
 				  	<thead class="thead-light">
 				    	<tr>
-					      	<th scope="col" width="20%">Pacijent</th>
-					      	<th scope="col" width="20%">Lekar</th>
-					      	<th scope="col" width="25%">Vreme</th>
-					      	<th scope="col" width="20%">Tip pregleda</th>
-					      	<th scope="col" width="15%">Trajanje</th>
+					      	<th scope="col" width="27%">Pacijent</th>
+					      	<th scope="col" width="27%">Lekari</th>
+					      	<th scope="col" width="26%">Vreme</th>
+					      	<th scope="col" width="20%">Trajanje</th>
 				    	</tr>
 				  	</thead>
 				  	<tbody>
-				  		<tr v-for="pregled in naCekanjuTermini" @click="dialog = true" v-on:click="izabraniPregled(pregled)">
-					      	<td width="20%">{{ pregled.pacijent.ime }} {{ pregled.pacijent.prezime }}</td>
-					      	<td width="20%">{{ pregled.lekar.ime }} {{ pregled.lekar.prezime }}</td>
-					      	<td width="25%">{{ formatVreme(pregled.vreme) }}</td>
-					      	<td width="20%">{{ pregled.tipPregleda.naziv }}</td>
-					      	<td width="15%">{{ formatTrajanje(pregled.trajanje) }}</td>
+				  		<tr v-for="op in naCekanjuOperacije" @click="dialog = true" v-on:click="izabranaOperacija(op)">
+					      	<td width="27%">{{ op.pacijent.ime }} {{ op.pacijent.prezime }}</td>
+					      	<td width="27%">{{ ispisiLekare(op.lekari) }}</td>
+					      	<td width="26%">{{ formatVreme(op.vreme) }}</td>
+					      	<td width="20%">60 minuta</td>
 				    	</tr>
 				  	</tbody>
 				</table>
@@ -138,11 +152,18 @@ Vue.component("na-cekanju-termini", {
 		            			</td>
 		          			</tr>
 		          			<tr>
+			          			<td></td>
+		          				<td>
+		          					<v-btn @click="dialog4 = true" v-on:click="nadjiLekare" :disabled="sale.length==0">
+	        							Dodaj lekare
+									</v-btn>
+								</td>
 		          				<td></td>
 		          				<td>
 		          					<v-btn @click="dialog2 = true" v-on:click="reset" :disabled="sale.length!=0">
-	        							Promeni podatke pregleda
-									</v-btn></td>
+	        							Promeni podatke operacije
+									</v-btn>
+								</td>
 								<td></td>
 		          				<td align="right">
 		          					<v-btn v-on:click="dodijeliSalu" :disabled="selected.length==0">
@@ -165,90 +186,121 @@ Vue.component("na-cekanju-termini", {
 					<v-stepper-step :complete="e6 > 1" step="1">
 				        Odabir datuma
 				    </v-stepper-step>
-				    	<v-stepper-content step="1">
-				    		<div class="form-row mb-3">
-								<div class="col">
-									<label for="datum" class="mt-1">Datum i vreme pregleda</label>
-									<input type="datetime-local" v-model="noviTerminPregleda.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid':!odabranDatum}" required>
-									<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
-								</div>
+			    	<v-stepper-content step="1">
+			    		<div class="form-row mb-3">
+							<div class="col">
+								<label for="datum" class="mt-1">Datum i vreme operacije</label>
+								<input type="datetime-local" v-model="noviTerminOperacije.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid' : !odabranDatum }" required>
+								<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
 							</div>
-	        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
-	        		 		<v-btn v-on:click="cancel">Izlaz</v-btn>
-						</v-stepper-content>
-						
-						<v-divider></v-divider>
-						
-						<v-stepper-step :complete="e6 > 2" step="2">
-							Odabir lekara
-						</v-stepper-step>
-						
-						<v-stepper-content step="2">
-							<div class="form-row">
-								<div class="col">
-									<label for="lekar" class="mt-1">Lekar</label>
-									<select class="custom-select mt-0" v-model="noviTerminPregleda.lekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
-										<option v-for="lekar in lekari" :value="lekar">
-											{{ lekar.ime}} {{lekar.prezime }}
-										</option>
-									</select>
-									<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
-								</div>
+						</div>
+        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
+        		 		<v-btn v-on:click="cancel">Izlaz</v-btn>
+					</v-stepper-content>
+					
+					<v-divider></v-divider>
+					
+					<v-stepper-step :complete="e6 > 2" step="2">
+						Odabir lekara
+					</v-stepper-step>
+					
+					<v-stepper-content step="2">
+						<div class="form-row">
+							<div class="col">
+								<label for="lekar" class="mt-1">Lekar</label>
+								<select class="custom-select mt-0" v-model="noviPocetniLekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
+									<option v-for="lek in lekari" :value="lek">
+										{{ lek.ime }} {{ lek.prezime }}
+									</option>
+								</select>
+								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
 							</div>
-				        	<v-btn v-on:click="finish" class="primary">Finish</v-btn>
-				        	<v-btn v-on:click="prev">Nazad</v-btn>
-				        	<v-btn v-on:click="cancel">Izlaz</v-btn>
-				      	</v-stepper-content>
+						</div>
+			        	<v-btn v-on:click="finish" class="primary">Finish</v-btn>
+			        	<v-btn v-on:click="prev">Nazad</v-btn>
+			        	<v-btn v-on:click="cancel">Izlaz</v-btn>
+			      	</v-stepper-content>
 				      	
-				      </v-stepper>
-					</v-dialog>
+			    </v-stepper>
+			</v-dialog>
 					
+			<v-dialog v-model="dialog4">
+				<v-card>
+					<v-card-title>
+	        			Lekari
+	        		</v-card-title>
+	        		<v-spacer></v-spacer>
+	        		<v-data-table
+						v-model="izabraniLekari"
+						:headers="zaglavljeLekari"
+						:items="moguciLekari"
+						:single-select="false"
+						show-select
+						no-data-text="Nema dostupnih lekara"
+						no-results-text="Nema rezultata pretrage"
+						item-key="ime"
+						class="elevation-1"
+					>
+						<template v-slot:body.append>
+		          			<tr>
+			          			<td></td>
+		          				<td>
+		          					<v-btn v-on:click="dodajLekare">
+		    							Dodaj lekare
+									</v-btn>
+								</td>
+		          				<td></td>
+		          			</tr>
+						</template>
+					</v-data-table>
+				</v-card>
+			</v-dialog>
 					
-					<v-dialog v-model="dialog3">
-						<div>
-					      	<v-sheet
-						        tile height="54"
-						        color="grey lighten-3"
-						        class="d-flex"
-					      	>
-						        <v-btn
-									icon
-						          	class="ma-2"
-						          	@click="$refs.calendar.prev()"
-						        >
-						        	<v-icon>mdi-chevron-left</v-icon>
-						        </v-btn>
-						        <v-select
-						        	v-model="type"
-						          	:items="types"
-						          	dense
-						          	outlined
-						          	hide-details
-						          	class="ma-2"
-						          	label="type"
-						        ></v-select>
-						        <v-spacer></v-spacer>
-						        <v-btn
-						          	icon
-						          	class="ma-2"
-						          	@click="$refs.calendar.next()"
-						        >
-						          	<v-icon>mdi-chevron-right</v-icon>
-						        </v-btn>
-					      	</v-sheet>
-					      	<v-sheet height="600">
-					        	<v-calendar
-					          		ref="calendar"
-					          		v-model="value"
-					          		:weekdays="weekday"
-					          		:type="type"
-					          		:events="events"
-		          			  		:event-overlap-threshold="30"
-		          			  		:event-color="getEventColor"
-					        	></v-calendar>
-				      		</v-sheet>
-				    	</div>
-					</v-dialog>
+			<v-dialog v-model="dialog3">
+				<div>
+			      	<v-sheet
+				        tile height="54"
+				        color="grey lighten-3"
+				        class="d-flex"
+			      	>
+				        <v-btn
+							icon
+				          	class="ma-2"
+				          	@click="$refs.calendar.prev()"
+				        >
+				        	<v-icon>mdi-chevron-left</v-icon>
+				        </v-btn>
+				        <v-select
+				        	v-model="type"
+				          	:items="types"
+				          	dense
+				          	outlined
+				          	hide-details
+				          	class="ma-2"
+				          	label="type"
+				        ></v-select>
+				        <v-spacer></v-spacer>
+				        <v-btn
+				          	icon
+				          	class="ma-2"
+				          	@click="$refs.calendar.next()"
+				        >
+				          	<v-icon>mdi-chevron-right</v-icon>
+				        </v-btn>
+			      	</v-sheet>
+			      	<v-sheet height="600">
+			        	<v-calendar
+			          		ref="calendar"
+			          		v-model="value"
+			          		:weekdays="weekday"
+			          		:type="type"
+			          		:events="events"
+          			  		:event-overlap-threshold="30"
+          			  		:event-color="getEventColor"
+			        	></v-calendar>
+		      		</v-sheet>
+		    	</div>
+			</v-dialog>
 		</div>
 	</v-app>
 	`,
@@ -272,26 +324,31 @@ Vue.component("na-cekanju-termini", {
 			let datum=`${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`;
 			return datum;
 		},
-		izabraniPregled: function(pregled){
-			this.lekar=pregled.lekar;
-			this.dialog=true;
-			this.brojManje='';
-			this.brojVece='';
-			this.selected=[];
-			this.terminPregleda.idAdmina=this.ulogovan.id;
-			this.terminPregleda.datumiVreme=pregled.vreme;
-			this.terminPregleda.trajanje=pregled.trajanje;
-			this.terminPregleda.pregledId=pregled.id;
-			this.terminPregleda.tipPregleda=pregled.tipPregleda;
-			this.terminPregleda.lekar=pregled.lekar;
-			let termin=JSON.parse(JSON.stringify(this.terminPregleda))
-			termin.datumiVreme=Date.parse(termin.datumiVreme)
+		izabranaOperacija : function (op) {
+			this.lekariOp = op.lekari;
+			this.dialog = true;
+			this.brojManje = '';
+			this.brojVece = '';
+			this.selected = [];
+			this.terminOperacije.idAdmina = this.ulogovan.id;
+			this.terminOperacije.datumiVreme = op.vreme;
+			this.terminOperacije.operacijaId = op.id;
+			this.terminOperacije.lekari = op.lekari;
+			this.terminOperacije.trajanje = 3600000;
+			let termin = JSON.parse(JSON.stringify(this.terminOperacije));
+			termin.datumiVreme = Date.parse(termin.datumiVreme);
 			axios
-			.post("/sale/dobaviSlobodneSaleZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
-			.then(response=>{
+			.post("/sale/dobaviSlobodneSaleZaOperaciju", termin, { headers: { Authorization: 'Bearer ' + this.token }})
+			.then(response => {
 				this.sale=response.data;	
 			})
 			.catch(function (error) { console.log(error); });
+		},
+		dodajLekare: function() {
+			for (let l of this.izabraniLekari) {
+				this.terminOperacije.lekari.push(l);
+			}
+			this.dialog4 = false;
 		},
 		dodijeliSalu:function(){
 			let sala=this.selected[0];
@@ -301,16 +358,16 @@ Vue.component("na-cekanju-termini", {
 					break;
 				}
 			}
-			this.terminPregleda.sala=sala;
-			let termin=JSON.parse(JSON.stringify(this.terminPregleda))
+			this.terminOperacije.sala=sala;
+			let termin=JSON.parse(JSON.stringify(this.terminOperacije))
 			termin.datumiVreme=Date.parse(termin.datumiVreme)
 			axios
-			.post('/pregledi/dodijeliSaluPregledu',termin,{ headers: { Authorization: 'Bearer ' + this.token }} )
+			.post('/operacije/dodijeliSaluOperaciji', termin, { headers: { Authorization: 'Bearer ' + this.token }} )
 			.then(response=>{
 				if(response.data){
 					axios
-		            .get('/pregledi/ucitajSvePregledeNaCekanju/'+this.ulogovan.id ,{ headers: { Authorization: 'Bearer ' + this.token }} )
-		            .then(response => (this.naCekanjuTermini = response.data))
+		            .get('/operacije/ucitajSveOperacijeNaCekanju/'+this.ulogovan.id ,{ headers: { Authorization: 'Bearer ' + this.token }} )
+		            .then(response => (this.naCekanjuOperacije = response.data))
 		            .catch(function (error) { console.log(error); });
 					this.dialog=false;
 				}
@@ -319,29 +376,30 @@ Vue.component("na-cekanju-termini", {
 			.catch(function (error) { console.log(error); });
 		},
 		formatTrajanje: function(trajanje){
-			return parseInt(trajanje)/60000+ " minuta"
+			return parseInt(trajanje) / 60000 + " minuta"
 		},
 		next:function() {
 			  if (!this.validateForm1()) return false;
 			  this.dobaviPodatke();
-
 		},
 		finish:function(){
 			  if (!this.validateForm2()) return false;
-			  let termin=JSON.parse(JSON.stringify(this.noviTerminPregleda))
+			  this.noviTerminOperacije.lekari.push(this.noviPocetniLekar);
+			  this.noviPocetniLekar = null;
+			  let termin=JSON.parse(JSON.stringify(this.noviTerminOperacije))
 			  termin.datumiVreme=Date.parse(termin.datumiVreme)
-			  this.terminPregleda=JSON.parse(JSON.stringify(this.noviTerminPregleda))
+			  this.terminOperacije=JSON.parse(JSON.stringify(this.noviTerminOperacije))
 			  this.sale=JSON.parse(JSON.stringify(this.noveSale))
 			  this.dialog2=false;
 		},
 		prev: function(){
-			 this.noviTerminPregleda.lekar=null;
+			 this.noviTerminOperacije.lekari=null;
 			 this.e6=1;
 		},
 		reset: function(){
-			this.noviTerminPregleda=JSON.parse(JSON.stringify(this.terminPregleda));
-			this.noviTerminPregleda.datumiVreme=0;
-			this.noviTerminPregleda.lekar=null;
+			this.noviTerminOperacije=JSON.parse(JSON.stringify(this.terminOperacije));
+			this.noviTerminOperacije.datumiVreme=0;
+			this.noviTerminOperacije.lekari=[];
 			this.e6=1;
 		},
 		validateForm1:function(){
@@ -359,7 +417,7 @@ Vue.component("na-cekanju-termini", {
 		validateForm2:function(){
 			this.promjenaDatuma();
 			
-			if(this.noviTerminPregleda.lekar==null){
+			if(this.noviPocetniLekar==null){
 				this.odabraniLekar=false;
 			}
 			else{
@@ -375,7 +433,7 @@ Vue.component("na-cekanju-termini", {
 			}	
 		},
 		promjenaDatuma:function(){
-			if(this.noviTerminPregleda.datumiVreme==0 || new Date(this.noviTerminPregleda.datumiVreme).getTime()<=(new Date().getTime())){
+			if(this.noviTerminOperacije.datumiVreme==0 || new Date(this.noviTerminOperacije.datumiVreme).getTime()<=(new Date().getTime())){
 				this.odabranDatum=false;
 				return false;
 			}
@@ -385,15 +443,39 @@ Vue.component("na-cekanju-termini", {
 			return true;
 			}
 		},
-		dobaviPodatke: function(){
-			let termin=JSON.parse(JSON.stringify(this.noviTerminPregleda))
-			termin.datumiVreme=Date.parse(termin.datumiVreme)
+		nadjiLekare: function() {
+			let termin=JSON.parse(JSON.stringify(this.terminOperacije));
+			termin.datumiVreme=Date.parse(termin.datumiVreme);
 			axios
-			.post("/lekari/dobaviSlobodneLekareZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
+			.post("/lekari/dobaviSlobodneLekareZaOperaciju", termin, { headers: { Authorization: 'Bearer ' + this.token }})
+			.then(response=>{ 
+				this.moguciLekari = response.data;
+				for (let lek of this.terminOperacije.lekari) {
+					const indeks = this.nadjiIndeks(lek);
+					if (indeks > -1) {
+					  this.moguciLekari.splice(indeks, 1);
+					}
+				}
+			})
+			.catch(function (error) { console.log(error); });
+		},
+		nadjiIndeks: function (lekar) {
+			for (let l of this.moguciLekari) {
+				if (l.id == lekar.id) {
+					return this.moguciLekari.indexOf(l);
+				}
+			}
+			return -1;
+		},
+		dobaviPodatke: function(){
+			let termin=JSON.parse(JSON.stringify(this.noviTerminOperacije));
+			termin.datumiVreme=Date.parse(termin.datumiVreme);
+			axios
+			.post("/lekari/dobaviSlobodneLekareZaOperaciju", termin, { headers: { Authorization: 'Bearer ' + this.token }})
 			.then(response=>{
 				this.lekari=response.data;
 				axios
-				.post("/sale/dobaviSlobodneSaleZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
+				.post("/sale/dobaviSlobodneSaleZaOperaciju", termin, { headers: { Authorization: 'Bearer ' + this.token }})
 				.then(response=>{
 					this.noveSale=response.data;
 					if(this.lekari.length==0 && this.noveSale.length==0){
@@ -414,7 +496,7 @@ Vue.component("na-cekanju-termini", {
 				.catch(function (error) { console.log(error); });
 				})
 			.catch(function (error) { console.log(error); });
-		},
+		},	
 		cancel: function(){
 			this.dialog2=false;
 		},
@@ -448,10 +530,17 @@ Vue.component("na-cekanju-termini", {
 			}
 			else if (a==3){
 				this.$router.replace({ name: 'naCekanjuTermini' });
-			} 
+			}
 			else {
 				this.$router.replace({ name: 'naCekanjuOperacije' });
 			}
+		},
+		ispisiLekare: function (lekri) {
+			var lekString = "";
+			for (let l of lekri) {
+				lekString += l.ime + " " + l.prezime + ", ";
+			}
+			return lekString.substring(0, lekString.length - 2);
 		}
 	},
 	created() {
@@ -461,8 +550,8 @@ Vue.component("na-cekanju-termini", {
         .then(response => { 
         	this.ulogovan = response.data;
         	axios
-            .get('/pregledi/ucitajSvePregledeNaCekanju/'+this.ulogovan.id ,{ headers: { Authorization: 'Bearer ' + this.token }} )
-            .then(response => (this.naCekanjuTermini = response.data))
+            .get('/operacije/ucitajSveOperacijeNaCekanju/'+this.ulogovan.id ,{ headers: { Authorization: 'Bearer ' + this.token }} )
+            .then(response => { this.naCekanjuOperacije = response.data; })
             .catch(function (error) { console.log(error); });
         })
         .catch(function (error) { console.log(error); });

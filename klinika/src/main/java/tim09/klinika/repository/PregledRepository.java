@@ -38,5 +38,7 @@ public interface PregledRepository extends JpaRepository<Pregled, Long> {
 
 	public List<Pregled> findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndPotvrdjen(Long id, long time, boolean potvrdjen);
 
-	public List<Pregled> findBySalaIdAndVremeAfter(Long id, long time); 
+	public List<Pregled> findBySalaIdAndVremeAfter(Long id, long time);
+	
+	public List<Pregled> findByLekarIdAndVremeAfter(Long id, long time);
 }

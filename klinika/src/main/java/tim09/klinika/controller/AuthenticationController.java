@@ -64,7 +64,6 @@ public class AuthenticationController {
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
 
 		Korisnik ulogovan = userDetailsService.findByEmail(trenutniKorisnik.getName());
-		System.out.println(trenutniKorisnik.getName());
 		KorisnikDTO korisnikDTO = new KorisnikDTO(ulogovan);
 		return new ResponseEntity<>(korisnikDTO, HttpStatus.OK);
 	}

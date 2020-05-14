@@ -26,20 +26,20 @@ public class LekarService {
 
 	@Autowired
 	private LekarRepository lekarRepository;
-	
+
 	@Autowired
 	private FormatDatumaService datumService;
-	
+
 	@Autowired
 	private OperacijaRepository operacijaRepository;
-	
+
 	@Autowired
 	private PregledRepository pregledRepository;
 
 	public List<Lekar> findAllByKlinika(Klinika k) {
 		return lekarRepository.findAllByKlinika(k);
 	}
-	
+
 	public Lekar findOne(Long id) {
 		return lekarRepository.findById(id).orElseGet(null);
 	}
@@ -54,7 +54,7 @@ public class LekarService {
 
 	public boolean remove(Long id) {
 		Optional<Lekar> l = lekarRepository.findById(id);
-		
+
 		if (l != null) {
 			Lekar lekar = l.get();
 			lekar.setAktivan(false);
@@ -63,24 +63,32 @@ public class LekarService {
 			return false;
 		}
 	}
-	
-	public List<Lekar> findByIdKlinikaAndVremeAndTipPregleda(Long klinikaId, long datumiVreme, TipPregledaDTO tipPregleda,int trajanje) {		
-		return lekarRepository.findByIdKlinikaAndVremeAndTipPregleda(klinikaId,datumiVreme,datumService.getRadnoVrijemeLongIzLong(datumiVreme),tipPregleda.getId(),datumService.getMinuteULong(trajanje));
+
+	public List<Lekar> findByIdKlinikaAndVremeAndTipPregleda(Long klinikaId, long datumiVreme,
+			TipPregledaDTO tipPregleda, int trajanje) {
+		return lekarRepository.findByIdKlinikaAndVremeAndTipPregleda(klinikaId, datumiVreme,
+				datumService.getRadnoVrijemeLongIzLong(datumiVreme), tipPregleda.getId(),
+				datumService.getMinuteULong(trajanje));
+	}
+
+	public List<Lekar> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, int trajanje) {
+		return lekarRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, (datumiVreme + 7200000) % 86400000);
 	}
 
 	public List<Long> vratiSlobodneTermine(PretragaLekaraDTO pldto) {
-		System.out.println("*************************************" + pldto.getDatum() + pldto.getId());
-		List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(pldto.getId(), pldto.getDatum(), pldto.getDatum() + 86400000);
-		List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(pldto.getId(), pldto.getDatum(), pldto.getDatum() + 86400000);
+		List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(pldto.getId(), pldto.getDatum(),
+				pldto.getDatum() + 86400000);
+		List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(pldto.getId(), pldto.getDatum(),
+				pldto.getDatum() + 86400000);
 		Optional<Lekar> l = lekarRepository.findById(pldto.getId());
 		ArrayList<Long> vremena = new ArrayList<Long>();
 		if (l != null) {
-			Lekar le =  l.get();
+			Lekar le = l.get();
 			long pocetak = le.getPocetakRadnogVremena();
 			long kraj = le.getKrajRadnogVremena();
 			int sati = (int) ((kraj - pocetak) / 3600000);
 			for (int i = 0; i < sati; i++) {
-				vremena.add(pldto.getDatum() + pocetak + i*3600000);
+				vremena.add(pldto.getDatum() + pocetak + i * 3600000);
 			}
 			for (Pregled p : pregledi) {
 				if (vremena.contains(p.getVreme())) {
@@ -124,6 +132,5 @@ public class LekarService {
 		}
 		return zadovoljava;
 	}
-
 
 }

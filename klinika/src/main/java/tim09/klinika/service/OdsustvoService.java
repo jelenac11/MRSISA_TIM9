@@ -1,11 +1,14 @@
 package tim09.klinika.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.model.Odsustvo;
+import tim09.klinika.model.Operacija;
 import tim09.klinika.repository.OdsustvoRepository;
 
 @Service
@@ -39,6 +42,15 @@ public class OdsustvoService {
 	
 	public List<Odsustvo> findByOdgovorenoFalseAndKlinikaID(long id){
 		return odsustvoRepository.findByOdgovorenoFalseAndKlinikaId(id);
+	}
+
+	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
+		List<Odsustvo> odsustva = odsustvoRepository.findByPodnosilacAndKrajAfter(id, time);
+		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
+		for (Odsustvo odsustvo : odsustva) {
+			kalendar.add(new RadniKalendarDTO(odsustvo.getPocetak(), odsustvo.getKraj(), "Godisnji odmor"));
+		}
+		return kalendar;
 	}
 	
 	public Odsustvo updateOdsustvo(Odsustvo odsustvo) {

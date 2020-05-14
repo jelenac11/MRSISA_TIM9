@@ -21,7 +21,7 @@ Vue.component("pretraga-klinika", {
 	template: `
 	<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
-		<div class="tab-pane fade show active" id="pills-pk" role="tabpanel" >
+		<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
 			<p class="m-1 ml-3 mt-2 font-weight-normal">*Za pretragu klinika je neophodno uneti tip pregleda i datum.</p>
 			<div class="input-group">
 			  	<span class="input-group-btn">

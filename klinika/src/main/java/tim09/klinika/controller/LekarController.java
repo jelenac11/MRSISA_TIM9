@@ -25,6 +25,7 @@ import tim09.klinika.dto.KlinikaDTO;
 import tim09.klinika.dto.LekarDTO;
 import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
+import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
 import tim09.klinika.dto.TipPregledaDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Autoritet;
@@ -51,7 +52,7 @@ public class LekarController {
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-	
+
 	@Autowired
 	private TipPregledaService tipPregledaService;
 
@@ -145,42 +146,60 @@ public class LekarController {
 		korisnik = lekarService.save(korisnik);
 		return new ResponseEntity<>(new LekarDTO(korisnik), HttpStatus.OK);
 	}
-	
-	@PostMapping(value="dobaviSlobodneLekareZaPregled",consumes="application/json")
+
+	@PostMapping(value = "dobaviSlobodneLekareZaPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<List<LekarDTO>> dobaviSlobodneLekareZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO){
-		AdminKlinike admin=adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
-		Klinika k=admin.getKlinika();
-		List<Lekar> lekari=lekarService.findByIdKlinikaAndVremeAndTipPregleda(k.getId(),slobodanTerminDTO.getDatumiVreme(),slobodanTerminDTO.getTipPregleda(),slobodanTerminDTO.getTrajanje());
-		List<LekarDTO> lekariDTO=new ArrayList<LekarDTO>();
-		for(Lekar lekar:lekari) {
+	public ResponseEntity<List<LekarDTO>> dobaviSlobodneLekareZaPregled(
+			@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
+		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		Klinika k = admin.getKlinika();
+		List<Lekar> lekari = lekarService.findByIdKlinikaAndVremeAndTipPregleda(k.getId(),
+				slobodanTerminDTO.getDatumiVreme(), slobodanTerminDTO.getTipPregleda(),
+				slobodanTerminDTO.getTrajanje());
+		List<LekarDTO> lekariDTO = new ArrayList<LekarDTO>();
+		for (Lekar lekar : lekari) {
 			lekariDTO.add(new LekarDTO(lekar));
 		}
-		return new ResponseEntity<List<LekarDTO>>(lekariDTO,HttpStatus.OK);
+		return new ResponseEntity<List<LekarDTO>>(lekariDTO, HttpStatus.OK);
 	}
-	
-	@PutMapping(value="/vratiSlobodneTermine",consumes="application/json")
+
+	@PostMapping(value = "dobaviSlobodneLekareZaOperaciju", consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<List<LekarDTO>> dobaviSlobodneLekareZaPregled(
+			@RequestBody SlobodanTerminOperacijaDTO slobodanTerminDTO) {
+		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		Klinika k = admin.getKlinika();
+		List<Lekar> lekari = lekarService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme(),
+				slobodanTerminDTO.getTrajanje());
+		List<LekarDTO> lekariDTO = new ArrayList<LekarDTO>();
+		for (Lekar lekar : lekari) {
+			lekariDTO.add(new LekarDTO(lekar));
+		}
+		return new ResponseEntity<List<LekarDTO>>(lekariDTO, HttpStatus.OK);
+	}
+
+	@PutMapping(value = "/vratiSlobodneTermine", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<List<Long>> vratiSlobodneTermine(@RequestBody PretragaLekaraDTO pldto){
+	public ResponseEntity<List<Long>> vratiSlobodneTermine(@RequestBody PretragaLekaraDTO pldto) {
 		return new ResponseEntity<>(lekarService.vratiSlobodneTermine(pldto), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/ucitajSveLekareKlinike/{id}")
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<List<LekarDTO>> ucitajLekareKlinike(@PathVariable Long id) {
 		return new ResponseEntity<>(lekarService.vratiLekareKlinike(id), HttpStatus.OK);
 	}
-	
+
 	@PutMapping(value = "/proveriTipIVremeLekara", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<Boolean> imaLiVremenaLekar(@RequestBody PretragaLekaraDTO pldto){
+	public ResponseEntity<Boolean> imaLiVremenaLekar(@RequestBody PretragaLekaraDTO pldto) {
 		return new ResponseEntity<>(lekarService.proveriTipIVreme(pldto), HttpStatus.OK);
 	}
-	
-	@PostMapping(value="izbrisiLekara",consumes="application/json")
+
+	@PostMapping(value = "izbrisiLekara", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<Boolean> izbrisiLekara(@RequestBody LekarDTO lekarDTO){
-		boolean uspesno =lekarService.remove(lekarDTO.getId());		
-		return new ResponseEntity<Boolean>(uspesno,HttpStatus.OK);
+	public ResponseEntity<Boolean> izbrisiLekara(@RequestBody LekarDTO lekarDTO) {
+		boolean uspesno = lekarService.remove(lekarDTO.getId());
+		return new ResponseEntity<Boolean>(uspesno, HttpStatus.OK);
 	}
 }

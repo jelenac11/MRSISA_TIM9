@@ -1,5 +1,6 @@
 package tim09.klinika.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,14 @@ public class SalaService {
 
 	@Autowired
 	private SalaRepository salaRepository;
-	
+
 	@Autowired
 	private FormatDatumaService datumService;
-
 
 	public Sala findByBroj(int broj) {
 		return salaRepository.findByBroj(broj);
 	}
-	
+
 	public Sala findOne(Long id) {
 		return salaRepository.findById(id).orElseGet(null);
 	}
@@ -38,10 +38,8 @@ public class SalaService {
 	public void remove(Long id) {
 		salaRepository.deleteById(id);
 	}
-	
-	public List<Sala> findByIdKlinikaAndVremeAndTipPregleda(Long klinikaId, long datumiVreme, TipPregledaDTO tipPregleda,
-			int trajanje) {
-		// TODO Auto-generated method stub
-		return salaRepository.findByIdKlinikaAndVreme(klinikaId,datumiVreme,datumService.getMinuteULong(trajanje));
+
+	public List<Sala> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, long trajanje) {
+		return salaRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, trajanje);
 	}
 }

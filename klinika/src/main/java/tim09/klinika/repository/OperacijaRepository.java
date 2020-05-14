@@ -6,11 +6,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import tim09.klinika.model.Operacija;
+import tim09.klinika.model.Pregled;
 
 public interface OperacijaRepository extends JpaRepository<Operacija, Long> {
 
-	@Query(value = "SELECT * FROM operacija op WHERE  op.vreme >= ?2 and op.vreme <= ?3 and (select count(o) from operisali o where operacija_id = op.operacija_id and lekar_id = ?1)=1", nativeQuery = true)
+	@Query(value = "SELECT * FROM operacija op WHERE op.vreme >= ?2 and op.vreme <= ?3 and (select count(o) from operisali o where operacija_id = op.operacija_id and lekar_id = ?1)=1", nativeQuery = true)
 	List<Operacija> findByLekarIdAndVreme(Long id, long datum, long l);
-	
+
 	List<Operacija> findBySalaIdAndVremeAfter(Long id, long time);
+
+	@Query(value = "SELECT * FROM operacija op WHERE op.vreme <= ?2 and (select count(o) from operisali o where operacija_id = op.operacija_id and lekar_id = ?1)=1", nativeQuery = true)
+	List<Operacija> findByLekariAndVremeAfter(Long id, long time);
+	
+	public List<Operacija> findByKlinikaIdAndSalaIdIsNullAndVremeAfter(Long id, long time);
 }

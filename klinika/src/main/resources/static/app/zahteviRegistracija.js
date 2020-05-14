@@ -13,7 +13,7 @@ Vue.component("zahtevi-registracija",{
 	<div>
 	    <navig-bar v-bind:token="this.token"></navig-bar>
 	    
-        <table class="table table-hover table-striped">
+        <table class="naviga table table-hover table-striped">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">Email</th>

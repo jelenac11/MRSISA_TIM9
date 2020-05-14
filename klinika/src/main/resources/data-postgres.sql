@@ -15,11 +15,11 @@ insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, 
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke) values('AC', 'Narodnog fronta 23d', 'Republika Srbija', 'admincentra@gmail.com', 'Novi Sad', 'Admin', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Centrić', true, true, true, '064-123-1236', 0);
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, klinika_id) values('AK', 'Topolska 18', 'Republika Srbija', 'adminklinike1@gmail.com', 'Beograd', 'Admir', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Admirović', true, true, true, '064-123-1237', 0, 1);
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, klinika_id) values('AK', 'Sibinjska 26', 'Republika Srbija', 'lazaklinika2@gmail.com', 'Sibinj', 'Laza', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Lazić', true, true, true, '064-123-1238', 0, 2);
-insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Danila Kiša 56', 'Republika Srbija', 'mikalekar@gmail.com', 'Novi Sad', 'Mika', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Mikić', true, true, false, '064-123-1239', 0, 28800000, 46800000, 1, true);
-insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Akšehirska 7', 'Republika Srbija', 'petarpetrovic@gmail.com', 'Beograd', 'Petar', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Petrović', true, true, true, '064-123-1210', 0, 0, 0, 1, true);
-insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Topolska 18', 'Republika Srbija', 'milosmilosevic@gmail.com', 'Sombor', 'Miloš', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milošević', true, true, true, '064-123-1211', 0, 0, 0, 1, true);
-insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Narodnog fronta 23', 'Republika Srbija', 'jelena@gmail.com', 'Novi Sad', 'Jelena', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Marković', true, true, true, '064-123-1212', 0, 0, 0, 2, true);
-insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id) values('MS', '16. oktobra 23', 'Republika Srbija', 'mikimiki@gmail.com', 'Beograd', 'Milan', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milanović', true, true, true, '064-123-1213', 0, 0, 0, 2);
+insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Danila Kiša 56', 'Republika Srbija', 'mikalekar@gmail.com', 'Novi Sad', 'Mika', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Mikić', true, true, true, '064-123-1239', 0, 28800000, 46800000, 1, true);
+insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Akšehirska 7', 'Republika Srbija', 'petarpetrovic@gmail.com', 'Beograd', 'Petar', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Petrović', true, true, true, '064-123-1210', 0, 28800000, 46800000, 1, true);
+insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Topolska 18', 'Republika Srbija', 'milosmilosevic@gmail.com', 'Sombor', 'Miloš', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milošević', true, true, true, '064-123-1211', 0, 28800000, 46800000, 1, true);
+insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Narodnog fronta 23', 'Republika Srbija', 'jelena@gmail.com', 'Novi Sad', 'Jelena', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Marković', true, true, true, '064-123-1212', 0, 28800000, 46800000, 2, true);
+insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id) values('MS', '16. oktobra 23', 'Republika Srbija', 'mikimiki@gmail.com', 'Beograd', 'Milan', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milanović', true, true, true, '064-123-1213', 0, 28800000, 46800000, 2);
 
 insert into autoritet (name) values ('ROLE_PACIJENT');
 insert into autoritet (name) values ('ROLE_LEKAR');
@@ -57,9 +57,9 @@ insert into stavka_sifrarnika (sifra, naziv, tip_sifre, sifrarnik_id) values('L5
 insert into stavka_sifrarnika (sifra, naziv, tip_sifre, sifrarnik_id) values('D813', 'Sars', 'DIJAGNOZE', 2);
 insert into stavka_sifrarnika (sifra, naziv, tip_sifre, sifrarnik_id) values('D199', 'COVID-19', 'DIJAGNOZE', 2);
 
-insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(0, '', false, false, 0, 1, 6);
-insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(0, '', false, false, 0, 1, 7);
-insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(0, '', false, false, 0, 1, 8);
+insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591084800000, 1, 6);
+insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591084800000, 1, 7);
+insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591084800000, 1, 8);
 
 insert into tip_pregleda (naziv, opis, klinika_id) values ('Uklanjanje mekih naslaga', 'Dečija stomatologija', 1);
 insert into tip_pregleda (naziv, opis, klinika_id) values ('Stomatološki pregled', 'Klinički pregled zuba, uzimanje statusa svakog zuba pojedinačno', 1);
@@ -79,9 +79,28 @@ insert into specijalizovan (lekar_id, tip_pregleda_id) values (9, 6);
 --insert into odsustvo (podnosilac_id, klinika_id, pocetak, kraj, odgovoreno, odobreno) values (6, 1, 1588543200000, 1588888800000, true, true);
 insert into odsustvo (podnosilac_id, klinika_id, pocetak, kraj, odgovoreno, odobreno) values (8, 2, 1588456800000, 1589493600000, true, true);
 
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, otkazan, potvrdjen, zauzet) values (6, 1, 1, 1590127200000, 3600000, false, true, true);
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1589979600000, 3600000, false, true, true);
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, sala_id, otkazan, trajanje, klinika_id, potvrdjen, zauzet) values (6, null, 1, 1590562800000 ,1, false, 3600000, 1, false, false);
+-- potvrdjeni pregledi
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 1, 1, 1590127200000, 3600000, 1, false, true, true);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1589979600000, 3600000, 1, false, true, true);
+
+-- zahtevi nepotvrdjeni
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1590645600000, 3600000, 1, false, false, true);
+
+-- predefinisani
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, null, 1, 1590562800000, 3600000, 1, false, false, false, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 1, 1590562800000, 3600000, 1, false, false, false, 2);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 3, 1590559200000, 3600000, 1, false, false, false, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 3, 1590912000000, 3600000, 1, false, false, false, 1);
+
+insert into operacija (pacijent_id, vreme, klinika_id) values (1, 1590271200000, 1);
+insert into operacija (pacijent_id, vreme, klinika_id) values (2, 1590300000000, 1);
+insert into operacija (pacijent_id, vreme, klinika_id) values (1, 1590562800000, 1);
+
+insert into operisali (lekar_id, operacija_id) values (6, 1);
+insert into operisali (lekar_id, operacija_id) values (7, 1);
+insert into operisali (lekar_id, operacija_id) values (8, 1);
+insert into operisali (lekar_id, operacija_id) values (6, 2);
+insert into operisali (lekar_id, operacija_id) values (7, 3);
 
 insert into stavka_cenovnika (tip_pregleda_id, cena, cenovnik_id) values (1, 2500, 1);
 insert into stavka_cenovnika (tip_pregleda_id, cena, cenovnik_id) values (2, 3000, 1);
