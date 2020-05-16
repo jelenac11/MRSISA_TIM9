@@ -11,55 +11,56 @@ Vue.component("radni-kalendar", {
 		} 
 	},
 	template: `
-	<v-app>
-		<div data-app>
-			<navig-bar v-bind:token="this.token"></navig-bar>
-			
-			<div class="naviga tab-content">
-				<v-sheet
-			        tile height="54"
-			        color="grey lighten-3"
-			        class="d-flex"
-		      	>
-			        <v-btn
-						icon
-			          	class="ma-2"
-			          	@click="$refs.calendar.prev()"
-			        >
-			        	<v-icon>mdi-chevron-left</v-icon>
-			        </v-btn>
-			        <v-select
-			        	v-model="type"
-			          	:items="types"
-			          	dense
-			          	outlined
-			          	hide-details
-			          	class="ma-2"
-			          	label="type"
-			        ></v-select>
-			        <v-spacer></v-spacer>
-			        <v-btn
-			          	icon
-			          	class="ma-2"
-			          	@click="$refs.calendar.next()"
-			        >
-			          	<v-icon>mdi-chevron-right</v-icon>
-			        </v-btn>
-		      	</v-sheet>
-		      	<v-sheet height="600">
-		        	<v-calendar
-		          		ref="calendar"
-		          		v-model="value"
-		          		:weekdays="weekday"
-		          		:type="type"
-		          		:events="events"
-	  			  		:event-overlap-threshold="30"
-	  			  		:event-color="getEventColor"
-		        	></v-calendar>
-	      		</v-sheet>
-	      	</div>
-		</div>
-	</v-app>	
+	<div>
+		<navig-bar v-bind:token="this.token"></navig-bar>
+		<v-app>
+			<div data-app>
+				<div class="naviga tab-content">
+					<v-sheet
+				        tile height="54"
+				        color="grey lighten-3"
+				        class="d-flex"
+			      	>
+				        <v-btn
+							icon
+				          	class="ma-2"
+				          	@click="$refs.calendar.prev()"
+				        >
+			        		<v-icon>mdi-chevron-left</v-icon>
+						</v-btn>
+				        <v-select
+				        	v-model="type"
+				          	:items="types"
+				          	dense
+				          	outlined
+				          	hide-details
+				          	class="ma-2"
+				          	label="type"
+				        ></v-select>
+				        <v-spacer></v-spacer>
+				        <v-btn
+				          	icon
+				          	class="ma-2"
+				          	@click="$refs.calendar.next()"
+				        >
+				          	<v-icon>mdi-chevron-right</v-icon>
+				        </v-btn>
+			      	</v-sheet>
+			      	<v-sheet height="600">
+			        	<v-calendar
+			          		ref="calendar"
+			          		v-model="value"
+			          		:weekdays="weekday"
+			          		:type="type"
+			          		:events="events"
+		  			  		:event-overlap-threshold="30"
+		  			  		:event-color="getEventColor"
+			        	></v-calendar>
+		      		</v-sheet>
+		      	</div>
+			</div>
+		</v-app>
+	</div>
 	`
 	,
 	methods : {

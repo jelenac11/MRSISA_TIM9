@@ -46,7 +46,7 @@ public class AutoritetService {
 
 	@Autowired
 	private PacijentService pacijentService;
-	
+
 	@Autowired
 	private PregledService pregledService;
 
@@ -135,7 +135,7 @@ public class AutoritetService {
 
 	public RedirectView potvrdaRegistracije(String token) {
 		VerifikacioniToken vt = verifikacioniTokenService.findByToken(token);
-		
+
 		if (vt != null) {
 			vt.getPacijent().setVerifikovan(true);
 			pacijentService.save(vt.getPacijent());
@@ -143,16 +143,15 @@ public class AutoritetService {
 		}
 		return null;
 	}
-	
+
 	public RedirectView potvrdaTerminaPregleda(String token) {
 		TokenPotvrdePregleda tpp = tokenPotvrdePregledaService.findByToken(token);
-		
+
 		if (tpp != null) {
-			return new RedirectView("http://localhost:8081/#/potvrdaTerminaPregleda/"+token);
+			return new RedirectView("http://localhost:8081/#/potvrdaTerminaPregleda/" + token);
 		}
 		return null;
 	}
-
 
 	public List<Autoritet> findById(Long id) {
 		Autoritet aut = autoritetRepository.getOne(id);
@@ -167,17 +166,18 @@ public class AutoritetService {
 		autoriteti.add(aut);
 		return autoriteti;
 	}
-	
+
 	public RedirectView odgovorNaPotvrduTerminaPregleda(OdgovorPregledDTO odgovorPregledDTO) {
 		TokenPotvrdePregleda tpp = tokenPotvrdePregledaService.findByToken(odgovorPregledDTO.getToken());
-		
+
 		if (tpp != null) {
-			Pregled pregled=tpp.getPregled();
-			emailService.obavijestiLekara(pregled, pregled.getLekar().getEmail());
+			Pregled pregled = tpp.getPregled();
 			pregled.setZauzet(odgovorPregledDTO.isOdgovor());
 			pregled.setPotvrdjen(true);
 			if (!odgovorPregledDTO.isOdgovor()) {
 				pregled.setPacijent(null);
+			} else {
+				emailService.obavijestiLekara(pregled, pregled.getLekar().getEmail());
 			}
 			pregledService.save(pregled);
 			tokenPotvrdePregledaService.deleteById(tpp.getId());
@@ -187,9 +187,9 @@ public class AutoritetService {
 	}
 
 	public ResponseEntity<PregledDTO> dobaviPodatkeoPregledu(String token) {
-		TokenPotvrdePregleda tpp=tokenPotvrdePregledaService.findByToken(token);
-		Pregled pregled=tpp.getPregled();
-		return new ResponseEntity<PregledDTO>(new PregledDTO(pregled),HttpStatus.OK);
+		TokenPotvrdePregleda tpp = tokenPotvrdePregledaService.findByToken(token);
+		Pregled pregled = tpp.getPregled();
+		return new ResponseEntity<PregledDTO>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
 }

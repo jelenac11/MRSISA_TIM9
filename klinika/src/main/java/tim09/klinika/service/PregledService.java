@@ -153,7 +153,7 @@ public class PregledService {
 		Lekar lekar = lekarService.findOne(slobodanTerminDTO.getLekar().getId());
 		pregled.setLekar(lekar);
 		emailService.posaljiLinkPotvrdePregleda(pregled, "aleksa.goljovic4@gmail.com");
-		emailService.obavijestiLekara(pregled, "aleksa.goljovic4@gmail.com");
+		//emailService.obavijestiLekara(pregled, "aleksa.goljovic4@gmail.com");
 		pregledRepository.save(pregled);
 
 	}

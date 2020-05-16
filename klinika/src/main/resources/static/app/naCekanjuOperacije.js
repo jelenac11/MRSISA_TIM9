@@ -67,242 +67,244 @@ Vue.component("na-cekanju-operacije", {
 		} 
 	},
 	template: `
-	<v-app>
-		<div data-app>
-			<navig-bar v-bind:token="this.token"></navig-bar>
-			<div class="naviga">			    
-				<v-tabs v-model="activeTab" centered>
-			      <v-tab href="#1" v-on:click="promijeniTab(1)">
-					<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
-			      </v-tab>
-			      <v-tab href="#2" v-on:click="promijeniTab(2)">
-					<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
-			      </v-tab>
-			      <v-tab href="#3" v-on:click="promijeniTab(3)">
-					<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
-			      </v-tab>
-			      <v-tab href="#4" v-on:click="promijeniTab(4)">
-					<router-link :to="{ name: 'naCekanjuOperacije' }">Operacije bez sale</router-link>
-			      </v-tab>
-			    </v-tabs>
-			</div>
-			<div class="naviga tab-content">
-				<table class="table table-hover table-striped">
-				  	<thead class="thead-light">
-				    	<tr>
-					      	<th scope="col" width="27%">Pacijent</th>
-					      	<th scope="col" width="27%">Lekari</th>
-					      	<th scope="col" width="26%">Vreme</th>
-					      	<th scope="col" width="20%">Trajanje</th>
-				    	</tr>
-				  	</thead>
-				  	<tbody>
-				  		<tr v-for="op in naCekanjuOperacije" @click="dialog = true" v-on:click="izabranaOperacija(op)">
-					      	<td width="27%">{{ op.pacijent.ime }} {{ op.pacijent.prezime }}</td>
-					      	<td width="27%">{{ ispisiLekare(op.lekari) }}</td>
-					      	<td width="26%">{{ formatVreme(op.vreme) }}</td>
-					      	<td width="20%">60 minuta</td>
-				    	</tr>
-				  	</tbody>
-				</table>
-			</div>
-			
-			<v-dialog v-model="dialog">
-					
-				<v-card>
-					<v-card-title>
-	        			Sale
-	        		<v-spacer></v-spacer>
-	        		<v-text-field
-						v-model="search"
-						append-icon="mdi-magnify"
-						label="Pretraga po imenu..."
-						single-line
-						hide-details
-	        		></v-text-field>
-	        		<v-spacer></v-spacer>
-	        		<v-text-field
-						v-model="searchBroj"
-		          		append-icon="mdi-magnify"
-			          	label="Pretraga po broju..."
-			          	single-line
-			          	hide-details
-	        		></v-text-field>
-					</v-card-title>
-					
-					<v-data-table
-						v-model="selected"
-						:headers="zaglavlje"
-						:items="sale"
-						:single-select="true"
-						show-select
-						no-data-text="Nema dostupnih sala"
-						no-results-text="Nema rezultata pretrage"
-						item-key="naziv"
-						class="elevation-1"
-					>
-						<template v-slot:body.append>
-		          			<tr>
-		          				<td></td>
-								<td>
-		              				<v-text-field v-model="brojManje" type="number" label="Vece od"></v-text-field>
-		            			</td>
-		            			<td>
-		              				<v-text-field v-model="brojVece" type="number" label="Manje od"></v-text-field>
-		            			</td>
-		          			</tr>
-		          			<tr>
-			          			<td></td>
-		          				<td>
-		          					<v-btn @click="dialog4 = true" v-on:click="nadjiLekare" :disabled="sale.length==0">
-	        							Dodaj lekare
-									</v-btn>
-								</td>
-		          				<td></td>
-		          				<td>
-		          					<v-btn @click="dialog2 = true" v-on:click="reset" :disabled="sale.length!=0">
-	        							Promeni podatke operacije
-									</v-btn>
-								</td>
-								<td></td>
-		          				<td align="right">
-		          					<v-btn v-on:click="dodijeliSalu" :disabled="selected.length==0">
-	        							Dodeli salu
-									</v-btn>
-		          				</td>
-		          			</tr>
-						</template>
-						<template v-slot:item.Kalendar="{ item }">
-							<v-btn class="secondary" small v-on:click="dobaviRadniKalendar(item)" @click="dialog3 = true">
-		        				Prikaži radni kalendar
-							</v-btn>
-						</template>
-					</v-data-table>
-				</v-card>
-			</v-dialog>
-			
-			<v-dialog v-model="dialog2" persistent>
-				<v-stepper v-model="e6">
-					<v-stepper-step :complete="e6 > 1" step="1">
-				        Odabir datuma
-				    </v-stepper-step>
-			    	<v-stepper-content step="1">
-			    		<div class="form-row mb-3">
-							<div class="col">
-								<label for="datum" class="mt-1">Datum i vreme operacije</label>
-								<input type="datetime-local" v-model="noviTerminOperacije.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid' : !odabranDatum }" required>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
-							</div>
-						</div>
-        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
-        		 		<v-btn v-on:click="cancel">Izlaz</v-btn>
-					</v-stepper-content>
-					
-					<v-divider></v-divider>
-					
-					<v-stepper-step :complete="e6 > 2" step="2">
-						Odabir lekara
-					</v-stepper-step>
-					
-					<v-stepper-content step="2">
-						<div class="form-row">
-							<div class="col">
-								<label for="lekar" class="mt-1">Lekar</label>
-								<select class="custom-select mt-0" v-model="noviPocetniLekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
-									<option v-for="lek in lekari" :value="lek">
-										{{ lek.ime }} {{ lek.prezime }}
-									</option>
-								</select>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
-							</div>
-						</div>
-			        	<v-btn v-on:click="finish" class="primary">Finish</v-btn>
-			        	<v-btn v-on:click="prev">Nazad</v-btn>
-			        	<v-btn v-on:click="cancel">Izlaz</v-btn>
-			      	</v-stepper-content>
-				      	
-			    </v-stepper>
-			</v-dialog>
-					
-			<v-dialog v-model="dialog4">
-				<v-card>
-					<v-card-title>
-	        			Lekari
-	        		</v-card-title>
-	        		<v-spacer></v-spacer>
-	        		<v-data-table
-						v-model="izabraniLekari"
-						:headers="zaglavljeLekari"
-						:items="moguciLekari"
-						:single-select="false"
-						show-select
-						no-data-text="Nema dostupnih lekara"
-						no-results-text="Nema rezultata pretrage"
-						item-key="ime"
-						class="elevation-1"
-					>
-						<template v-slot:body.append>
-		          			<tr>
-			          			<td></td>
-		          				<td>
-		          					<v-btn v-on:click="dodajLekare">
-		    							Dodaj lekare
-									</v-btn>
-								</td>
-		          				<td></td>
-		          			</tr>
-						</template>
-					</v-data-table>
-				</v-card>
-			</v-dialog>
-					
-			<v-dialog v-model="dialog3">
-				<div>
-			      	<v-sheet
-				        tile height="54"
-				        color="grey lighten-3"
-				        class="d-flex"
-			      	>
-				        <v-btn
-							icon
-				          	class="ma-2"
-				          	@click="$refs.calendar.prev()"
-				        >
-				        	<v-icon>mdi-chevron-left</v-icon>
-				        </v-btn>
-				        <v-select
-				        	v-model="type"
-				          	:items="types"
-				          	dense
-				          	outlined
+	<div>
+		<navig-bar v-bind:token="this.token"></navig-bar>
+		<v-app>
+			<div data-app>
+				<div class="naviga">			    
+					<v-tabs v-model="activeTab" centered>
+				      <v-tab href="#1" v-on:click="promijeniTab(1)">
+						<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
+				      </v-tab>
+				      <v-tab href="#2" v-on:click="promijeniTab(2)">
+						<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
+				      </v-tab>
+				      <v-tab href="#3" v-on:click="promijeniTab(3)">
+						<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
+				      </v-tab>
+				      <v-tab href="#4" v-on:click="promijeniTab(4)">
+						<router-link :to="{ name: 'naCekanjuOperacije' }">Operacije bez sale</router-link>
+				      </v-tab>
+				    </v-tabs>
+				</div>
+				<div class="naviga tab-content">
+					<table class="table table-hover table-striped">
+					  	<thead class="thead-light">
+					    	<tr>
+						      	<th scope="col" width="27%">Pacijent</th>
+						      	<th scope="col" width="27%">Lekari</th>
+						      	<th scope="col" width="26%">Vreme</th>
+						      	<th scope="col" width="20%">Trajanje</th>
+					    	</tr>
+					  	</thead>
+					  	<tbody>
+					  		<tr v-for="op in naCekanjuOperacije" @click="dialog = true" v-on:click="izabranaOperacija(op)">
+						      	<td width="27%">{{ op.pacijent.ime }} {{ op.pacijent.prezime }}</td>
+						      	<td width="27%">{{ ispisiLekare(op.lekari) }}</td>
+						      	<td width="26%">{{ formatVreme(op.vreme) }}</td>
+						      	<td width="20%">60 minuta</td>
+					    	</tr>
+					  	</tbody>
+					</table>
+				</div>
+				
+				<v-dialog v-model="dialog">
+						
+					<v-card>
+						<v-card-title>
+		        			Sale
+		        		<v-spacer></v-spacer>
+		        		<v-text-field
+							v-model="search"
+							append-icon="mdi-magnify"
+							label="Pretraga po imenu..."
+							single-line
+							hide-details
+		        		></v-text-field>
+		        		<v-spacer></v-spacer>
+		        		<v-text-field
+							v-model="searchBroj"
+			          		append-icon="mdi-magnify"
+				          	label="Pretraga po broju..."
+				          	single-line
 				          	hide-details
-				          	class="ma-2"
-				          	label="type"
-				        ></v-select>
-				        <v-spacer></v-spacer>
-				        <v-btn
-				          	icon
-				          	class="ma-2"
-				          	@click="$refs.calendar.next()"
-				        >
-				          	<v-icon>mdi-chevron-right</v-icon>
-				        </v-btn>
-			      	</v-sheet>
-			      	<v-sheet height="600">
-			        	<v-calendar
-			          		ref="calendar"
-			          		v-model="value"
-			          		:weekdays="weekday"
-			          		:type="type"
-			          		:events="events"
-          			  		:event-overlap-threshold="30"
-          			  		:event-color="getEventColor"
-			        	></v-calendar>
-		      		</v-sheet>
-		    	</div>
-			</v-dialog>
-		</div>
-	</v-app>
+		        		></v-text-field>
+						</v-card-title>
+						
+						<v-data-table
+							v-model="selected"
+							:headers="zaglavlje"
+							:items="sale"
+							:single-select="true"
+							show-select
+							no-data-text="Nema dostupnih sala"
+							no-results-text="Nema rezultata pretrage"
+							item-key="naziv"
+							class="elevation-1"
+						>
+							<template v-slot:body.append>
+			          			<tr>
+			          				<td></td>
+									<td>
+			              				<v-text-field v-model="brojManje" type="number" label="Vece od"></v-text-field>
+			            			</td>
+			            			<td>
+			              				<v-text-field v-model="brojVece" type="number" label="Manje od"></v-text-field>
+			            			</td>
+			          			</tr>
+			          			<tr>
+				          			<td></td>
+			          				<td>
+			          					<v-btn @click="dialog4 = true" v-on:click="nadjiLekare" :disabled="sale.length==0">
+		        							Dodaj lekare
+										</v-btn>
+									</td>
+			          				<td></td>
+			          				<td>
+			          					<v-btn @click="dialog2 = true" v-on:click="reset" :disabled="sale.length!=0">
+		        							Promeni podatke operacije
+										</v-btn>
+									</td>
+									<td></td>
+			          				<td align="right">
+			          					<v-btn v-on:click="dodijeliSalu" :disabled="selected.length==0">
+		        							Dodeli salu
+										</v-btn>
+			          				</td>
+			          			</tr>
+							</template>
+							<template v-slot:item.Kalendar="{ item }">
+								<v-btn class="secondary" small v-on:click="dobaviRadniKalendar(item)" @click="dialog3 = true">
+			        				Prikaži radni kalendar
+								</v-btn>
+							</template>
+						</v-data-table>
+					</v-card>
+				</v-dialog>
+				
+				<v-dialog v-model="dialog2" persistent>
+					<v-stepper v-model="e6">
+						<v-stepper-step :complete="e6 > 1" step="1">
+					        Odabir datuma
+					    </v-stepper-step>
+				    	<v-stepper-content step="1">
+				    		<div class="form-row mb-3">
+								<div class="col">
+									<label for="datum" class="mt-1">Datum i vreme operacije</label>
+									<input type="datetime-local" v-model="noviTerminOperacije.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid' : !odabranDatum }" required>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
+								</div>
+							</div>
+	        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
+	        		 		<v-btn v-on:click="cancel">Izlaz</v-btn>
+						</v-stepper-content>
+						
+						<v-divider></v-divider>
+						
+						<v-stepper-step :complete="e6 > 2" step="2">
+							Odabir lekara
+						</v-stepper-step>
+						
+						<v-stepper-content step="2">
+							<div class="form-row">
+								<div class="col">
+									<label for="lekar" class="mt-1">Lekar</label>
+									<select class="custom-select mt-0" v-model="noviPocetniLekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
+										<option v-for="lek in lekari" :value="lek">
+											{{ lek.ime }} {{ lek.prezime }}
+										</option>
+									</select>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
+								</div>
+							</div>
+				        	<v-btn v-on:click="finish" class="primary">Finish</v-btn>
+				        	<v-btn v-on:click="prev">Nazad</v-btn>
+				        	<v-btn v-on:click="cancel">Izlaz</v-btn>
+				      	</v-stepper-content>
+					      	
+				    </v-stepper>
+				</v-dialog>
+						
+				<v-dialog v-model="dialog4">
+					<v-card>
+						<v-card-title>
+		        			Lekari
+		        		</v-card-title>
+		        		<v-spacer></v-spacer>
+		        		<v-data-table
+							v-model="izabraniLekari"
+							:headers="zaglavljeLekari"
+							:items="moguciLekari"
+							:single-select="false"
+							show-select
+							no-data-text="Nema dostupnih lekara"
+							no-results-text="Nema rezultata pretrage"
+							item-key="ime"
+							class="elevation-1"
+						>
+							<template v-slot:body.append>
+			          			<tr>
+				          			<td></td>
+			          				<td>
+			          					<v-btn v-on:click="dodajLekare">
+			    							Dodaj lekare
+										</v-btn>
+									</td>
+			          				<td></td>
+			          			</tr>
+							</template>
+						</v-data-table>
+					</v-card>
+				</v-dialog>
+						
+				<v-dialog v-model="dialog3">
+					<div>
+				      	<v-sheet
+					        tile height="54"
+					        color="grey lighten-3"
+					        class="d-flex"
+				      	>
+					        <v-btn
+								icon
+					          	class="ma-2"
+					          	@click="$refs.calendar.prev()"
+					        >
+					        	<v-icon>mdi-chevron-left</v-icon>
+					        </v-btn>
+					        <v-select
+					        	v-model="type"
+					          	:items="types"
+					          	dense
+					          	outlined
+					          	hide-details
+					          	class="ma-2"
+					          	label="type"
+					        ></v-select>
+					        <v-spacer></v-spacer>
+					        <v-btn
+					          	icon
+					          	class="ma-2"
+					          	@click="$refs.calendar.next()"
+					        >
+					          	<v-icon>mdi-chevron-right</v-icon>
+					        </v-btn>
+				      	</v-sheet>
+				      	<v-sheet height="600">
+				        	<v-calendar
+				          		ref="calendar"
+				          		v-model="value"
+				          		:weekdays="weekday"
+				          		:type="type"
+				          		:events="events"
+	          			  		:event-overlap-threshold="30"
+	          			  		:event-color="getEventColor"
+				        	></v-calendar>
+			      		</v-sheet>
+			    	</div>
+				</v-dialog>
+			</div>
+		</v-app>
+	</div>
 	`,
 	methods : {
 		formatVreme:function(datum){

@@ -32,137 +32,139 @@ Vue.component("definisanje-slobodnog-termina", {
 		} 
 	},
 	template: `
-	<v-app>
-	<div data-app>
-	<navig-bar v-bind:token="this.token"></navig-bar>
-		<div class="naviga">			    
-			<v-tabs v-model="activeTab" centered>
-		      <v-tab href="#1" v-on:click="promijeniTab(1)">
-				<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
-		      </v-tab>
-		      <v-tab href="#2" v-on:click="promijeniTab(2)">
-				<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
-		      </v-tab>
-		      <v-tab href="#3" v-on:click="promijeniTab(3)">
-				<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
-		      </v-tab>
-		      <v-tab href="#4" v-on:click="promijeniTab(4)">
-				<router-link :to="{ name: 'naCekanjuOperacije' }">Operacije bez sale</router-link>
-		      </v-tab>
-		    </v-tabs>
-		</div>
-		<div class="naviga tab-content">
-			<table class="table table-hover table-striped">
-			  	<thead class="thead-light">
-			    	<tr>
-				      	<th scope="col" width="20%">Lekar</th>
-				      	<th scope="col" width="25%">Vreme</th>
-				      	<th scope="col" width="15%">Sala</th>
-				      	<th scope="col" width="25%">Tip pregleda</th>
-				      	<th scope="col" width="15%">Trajanje</th>
-			    	</tr>
-			  	</thead>
-			  	<tbody>
-			  		<tr v-for="pregled in slobodniPregledi">
-				      	<td width="20%">{{ pregled.lekar.ime }} {{ pregled.lekar.prezime }}</td>
-				      	<td width="25%">{{ formatVreme(pregled.vreme) }}</td>
-				      	<td width="15%">{{ pregled.sala.naziv }}</td>
-				      	<td width="25%">{{ pregled.tipPregleda.naziv }}</td>
-				      	<td width="15%">{{ formatTrajanje(pregled.trajanje) }}</td>
-			    	</tr>
-			  	</tbody>
-			</table>
-			<v-btn @click="dijalog = true" :block="true" class="primary" v-on:click="reset">
-        		Dodaj novi predefinisani termin
-			</v-btn>
-		</div>
-		
-		<v-dialog width="500" v-model="dijalog">
-			<v-stepper v-model="e6">
-				<v-stepper-step :complete="e6 > 1" step="1">
-			        Odabir lekara i datuma pregleda
-			    </v-stepper-step>
-			    	<v-stepper-content step="1">
-			    	<div class="form-row">
-							<div class="col">
-								<label for="lekar" class="mt-1">Lekar</label>
-								<select class="custom-select mt-0" v-model="terminPregleda.lekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
-									<option v-for="lekar in lekari" :value="lekar">
-										{{ lekar.ime}} {{lekar.prezime }}
-									</option>
-								</select>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
+	<div>
+		<navig-bar v-bind:token="this.token"></navig-bar>
+		<v-app>
+		<div data-app>
+			<div class="naviga">			    
+				<v-tabs v-model="activeTab" centered>
+			      <v-tab href="#1" v-on:click="promijeniTab(1)">
+					<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
+			      </v-tab>
+			      <v-tab href="#2" v-on:click="promijeniTab(2)">
+					<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
+			      </v-tab>
+			      <v-tab href="#3" v-on:click="promijeniTab(3)">
+					<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
+			      </v-tab>
+			      <v-tab href="#4" v-on:click="promijeniTab(4)">
+					<router-link :to="{ name: 'naCekanjuOperacije' }">Operacije bez sale</router-link>
+			      </v-tab>
+			    </v-tabs>
+			</div>
+			<div class="naviga tab-content">
+				<table class="table table-hover table-striped">
+				  	<thead class="thead-light">
+				    	<tr>
+					      	<th scope="col" width="20%">Lekar</th>
+					      	<th scope="col" width="25%">Vreme</th>
+					      	<th scope="col" width="15%">Sala</th>
+					      	<th scope="col" width="25%">Tip pregleda</th>
+					      	<th scope="col" width="15%">Trajanje</th>
+				    	</tr>
+				  	</thead>
+				  	<tbody>
+				  		<tr v-for="pregled in slobodniPregledi">
+					      	<td width="20%">{{ pregled.lekar.ime }} {{ pregled.lekar.prezime }}</td>
+					      	<td width="25%">{{ formatVreme(pregled.vreme) }}</td>
+					      	<td width="15%">{{ pregled.sala.naziv }}</td>
+					      	<td width="25%">{{ pregled.tipPregleda.naziv }}</td>
+					      	<td width="15%">{{ formatTrajanje(pregled.trajanje) }}</td>
+				    	</tr>
+				  	</tbody>
+				</table>
+				<v-btn @click="dijalog = true" :block="true" class="primary" v-on:click="reset">
+	        		Dodaj novi predefinisani termin
+				</v-btn>
+			</div>
+			
+			<v-dialog width="500" v-model="dijalog">
+				<v-stepper v-model="e6">
+					<v-stepper-step :complete="e6 > 1" step="1">
+				        Odabir lekara i datuma pregleda
+				    </v-stepper-step>
+				    	<v-stepper-content step="1">
+				    	<div class="form-row">
+								<div class="col">
+									<label for="lekar" class="mt-1">Lekar</label>
+									<select class="custom-select mt-0" v-model="terminPregleda.lekar" v-bind:class="{ 'is-invalid':!odabraniLekar}" required>
+										<option v-for="lekar in lekari" :value="lekar">
+											{{ lekar.ime}} {{lekar.prezime }}
+										</option>
+									</select>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali lekara.</div>
+								</div>
 							</div>
-						</div>
-						<div class="form-row mb-3">
-							<div class="col">
-								<label for="datum" class="mt-1">Datum pregleda</label>
-								<input type="date" v-model="terminPregleda.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid':!odabranDatum}" required>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
+							<div class="form-row mb-3">
+								<div class="col">
+									<label for="datum" class="mt-1">Datum pregleda</label>
+									<input type="date" v-model="terminPregleda.datumiVreme" class="form-control" id="datum" v-on:change="promjenaDatuma" v-bind:class="{ 'is-invalid':!odabranDatum}" required>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Odabrani datum je nevalidan.</div>
+								</div>
 							</div>
-						</div>
-        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
-					</v-stepper-content>
-					<v-divider></v-divider>
-					
-					
-					<v-stepper-step :complete="e6 > 2" step="2">
-						Odabir termina pregleda i tipa pregleda
-					</v-stepper-step>
-					
-					
-					<v-stepper-content step="2">
-						<div class="form-row">
-							<div class="col">
-								<label for="tipPregleda" class="mt-1">Tip pregleda</label>
-								<select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
-									<option v-for="tip in tipoviPregleda" :value="tip">
-										{{ tip.naziv }}
-									</option>
-								</select>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
-							</div>
-						</div>
+	        		 		<v-btn class="primary" v-on:click="next">Next</v-btn>
+						</v-stepper-content>
+						<v-divider></v-divider>
 						
-						<div class="form-row">
-							<div class="col">
-								<label for="termin" class="mt-1">Termin</label>
-								<select class="custom-select mt-0" v-model="termin" id="termin" v-bind:class="{ 'is-invalid':!odabraniTermin}" required>
-									<option v-for="termin in termini" :value="termin">
-										{{ urediDatum(termin) }}
-									</option>
-								</select>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali termin.</div>
-							</div>
-						</div>
 						
-			        	<v-btn v-on:click="next2" class="primary">Next</v-btn>
-			        	<v-btn v-on:click="prev">Nazad</v-btn>
-			        </v-stepper-content>
-			        
-			        <v-stepper-step :complete="e6 > 3" step="3">
-						Odabir sale
-					</v-stepper-step>
-					
-			      <v-stepper-content step="3">
-						<div class="form-row">
-							<div class="col">
-								<label for="sala" class="mt-1">Sala</label>
-								<select class="custom-select mt-0" v-model="terminPregleda.sala" v-bind:class="{ 'is-invalid':!odabranaSala}" required>
-									<option v-for="sala in sale" :value="sala">
-										{{ sala.naziv }}
-									</option>
-								</select>
-								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali salu.</div>
+						<v-stepper-step :complete="e6 > 2" step="2">
+							Odabir termina pregleda i tipa pregleda
+						</v-stepper-step>
+						
+						
+						<v-stepper-content step="2">
+							<div class="form-row">
+								<div class="col">
+									<label for="tipPregleda" class="mt-1">Tip pregleda</label>
+									<select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
+										<option v-for="tip in tipoviPregleda" :value="tip">
+											{{ tip.naziv }}
+										</option>
+									</select>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
+								</div>
 							</div>
-						</div>
-			        	<v-btn v-on:click="finish" class="primary">Finish</v-btn>
-			        	<v-btn v-on:click="prev2">Nazad</v-btn>
-			      	</v-stepper-content>
-			      </v-stepper>
-				</v-dialog>
+							
+							<div class="form-row">
+								<div class="col">
+									<label for="termin" class="mt-1">Termin</label>
+									<select class="custom-select mt-0" v-model="termin" id="termin" v-bind:class="{ 'is-invalid':!odabraniTermin}" required>
+										<option v-for="termin in termini" :value="termin">
+											{{ urediDatum(termin) }}
+										</option>
+									</select>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali termin.</div>
+								</div>
+							</div>
+							
+				        	<v-btn v-on:click="next2" class="primary">Next</v-btn>
+				        	<v-btn v-on:click="prev">Nazad</v-btn>
+				        </v-stepper-content>
+				        
+				        <v-stepper-step :complete="e6 > 3" step="3">
+							Odabir sale
+						</v-stepper-step>
+						
+				      <v-stepper-content step="3">
+							<div class="form-row">
+								<div class="col">
+									<label for="sala" class="mt-1">Sala</label>
+									<select class="custom-select mt-0" v-model="terminPregleda.sala" v-bind:class="{ 'is-invalid':!odabranaSala}" required>
+										<option v-for="sala in sale" :value="sala">
+											{{ sala.naziv }}
+										</option>
+									</select>
+									<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali salu.</div>
+								</div>
+							</div>
+				        	<v-btn v-on:click="finish" class="primary">Finish</v-btn>
+				        	<v-btn v-on:click="prev2">Nazad</v-btn>
+				      	</v-stepper-content>
+				      </v-stepper>
+					</v-dialog>
+		</div>
+		</v-app>
 	</div>
-	</v-app>
 	`,
 	created: function(){
 		this.token = localStorage.getItem("token");

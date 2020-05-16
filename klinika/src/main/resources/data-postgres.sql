@@ -81,12 +81,13 @@ insert into specijalizovan (lekar_id, tip_pregleda_id) values (9, 6);
 insert into odsustvo (podnosilac_id, klinika_id, pocetak, kraj, odgovoreno, odobreno) values (8, 2, 1588456800000, 1589493600000, true, true);
 
 -- potvrdjeni pregledi
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1589061600000, 3600000, 1, false, true, true, 1);
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590127200000, 3600000, 1, false, true, true, 1);
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589979600000, 3600000, 1, false, true, true, 2);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590656400000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590652800000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589011200000, 3600000, 1, false, true, true, 2);
 
 -- zahtevi nepotvrdjeni
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1590645600000, 3600000, 1, false, false, true);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1590652800000, 3600000, 1, false, false, true);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet) values (6, 2, 1, 1590739200000, 3600000, 1, false, false, true);
 
 -- predefinisani
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, null, 1, 1590562800000, 3600000, 1, false, false, false, 1);
