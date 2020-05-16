@@ -62,13 +62,12 @@ public class PacijentService {
 		Autoritet a = korisnik.getAutoriteti().get(0);
 		
 		MedicinskoOsoblje med = null;
-		if (a.getAuthority().equals("LEKAR")) {
+		if (a.getAuthority().equals("ROLE_LEKAR")) {
 			med = lekarRepository.findById(id).orElseGet(null);
-		} else if (a.getAuthority().equals("MED_SESTRA")) {
+		} else if (a.getAuthority().equals("ROLE_MED_SESTRA")) {
 			med = medSestraRepository.findById(id).orElseGet(null);
 		}
-		
-		
+	 
 		List<PacijentDTO> pacijentiDTO = new ArrayList<PacijentDTO>();
 		if (med == null) {
 			return pacijentiDTO;

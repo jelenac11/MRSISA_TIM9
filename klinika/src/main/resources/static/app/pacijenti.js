@@ -20,7 +20,7 @@ Vue.component("pacijenti", {
 					<input type="search" class="form-control col-4 ml-auto m-2" v-model="jbo"  placeholder="JBO..."/>
 				</div>
 			</div>
-			<table class="table table-hover table-striped">
+			<table id="tabela" class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
 				      	<th scope="col" width="30%">Ime</th>
@@ -41,6 +41,7 @@ Vue.component("pacijenti", {
 	`
 	,
 	mounted: function(){
+		//$('#tabela').DataTable();
 		axios
 		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => { 

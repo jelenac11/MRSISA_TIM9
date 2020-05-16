@@ -38,6 +38,9 @@ public class Operacija {
 
 	@Column(name = "vreme", nullable = false)
 	private long vreme;
+	
+	@Column(name = "otkazana", nullable = false)
+	private boolean otkazana;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
@@ -93,5 +96,13 @@ public class Operacija {
 
 	public void setVreme(long vreme) {
 		this.vreme = vreme;
+	}
+
+	public boolean isOtkazana() {
+		return otkazana;
+	}
+
+	public void setOtkazana(boolean otkazana) {
+		this.otkazana = otkazana;
 	}
 }

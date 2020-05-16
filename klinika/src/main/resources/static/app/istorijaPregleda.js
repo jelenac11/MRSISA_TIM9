@@ -3,37 +3,51 @@ Vue.component("istorija-pregleda", {
 		return {
 			ulogovan: {},
 			pregledi: [],
+			activeTab: '1',
 			token: "",
 		} 
 	},
 	template: `
 	<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
-		
-		<div class="tab-content">
-			<table class="table table-hover table-striped">
-			  	<thead class="thead-light">
-			    	<tr>
-				      	<th scope="col" width="20%">Klinika</th>
-				      	<th scope="col" width="20%">Tip pregleda</th>
-				      	<th scope="col" width="20%">Vreme</th>
-				      	<th scope="col" width="20%">Lekar</th>
-				      	<th scope="col" width="10%">Broj sale</th>
-				      	<th scope="col" width="10%"></th>
-			    	</tr>
-			  	</thead>
-			  	<tbody>
-			  		<tr v-for="(pregled, indeks) in pregledi">
-				      	<td width="20%">{{ pregled.klinika.naziv }}</td>
-				      	<td width="20%">{{ pregled.tipPregleda.naziv }}</td>
-				      	<td width="20%">{{ urediDatum(pregled.vreme2) }}</td>
-				      	<td width="20%">{{ pregled.lekar.ime }} {{pregled.lekar.prezime}}</td>
-				      	<td width="10%">{{ pregled.sala.broj }}</td>
-			    		<td width="10%"><button class="btn btn-danger btn-sm" v-on:click="otkaziPregled(indeks)" id="brisanjeTipa" v-show="proveriOtkazivanje(indeks)">Otkaži</button></td>
-			    	</tr>
-			  	</tbody>
-			</table>
-		</div>
+		<v-app>
+			<div data-app>
+				<div class="naviga">			    
+					<v-tabs v-model="activeTab" centered>
+				      	<v-tab href="#1" v-on:click="promijeniTab(1)">
+							<router-link :to="{ name: 'istorijaPregleda' }">Pregledi</router-link>
+				      	</v-tab>
+				      	<v-tab href="#2" v-on:click="promijeniTab(2)">
+							<router-link :to="{ name: 'istorijaOperacija' }">Operacije</router-link>
+				      	</v-tab>
+				    </v-tabs>
+				</div>
+				<div class="naviga tab-content">
+					<table class="table table-hover table-striped">
+					  	<thead class="thead-light">
+					    	<tr>
+						      	<th scope="col" width="20%">Klinika</th>
+						      	<th scope="col" width="20%">Tip pregleda</th>
+						      	<th scope="col" width="20%">Vreme</th>
+						      	<th scope="col" width="20%">Lekar</th>
+						      	<th scope="col" width="10%">Broj sale</th>
+						      	<th scope="col" width="10%"></th>
+					    	</tr>
+					  	</thead>
+					  	<tbody>
+					  		<tr v-for="(pregled, indeks) in pregledi">
+						      	<td width="20%">{{ pregled.klinika.naziv }}</td>
+						      	<td width="20%">{{ pregled.tipPregleda.naziv }}</td>
+						      	<td width="20%">{{ urediDatum(pregled.vreme2) }}</td>
+						      	<td width="20%">{{ pregled.lekar.ime }} {{pregled.lekar.prezime}}</td>
+						      	<td width="10%">{{ pregled.sala.broj }}</td>
+					    		<td width="10%"><button class="btn btn-danger btn-sm" v-on:click="otkaziPregled(indeks)" id="brisanjeTipa" v-show="proveriOtkazivanje(indeks)">Otkaži</button></td>
+					    	</tr>
+					  	</tbody>
+					</table>
+				</div>
+			</div>
+		</v-app>
 	</div>
 	`
 	,
@@ -73,6 +87,13 @@ Vue.component("istorija-pregleda", {
 					}
 				})
 	            .catch(function (error) { console.log(error); });
+			}
+		},
+		promijeniTab : function (a) {
+			if (a == 1) {
+				this.$router.replace({ name: 'istorijaPregleda' });
+			} else {
+				this.$router.replace({ name: 'istorijaOperacija' });
 			}
 		},
 	},

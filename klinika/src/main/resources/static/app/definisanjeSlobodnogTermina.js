@@ -25,7 +25,7 @@ Vue.component("definisanje-slobodnog-termina", {
 			odabranoTrajanje:true,
 			dijalog: false,
 			e6:1,
-			activeTab:"2",
+			activeTab:"3",
 			termini:[],
 			termin:null,
 			pretragaTermina:{id:0,datum:0,tipPregleda:'',pacijent:0,klinika:0}
@@ -42,12 +42,15 @@ Vue.component("definisanje-slobodnog-termina", {
 					<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
 			      </v-tab>
 			      <v-tab href="#2" v-on:click="promijeniTab(2)">
-					<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
+					<router-link :to="{ name: 'zakazaneOperacije' }">Zakazane operacije</router-link>
 			      </v-tab>
 			      <v-tab href="#3" v-on:click="promijeniTab(3)">
-					<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
+					<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
 			      </v-tab>
 			      <v-tab href="#4" v-on:click="promijeniTab(4)">
+					<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
+			      </v-tab>
+			      <v-tab href="#5" v-on:click="promijeniTab(5)">
 					<router-link :to="{ name: 'naCekanjuOperacije' }">Operacije bez sale</router-link>
 			      </v-tab>
 			    </v-tabs>
@@ -408,9 +411,12 @@ Vue.component("definisanje-slobodnog-termina", {
 				this.$router.replace({ name: 'zakazaniPregledi' });
 			}
 			else if(a==2){
+				this.$router.replace({ name: 'zakazaneOperacije' });
+			}
+			else if(a==3){
 				this.$router.replace({ name: 'definisanjeSlobodnogTermina' });
 			}
-			else if (a==3){
+			else if (a==4){
 				this.$router.replace({ name: 'naCekanjuTermini' });
 			} 
 			else {

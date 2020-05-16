@@ -72,9 +72,8 @@ public class LekarService {
 
 	public List<Lekar> findByIdKlinikaAndVremeAndTipPregleda(Long klinikaId, long datumiVreme,
 			TipPregledaDTO tipPregleda, int trajanje) {
-		return lekarRepository.findByIdKlinikaAndVremeAndTipPregleda(klinikaId, datumiVreme,
-				datumService.getRadnoVrijemeLongIzLong(datumiVreme), tipPregleda.getId(),
-				datumService.getMinuteULong(trajanje));
+		return lekarRepository.findByIdKlinikaAndVremeAndTipPregleda(klinikaId, datumiVreme, datumService.getRadnoVrijemeLongIzLong(datumiVreme),
+				tipPregleda.getId());
 	}
 
 	public List<Lekar> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, int trajanje) {

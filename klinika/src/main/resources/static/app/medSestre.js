@@ -2,6 +2,7 @@ Vue.component("medSestre", {
 	data : function() {
 		return {
 			medSestre: [],
+			search: "",
 			token: "",
 		} 
 	},
@@ -10,6 +11,9 @@ Vue.component("medSestre", {
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		
 		<div class="naviga tab-content">
+			<div class="input-group">
+				<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Ime i prezime..."/>
+			</div>
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
@@ -24,7 +28,7 @@ Vue.component("medSestre", {
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="sestra in medSestre" data-toggle="modal" data-target="#" v-on:click="">
+			  		<tr v-for="sestra in filtriraneMedSestre" data-toggle="modal" data-target="#" v-on:click="">
 				      	<td width="12%">{{ sestra.ime }}</td>
 				      	<td width="12%">{{ sestra.prezime }}</td>
 				      	<td width="20%">{{ sestra.email }}</td>
@@ -64,5 +68,12 @@ Vue.component("medSestre", {
         .get('sestre/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => (this.medSestre = response.data))
         .catch(function (error) { console.log(error); });
+	},
+	computed : {
+		filtriraneMedSestre : function() {
+			return this.medSestre.filter(seka => {
+				return seka.ime.toLowerCase().includes(this.search.toLowerCase().trim()) || seka.prezime.toLowerCase().includes(this.search.toLowerCase().trim());
+			})
+		}
 	}
 });

@@ -111,7 +111,7 @@ public class PregledService {
 	public List<Pregled> findByKlinikaIdAndVremeAfterAndPacijentIsNull(long id, long vreme) {
 		return pregledRepository.findByKlinikaIdAndVremeAfterAndPacijentIsNull(id, vreme);
 	}
-	
+
 	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(long id, boolean b, boolean c,
 			long vreme, boolean potvrdjen) {
 		return pregledRepository.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(b, c, id,
@@ -120,7 +120,6 @@ public class PregledService {
 
 	public List<Pregled> findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(Long id, long time, boolean potvrdjen) {
 		return pregledRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndPotvrdjen(id, time, potvrdjen);
-
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendar(Long id, long time) {
@@ -153,7 +152,7 @@ public class PregledService {
 		Lekar lekar = lekarService.findOne(slobodanTerminDTO.getLekar().getId());
 		pregled.setLekar(lekar);
 		emailService.posaljiLinkPotvrdePregleda(pregled, "aleksa.goljovic4@gmail.com");
-		//emailService.obavijestiLekara(pregled, "aleksa.goljovic4@gmail.com");
+		// emailService.obavijestiLekara(pregled, "aleksa.goljovic4@gmail.com");
 		pregledRepository.save(pregled);
 
 	}
@@ -263,7 +262,7 @@ public class PregledService {
 	}
 
 	public List<Pregled> findByLekarIdAndPacijentIdAndVreme(long idLekara, long idPacijenta, long time) {
-		return pregledRepository.findByLekarIdAndPacijentIdAndVreme(idLekara,idPacijenta,time);
-		
+		return pregledRepository.findByLekarIdAndPacijentIdAndVreme(idLekara, idPacijenta, time);
+
 	}
 }

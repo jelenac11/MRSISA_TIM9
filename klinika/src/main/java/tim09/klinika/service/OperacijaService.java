@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.LekarDTO;
+import tim09.klinika.dto.OperacijaDTO;
+import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Operacija;
+import tim09.klinika.model.Pregled;
 import tim09.klinika.model.Sala;
 import tim09.klinika.repository.OperacijaRepository;
 
@@ -23,13 +26,13 @@ public class OperacijaService {
 
 	@Autowired
 	private SalaService salaService;
-	
+
 	@Autowired
 	private LekarService lekarService;
-	
+
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-	
+
 	@Autowired
 	private EmailService emailService;
 
@@ -50,7 +53,7 @@ public class OperacijaService {
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendar(Long id, long time) {
-		List<Operacija> operacije = operacijaRepository.findBySalaIdAndVremeAfter(id, time);
+		List<Operacija> operacije = operacijaRepository.findBySalaIdAndVremeAfterAndOtkazana(id, time, false);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Operacija operacija : operacije) {
 			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija"));
@@ -68,7 +71,7 @@ public class OperacijaService {
 	}
 
 	public List<Operacija> findByKlinikaIdAndSalaIdAndVremeAfter(Long id, long time) {
-		return operacijaRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfter(id, time);
+		return operacijaRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndOtkazana(id, time, false);
 	}
 
 	public void dodijeliSalu(SlobodanTerminOperacijaDTO slobodanTerminDTO) {
@@ -85,6 +88,21 @@ public class OperacijaService {
 		}
 		emailService.obavestiPacijentaZaOperaciju(operacija, "aleksa.goljovic4@gmail.com");
 		operacijaRepository.save(operacija);
+	}
+
+	public List<Operacija> findByOtkazanaAndKlinikaIdAndVremeAfter(boolean b, Long id, long time) {
+		return operacijaRepository.findByOtkazanaAndKlinikaIdAndVremeAfterAndSalaIdIsNotNull(b, id, time);
+	}
+
+	public List<OperacijaDTO> vratiOperacijePacijenta(long id) {
+		List<Operacija> operacije = operacijaRepository.findByPacijentIdAndOtkazanaFalse(id);
+		List<OperacijaDTO> operacijeDTO = new ArrayList<OperacijaDTO>();
+		if (operacije != null) {
+			for (Operacija o : operacije) {
+				operacijeDTO.add(new OperacijaDTO(o));
+			}
+		}
+		return operacijeDTO;
 	}
 
 }

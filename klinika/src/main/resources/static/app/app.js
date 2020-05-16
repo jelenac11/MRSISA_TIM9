@@ -39,9 +39,11 @@ const PotvrdaZakazivanja = {template : '<potvrda-zakazivanja></potvrda-zakazivan
 const Zaposleni = {template : '<zaposleni></zaposleni>'}
 const DefinisanjeSlobodnogTermina = {template: '<definisanje-slobodnog-termina></definisanje-slobodnog-termina>'}
 const ZakazaniPregledi = {template : '<zakazani-pregledi></zakazani-pregledi>'}
+const ZakazaneOperacije = {template : '<zakazane-operacije></zakazane-operacije>'}
 const NaCekanjuTermini = {template : '<na-cekanju-termini></na-cekanju-termini>'}
 const NaCekanjuOperacije = {template : '<na-cekanju-operacije></na-cekanju-operacije>'}
 const PotvrdaTerminaPregleda = {template: '<potvrda-termina-pregleda></potvrda-termina-pregleda>'}
+const IstorijaOperacija = {template: '<istorija-operacija></istorija-operacija>'}
 const ProfilPacijenta= {template: '<profil-pacijenta></profil-pacijenta>'}
 const router = new VueRouter({
 	mode: 'hash',
@@ -245,6 +247,11 @@ const router = new VueRouter({
 		component: ZakazaniPregledi
 	},
 	{
+		path: '/zakazaneOperacije',
+		name: 'zakazaneOperacije',
+		component: ZakazaneOperacije
+	},
+	{
 		path: '/naCekanjuTermini',
 		name: 'naCekanjuTermini',
 		component: NaCekanjuTermini
@@ -263,6 +270,11 @@ const router = new VueRouter({
 		path: '/istorijaPregleda',
 		name: 'istorijaPregleda',
 		component: IstorijaPregleda
+	},
+	{
+		path: '/istorijaOperacija',
+		name: 'istorijaOperacija',
+		component: IstorijaOperacija
 	},
 	{
 		path: '/potvrdaTerminaPregleda/:token',

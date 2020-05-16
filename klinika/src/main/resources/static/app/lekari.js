@@ -2,6 +2,7 @@ Vue.component("lekari", {
 	data : function() {
 		return {
 			lekari: [],
+			search: "",
 			token: "",
 		} 
 	},
@@ -10,6 +11,9 @@ Vue.component("lekari", {
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		
 		<div class="naviga tab-content">
+			<div class="input-group">
+				<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Ime i prezime..."/>
+			</div>
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
@@ -25,7 +29,7 @@ Vue.component("lekari", {
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="lekar in lekari" data-toggle="modal" data-target="#" v-on:click="">
+			  		<tr v-for="lekar in filtriraniLekari" data-toggle="modal" data-target="#" v-on:click="">
 				      	<td width="10%">{{ lekar.ime }}</td>
 				      	<td width="10%">{{ lekar.prezime }}</td>
 				      	<td width="20%">{{ lekar.email }}</td>
@@ -88,5 +92,12 @@ Vue.component("lekari", {
         .get('lekari/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => (this.lekari = response.data))
         .catch(function (error) { console.log(error); });
+	},
+	computed : {
+		filtriraniLekari : function() {
+			return this.lekari.filter(lekar => {
+				return lekar.ime.toLowerCase().includes(this.search.toLowerCase().trim()) || lekar.prezime.toLowerCase().includes(this.search.toLowerCase().trim());
+			})
+		}
 	}
 });

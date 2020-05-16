@@ -1,6 +1,8 @@
 package tim09.klinika.service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.cfg.Environment;
@@ -13,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.PredefinisaniDTO;
+import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Operacija;
 import tim09.klinika.model.Pacijent;
 import tim09.klinika.model.Pregled;
@@ -79,7 +82,7 @@ public class EmailService {
 		email.setTo(prima);
 		email.setSubject(subject);
 		email.setText(
-				"Poštovani, molimo Vas da potvrdite ili odbijete dodeljeni termin za pregled na sledećem linku "
+				"Poštovani, \nMolimo Vas da potvrdite ili odbijete dodeljeni termin za pregled na sledećem linku "
 						+ "\r\n" + "http://localhost:8081" + confirmationUrl);
 		javaMailSender.send(email);
 	}
@@ -90,9 +93,10 @@ public class EmailService {
 		SimpleMailMessage email = new SimpleMailMessage();
 		email.setTo(prima);
 		email.setSubject(subject);
-		email.setText("Poštovani, obaveštavamo vas da imate zakazanu operaciju datuma: "
-				+ new Date(operacija.getVreme()).toString() + ", u klinici " + operacija.getKlinika().getNaziv()
-				+ " koja se nalazi na lokaciji " + operacija.getKlinika().getLokacija() + ".");
+		email.setText("Poštovani, \nObaveštavamo Vas da imate zakazanu operaciju. \nPodaci o operaciji:\n"
+				+ "Datum: " + new Date(operacija.getVreme()).toString() + "\nKlinika: " + operacija.getKlinika().getNaziv()
+				+ "\nLokacija: " + operacija.getKlinika().getLokacija() + "\nBroj sale: " + operacija.getSala().getBroj()
+				+ "\nLekari: " + this.ispisiLekare(operacija.getLekari()));
 		javaMailSender.send(email);
 	}
 	
@@ -102,9 +106,10 @@ public class EmailService {
 		SimpleMailMessage email = new SimpleMailMessage();
 		email.setTo(prima);
 		email.setSubject(subject);
-		email.setText("Poštovani, obaveštavamo vas da imate zakazanu operaciju datuma: "
-				+ new Date(operacija.getVreme()).toString() + ", u klinici " + operacija.getKlinika().getNaziv()
-				+ " koja se nalazi na lokaciji " + operacija.getKlinika().getLokacija() + ". Operaciji prisustvuje " + operacija.getLekari().size() + " lekara.");
+		email.setText("Poštovani, \nObaveštavamo Vas da imate zakazanu operaciju. \nPodaci o operaciji:\n"
+				+ "Pacijent: " + operacija.getPacijent().getIme() + " " + operacija.getPacijent().getPrezime()
+				+ "\nDatum: " + new Date(operacija.getVreme()).toString() + "\nBroj sale: " + operacija.getSala().getBroj()
+				+ "\nLekari: " + this.ispisiLekare(operacija.getLekari()));
 		javaMailSender.send(email);
 	}
 
@@ -113,8 +118,18 @@ public class EmailService {
 		SimpleMailMessage email = new SimpleMailMessage();
 		email.setTo(mail);
 		email.setSubject("Obavestenje o novom zakazanom pregledu");
-		email.setText("Postovani, obavestavamo Vas, da " + new Date(pregled.getVreme()) + " imate zakazan pregled.");
+		email.setText("Poštovani, \nObaveštavamo Vas da imate zakazan pregled. \nPodaci o pregledu:\n"
+				+ "Pacijent: " + pregled.getPacijent().getIme() + " " + pregled.getPacijent().getPrezime()
+				+ "\nDatum: " + new Date(pregled.getVreme()).toString() + "\nBroj sale: " + pregled.getSala().getBroj()
+				+ "\nTip pregleda: " + pregled.getTipPregleda().getNaziv());
 		javaMailSender.send(email);
 	}
 
+	private String ispisiLekare(Set<Lekar> set) {
+		StringBuilder retVal = new StringBuilder();
+		for (Lekar lekar : set) {
+			retVal.append(lekar.getIme() + " " + lekar.getPrezime() + ", ");
+		}
+		return retVal.toString().substring(0, retVal.toString().length() - 2);
+	}
 }

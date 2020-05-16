@@ -63,7 +63,7 @@ Vue.component("na-cekanju-operacije", {
 		    weekday: [0, 1, 2, 3, 4, 5, 6],
 		    value: '',
 		    events: [],
-		    activeTab: '4',
+		    activeTab: '5',
 		} 
 	},
 	template: `
@@ -77,12 +77,15 @@ Vue.component("na-cekanju-operacije", {
 						<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
 				      </v-tab>
 				      <v-tab href="#2" v-on:click="promijeniTab(2)">
-						<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
+						<router-link :to="{ name: 'zakazaneOperacije' }">Zakazane operacije</router-link>
 				      </v-tab>
 				      <v-tab href="#3" v-on:click="promijeniTab(3)">
-						<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
+						<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
 				      </v-tab>
 				      <v-tab href="#4" v-on:click="promijeniTab(4)">
+						<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
+				      </v-tab>
+				      <v-tab href="#5" v-on:click="promijeniTab(5)">
 						<router-link :to="{ name: 'naCekanjuOperacije' }">Operacije bez sale</router-link>
 				      </v-tab>
 				    </v-tabs>
@@ -108,7 +111,7 @@ Vue.component("na-cekanju-operacije", {
 					</table>
 				</div>
 				
-				<v-dialog v-model="dialog">
+				<v-dialog width="700" v-model="dialog">
 						
 					<v-card>
 						<v-card-title>
@@ -144,12 +147,12 @@ Vue.component("na-cekanju-operacije", {
 						>
 							<template v-slot:body.append>
 			          			<tr>
-			          				<td></td>
+			          				<td>Broj</td>
 									<td>
-			              				<v-text-field v-model="brojManje" type="number" label="Vece od"></v-text-field>
+			              				<v-text-field v-model="brojManje" type="number" label="Od"></v-text-field>
 			            			</td>
 			            			<td>
-			              				<v-text-field v-model="brojVece" type="number" label="Manje od"></v-text-field>
+			              				<v-text-field v-model="brojVece" type="number" label="Do"></v-text-field>
 			            			</td>
 			          			</tr>
 			          			<tr>
@@ -159,13 +162,11 @@ Vue.component("na-cekanju-operacije", {
 		        							Dodaj lekare
 										</v-btn>
 									</td>
-			          				<td></td>
 			          				<td>
 			          					<v-btn @click="dialog2 = true" v-on:click="reset" :disabled="sale.length!=0">
-		        							Promeni podatke operacije
+		        							Promeni podatke
 										</v-btn>
 									</td>
-									<td></td>
 			          				<td align="right">
 			          					<v-btn v-on:click="dodijeliSalu" :disabled="selected.length==0">
 		        							Dodeli salu
@@ -175,14 +176,14 @@ Vue.component("na-cekanju-operacije", {
 							</template>
 							<template v-slot:item.Kalendar="{ item }">
 								<v-btn class="secondary" small v-on:click="dobaviRadniKalendar(item)" @click="dialog3 = true">
-			        				Prikaži radni kalendar
+			        				Radni kalendar
 								</v-btn>
 							</template>
 						</v-data-table>
 					</v-card>
 				</v-dialog>
 				
-				<v-dialog v-model="dialog2" persistent>
+				<v-dialog width="500" v-model="dialog2" persistent>
 					<v-stepper v-model="e6">
 						<v-stepper-step :complete="e6 > 1" step="1">
 					        Odabir datuma
@@ -225,7 +226,7 @@ Vue.component("na-cekanju-operacije", {
 				    </v-stepper>
 				</v-dialog>
 						
-				<v-dialog v-model="dialog4">
+				<v-dialog width="500" v-model="dialog4">
 					<v-card>
 						<v-card-title>
 		        			Lekari
@@ -257,7 +258,7 @@ Vue.component("na-cekanju-operacije", {
 					</v-card>
 				</v-dialog>
 						
-				<v-dialog v-model="dialog3">
+				<v-dialog width="1000" v-model="dialog3">
 					<div>
 				      	<v-sheet
 					        tile height="54"
@@ -386,6 +387,7 @@ Vue.component("na-cekanju-operacije", {
 		},
 		finish:function(){
 			  if (!this.validateForm2()) return false;
+			  this.noviTerminOperacije.lekari = [];
 			  this.noviTerminOperacije.lekari.push(this.noviPocetniLekar);
 			  this.noviPocetniLekar = null;
 			  let termin=JSON.parse(JSON.stringify(this.noviTerminOperacije))
@@ -395,7 +397,7 @@ Vue.component("na-cekanju-operacije", {
 			  this.dialog2=false;
 		},
 		prev: function(){
-			 this.noviTerminOperacije.lekari=null;
+			 this.noviTerminOperacije.lekari=[];
 			 this.e6=1;
 		},
 		reset: function(){
@@ -528,11 +530,14 @@ Vue.component("na-cekanju-operacije", {
 				this.$router.replace({ name: 'zakazaniPregledi' });
 			}
 			else if(a==2){
+				this.$router.replace({ name: 'zakazaneOperacije' });
+			}
+			else if(a==3){
 				this.$router.replace({ name: 'definisanjeSlobodnogTermina' });
 			}
-			else if (a==3){
+			else if (a==4){
 				this.$router.replace({ name: 'naCekanjuTermini' });
-			}
+			} 
 			else {
 				this.$router.replace({ name: 'naCekanjuOperacije' });
 			}
@@ -579,16 +584,16 @@ Vue.component("na-cekanju-operacije", {
 	          filter: value => {
 	        	  if(!this.searchBroj){
 	        		  if (!this.brojManje && !this.brojVece) return true
-			            if(!this.brojManje) return  value < parseInt(this.brojVece)
-			            if(!this.brojVece) return value > parseInt(this.brojManje)
-			            return value > parseInt(this.brojManje) && value < parseInt(this.brojVece)
+			            if(!this.brojManje) return  value <= parseInt(this.brojVece)
+			            if(!this.brojVece) return value >= parseInt(this.brojManje)
+			            return value >= parseInt(this.brojManje) && value <= parseInt(this.brojVece)
 	        	  }
 	        	  else{
 		        	  if(this.searchBroj==value){
 				            if (!this.brojManje && !this.brojVece) return true
-				            if(!this.brojManje) return  value < parseInt(this.brojVece)
-				            if(!this.brojVece) return value > parseInt(this.brojManje)
-				            return value > parseInt(this.brojManje) && value < parseInt(this.brojVece)
+				            if(!this.brojManje) return  value <= parseInt(this.brojVece)
+				            if(!this.brojVece) return value >= parseInt(this.brojManje)
+				            return value >= parseInt(this.brojManje) && value <= parseInt(this.brojVece)
 		        		}
 		        	  else{
 		        		  return false;
