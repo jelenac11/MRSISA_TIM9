@@ -4,6 +4,7 @@ Vue.component("dodavanje-klinike", {
 			novaKlinika : {
 				naziv : "",
 				lokacija : "",
+				opis : "",
 				ocena : 0,
 			},
 	    	submitovano : false,
@@ -23,6 +24,12 @@ Vue.component("dodavanje-klinike", {
 				    		<label for="naz" class="mt-1">Naziv</label>
 							<input type="text" v-model="novaKlinika.naziv" class="form-control" id="naz" placeholder="Naziv" required>
 				    		<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli naziv.</div>
+				    	</div>
+				  	</div>
+				  	<div class="form-row">
+				    	<div class="col">
+				    		<label for="op" class="mt-1">Opis</label>
+							<textarea v-model="novaKlinika.opis" class="form-control" id="op" placeholder="Opis"></textarea>
 				    	</div>
 				  	</div>
 				  	<div class="form-row">

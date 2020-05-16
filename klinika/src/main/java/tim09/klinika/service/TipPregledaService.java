@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.TipPregledaDTO;
+import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Pregled;
 import tim09.klinika.model.TipPregleda;
 import tim09.klinika.repository.TipPregledaRepository;
@@ -42,12 +43,16 @@ public class TipPregledaService {
 	}
 
 	public boolean remove(Long id) {
-		List<Pregled> pregledi = pregledService.findByTipPregledaIdAndOtkazanAndVremeGreaterThan(id, false,
-				new Date().getTime());
-		
+		List<Pregled> pregledi = pregledService.findByTipPregledaIdAndVremeGreaterThan(id, new Date().getTime());
+
 		if (pregledi.isEmpty()) {
-			TipPregleda pregled=findOne(id);
+			TipPregleda pregled = findOne(id);
 			pregled.setAktivan(false);
+			
+			for (Lekar l : pregled.getLekari()) {
+				l.getSpecijalnosti().remove(pregled);
+			}
+			
 			tipPregledaRepository.save(pregled);
 			return true;
 		} else {
@@ -56,11 +61,11 @@ public class TipPregledaService {
 	}
 
 	public boolean update(TipPregledaDTO tipPregledaDTO, TipPregleda tipPregleda) {
-		List<Pregled> pregledi = pregledService.findByTipPregledaIdAndOtkazanAndVremeGreaterThan(tipPregledaDTO.getId(),
-				false, new Date().getTime());
+		List<Pregled> pregledi = pregledService.findByTipPregledaIdAndVremeGreaterThan(tipPregledaDTO.getId(),
+				new Date().getTime());
 		TipPregleda postojiNaziv = null;
 		if (!tipPregledaDTO.getNaziv().equals(tipPregleda.getNaziv())) {
-			postojiNaziv = tipPregledaRepository.findByNazivAndAktivan(tipPregledaDTO.getNaziv(),true);
+			postojiNaziv = tipPregledaRepository.findByNazivAndAktivan(tipPregledaDTO.getNaziv(), true);
 		}
 		if (pregledi.isEmpty() && postojiNaziv == null) {
 			TipPregleda pregled = tipPregledaRepository.findById(tipPregledaDTO.getId()).orElseGet(null);
@@ -75,7 +80,7 @@ public class TipPregledaService {
 	}
 
 	public List<TipPregledaDTO> vratiTipoveKlinike(long id) {
-		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaIdAndAktivan(id,true);
+		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaIdAndAktivan(id, true);
 		List<TipPregledaDTO> tipovidto = new ArrayList<TipPregledaDTO>();
 		if (tipovi != null) {
 			for (TipPregleda tp : tipovi) {

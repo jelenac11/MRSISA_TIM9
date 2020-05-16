@@ -51,23 +51,23 @@ public class AuthenticationController {
 
 	@Autowired
 	private KorisnikService userDetailsService;
-	
+
 	@Autowired
 	private PacijentService pacijentService;
-	
+
 	@Autowired
 	private AutoritetService autoritetService;
 
 	@GetMapping(value = "/dobaviUlogovanog")
 	public ResponseEntity<KorisnikDTO> dobaviUlogovanog() {
-		
+
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
 
 		Korisnik ulogovan = userDetailsService.findByEmail(trenutniKorisnik.getName());
 		KorisnikDTO korisnikDTO = new KorisnikDTO(ulogovan);
 		return new ResponseEntity<>(korisnikDTO, HttpStatus.OK);
 	}
-	
+
 	@PutMapping(value = "promeniLozinku", consumes = "application/json")
 	public ResponseEntity<KorisnikDTO> promeniLozinku(@RequestBody KorisnikDTO korisnikDTO) {
 
@@ -80,7 +80,7 @@ public class AuthenticationController {
 		korisnik = userDetailsService.save(korisnik);
 		return new ResponseEntity<>(new KorisnikDTO(korisnik), HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/login", consumes = "application/json")
 	public ResponseEntity<KorisnikTokenDTO> createAuthenticationToken(
 			@RequestBody JwtAuthenticationRequest authenticationRequest) {
@@ -95,13 +95,13 @@ public class AuthenticationController {
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		Korisnik korisnik = (Korisnik) authentication.getPrincipal();
-		
+
 		String jwt = tokenUtils.generateToken(korisnik.getUsername());
 		int expiresIn = tokenUtils.getExpiredIn();
 
 		return ResponseEntity.ok(new KorisnikTokenDTO(jwt, expiresIn));
 	}
-	
+
 	@PutMapping(value = "/proveriEmail")
 	public ResponseEntity<Boolean> proveriEmail(@RequestBody PacijentDTO p) {
 		Korisnik k = userDetailsService.findByEmail(p.getEmail());
@@ -111,7 +111,7 @@ public class AuthenticationController {
 			return new ResponseEntity<>(true, HttpStatus.OK);
 		}
 	}
-	
+
 	@PutMapping(value = "/proveriJbo")
 	public ResponseEntity<Boolean> proveriJbo(@RequestBody PacijentDTO pac) {
 		Pacijent p = pacijentService.findByJbo(pac.getJbo());
@@ -121,18 +121,18 @@ public class AuthenticationController {
 			return new ResponseEntity<>(true, HttpStatus.OK);
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@PostMapping(value = "/dodajRegZahtev")
 	public ResponseEntity<Boolean> dodajRegZahtev(@RequestBody PacijentDTO pacijentDTO) {
 		return (ResponseEntity<Boolean>) autoritetService.registrujNovog(pacijentDTO);
 	}
-	
+
 	@PutMapping(value = "/updateRegZahtev")
 	public void updateRegZahtev(@RequestBody PacijentDTO pacijentDTO) throws MailException, InterruptedException {
 		autoritetService.updateRegZahtev(pacijentDTO);
 	}
-	
+
 	@GetMapping(value = "/potvrdaRegistracije/{token}")
 	public RedirectView potvrdaReg(@PathVariable("token") String url) {
 		return autoritetService.potvrdaRegistracije(url);
@@ -142,17 +142,17 @@ public class AuthenticationController {
 	public RedirectView potvrdaTerminaPregleda(@PathVariable("token") String url) {
 		return autoritetService.potvrdaTerminaPregleda(url);
 	}
-	
+
 	@GetMapping(value = "/dobaviPodatkeoPregledu/{token}")
-	public ResponseEntity<PregledDTO> dobaviPodatkeoPregledu(@PathVariable("token") String token){
+	public ResponseEntity<PregledDTO> dobaviPodatkeoPregledu(@PathVariable("token") String token) {
 		return autoritetService.dobaviPodatkeoPregledu(token);
 	}
-	
+
 	@PostMapping(value = "/odgovorNaPotvrduTerminaPregleda")
 	public RedirectView odgovorNaPotvrduTerminaPregleda(@RequestBody OdgovorPregledDTO odgovorPregledDTO) {
 		return autoritetService.odgovorNaPotvrduTerminaPregleda(odgovorPregledDTO);
 	}
-	
+
 	@PostMapping(value = "/refresh")
 	public ResponseEntity<KorisnikTokenDTO> refreshAuthenticationToken(HttpServletRequest request) {
 

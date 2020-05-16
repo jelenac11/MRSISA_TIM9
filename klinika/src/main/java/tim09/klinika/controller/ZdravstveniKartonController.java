@@ -19,7 +19,7 @@ public class ZdravstveniKartonController {
 
 	@Autowired
 	private ZdravstveniKartonService zdravstveniKartonService;
-	
+
 	@PreAuthorize("hasAnyRole('PACIJENT', 'LEKAR', 'MED_SESTRA')")
 	@PutMapping(value = "/dobaviKartonPacijenta", consumes = "application/json")
 	public ResponseEntity<ZdravstveniKartonDTO> dobaviKartonPacijenta(@RequestBody PacijentDTO p) {

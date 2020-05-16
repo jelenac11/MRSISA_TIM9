@@ -10,13 +10,13 @@ Vue.component("zakazani-pregledi", {
 	<v-app>
 	<div data-app> 
 	<navig-bar v-bind:token="this.token"></navig-bar>
-		<div class="naviga">			    
+		<div class="naviga">
 			<v-tabs v-model="activeTab" centered>
 		      <v-tab href="#1" v-on:click="promijeniTab(1)">
 				<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
 		      </v-tab>
 		      <v-tab href="#2" v-on:click="promijeniTab(2)">
-				<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Slobodni termini</router-link>
+				<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
 		      </v-tab>
 		      <v-tab href="#3" v-on:click="promijeniTab(3)">
 				<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
@@ -30,21 +30,21 @@ Vue.component("zakazani-pregledi", {
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
-				      	<th scope="col" width="25%">Pacijent</th>
-				      	<th scope="col" width="25%">Lekar</th>
-				      	<th scope="col" width="10%">Vreme</th>
-				      	<th scope="col" width="15%">Sala</th>
-				      	<th scope="col" width="15%">Tip pregleda</th>
+				      	<th scope="col" width="17%">Pacijent</th>
+				      	<th scope="col" width="17%">Lekar</th>
+				      	<th scope="col" width="23%">Vreme</th>
+				      	<th scope="col" width="10%">Sala</th>
+				      	<th scope="col" width="23%">Tip pregleda</th>
 				      	<th scope="col" width="10%">Trajanje</th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
 			  		<tr v-for="pregled in zakazaniPregledi">
-				      	<td width="25%">{{ pregled.pacijent.ime }} {{ pregled.pacijent.prezime }}</td>
-				      	<td width="25%">{{ pregled.lekar.ime }} {{ pregled.lekar.prezime }}</td>
-				      	<td width="10%">{{formatVreme(pregled.vreme)}}</td>
-				      	<td width="15%">{{ pregled.sala.naziv }}</td>
-				      	<td width="15%">{{ pregled.tipPregleda.naziv }}</td>
+				      	<td width="17%">{{ pregled.pacijent.ime }} {{ pregled.pacijent.prezime }}</td>
+				      	<td width="17%">{{ pregled.lekar.ime }} {{ pregled.lekar.prezime }}</td>
+				      	<td width="23%">{{formatVreme(pregled.vreme)}}</td>
+				      	<td width="10%">{{ pregled.sala.naziv }}</td>
+				      	<td width="23%">{{ pregled.tipPregleda.naziv }}</td>
 				      	<td width="10%">{{ formatTrajanje(pregled.trajanje) }}</td>
 			    	</tr>
 			  	</tbody>

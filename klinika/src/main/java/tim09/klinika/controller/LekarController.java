@@ -107,8 +107,8 @@ public class LekarController {
 		lekar.setDrzava(lekarDTO.getDrzava());
 		lekar.setGrad(lekarDTO.getGrad());
 		lekar.setEmail(lekarDTO.getEmail());
-		lekar.setIme(lekarDTO.getIme());
 		lekar.setLozinka(korisnikService.encodePassword(lekarDTO.getLozinka()));
+		lekar.setIme(lekarDTO.getIme());
 		lekar.setPrezime(lekarDTO.getPrezime());
 		lekar.setBrojTelefona(lekarDTO.getBrojTelefona());
 		lekar.setPocetakRadnogVremena(lekarDTO.getPocetakRadnogVremena());
@@ -140,7 +140,6 @@ public class LekarController {
 		korisnik.setDrzava(korisnikDTO.getDrzava());
 		korisnik.setGrad(korisnikDTO.getGrad());
 		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
 		korisnik.setPrezime(korisnikDTO.getPrezime());
 		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());

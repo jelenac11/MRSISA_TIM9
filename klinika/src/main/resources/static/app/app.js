@@ -82,7 +82,7 @@ const router = new VueRouter({
 		component: MedSestre
 	},
 	{
-		path: '/pacijetni',
+		path: '/pacijenti',
 		name: 'pacijenti',
 		component: Pacijenti
 	},

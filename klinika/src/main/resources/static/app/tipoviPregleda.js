@@ -15,10 +15,8 @@ Vue.component("tipoviPregleda", {
 	<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		<div class="naviga tab-content">
-			<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
-				<div class="input-group">
-					<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Naziv..."/>
-				</div>
+			<div class="input-group">
+				<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Pretraga..."/>
 			</div>
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
@@ -135,11 +133,9 @@ Vue.component("tipoviPregleda", {
 						toast("Uspešno izmenjen tip pregleda "+ this.noviTipPregleda.naziv + ".");
 						this.izabraniTipPregleda = JSON.parse(JSON.stringify(this.noviTipPregleda));
 						this.dobaviSve();
-						// ugasi modal
 					}
 					else{
 						toast("Tip pregleda nije moguce izmeniti.");
-						// ugasi modal
 					}
 				})
 				.catch(error => {

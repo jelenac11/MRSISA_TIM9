@@ -57,6 +57,7 @@ public class KlinikaController {
 		
 		klinika.setNaziv(klinikaDTO.getNaziv());
 		klinika.setLokacija(klinikaDTO.getLokacija());
+		klinika.setOpis(klinikaDTO.getOpis());
 		klinika.setCenovnik(new Cenovnik());
 
 		klinika = klinikaService.save(klinika);

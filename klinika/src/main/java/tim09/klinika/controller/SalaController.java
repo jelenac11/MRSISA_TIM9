@@ -21,10 +21,12 @@ import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SalaDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
+import tim09.klinika.dto.TipPregledaDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Sala;
+import tim09.klinika.model.TipPregleda;
 import tim09.klinika.service.AdminKlinikeService;
 import tim09.klinika.service.OperacijaService;
 import tim09.klinika.service.PregledService;
@@ -58,6 +60,17 @@ public class SalaController {
 		return new ResponseEntity<>(salaDTO, HttpStatus.OK);
 	}
 
+	@PostMapping(value = "/izmenaSale", consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<Boolean> izmenaSale(@RequestBody SalaDTO salaDTO) {
+		Sala sala = salaService.findOne(salaDTO.getId());
+		if (sala == null) {
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
+		boolean uspesno = salaService.update(salaDTO, sala);
+		return new ResponseEntity<Boolean>(uspesno, HttpStatus.OK);
+	}
+	
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<SalaDTO> kreirajSalu(@RequestBody SalaDTO salaDTO) {

@@ -106,7 +106,6 @@ public class AdminKlinikeController {
 		korisnik.setDrzava(korisnikDTO.getDrzava());
 		korisnik.setGrad(korisnikDTO.getGrad());
 		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
 		korisnik.setPrezime(korisnikDTO.getPrezime());
 		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());

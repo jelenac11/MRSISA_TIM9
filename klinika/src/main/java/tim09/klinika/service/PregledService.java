@@ -93,8 +93,8 @@ public class PregledService {
 		pregledRepository.deleteById(id);
 	}
 
-	public List<Pregled> findByTipPregledaIdAndOtkazanAndVremeGreaterThan(long id, boolean otkazano, long vreme) {
-		return pregledRepository.findByTipPregledaIdAndOtkazanAndVremeGreaterThan(id, otkazano, vreme);
+	public List<Pregled> findByTipPregledaIdAndVremeGreaterThan(long id, long vreme) {
+		return pregledRepository.findByTipPregledaIdAndVremeGreaterThan(id, vreme);
 	}
 
 	public boolean insertPregled(SlobodanTerminDTO slobodanTerminDTO) {
@@ -108,6 +108,10 @@ public class PregledService {
 		return false;
 	}
 
+	public List<Pregled> findByKlinikaIdAndVremeAfterAndPacijentIsNull(long id, long vreme) {
+		return pregledRepository.findByKlinikaIdAndVremeAfterAndPacijentIsNull(id, vreme);
+	}
+	
 	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(long id, boolean b, boolean c,
 			long vreme, boolean potvrdjen) {
 		return pregledRepository.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(b, c, id,

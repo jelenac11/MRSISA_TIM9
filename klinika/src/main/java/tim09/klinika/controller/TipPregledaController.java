@@ -105,9 +105,7 @@ public class TipPregledaController {
 		if (pregled == null) {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
-		for (Lekar l : pregled.getLekari()) {
-			l.getSpecijalnosti().remove(pregled);
-		}
+		
 		boolean uspesno = tipPregledaService.remove(pregled.getId());
 		
 		return new ResponseEntity<>(uspesno, HttpStatus.OK);

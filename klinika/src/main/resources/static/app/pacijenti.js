@@ -3,8 +3,10 @@ Vue.component("pacijenti", {
 		return {
 			pacijenti: [],
 			token: "",
-			korisnik:{},
-			search:'',
+			korisnik: {},
+			ime: "",
+			prezime: "",
+			jbo: "",
 		} 
 	},
 	template: `
@@ -13,7 +15,9 @@ Vue.component("pacijenti", {
 		<div class="naviga tab-content">
 			<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
 				<div class="input-group">
-					<input type="search" class="form-control col-4 ml-auto m-2" v-model="search"  placeholder="Naziv..."/>
+					<input type="search" class="form-control col-4 ml-auto m-2" v-model="ime"  placeholder="Ime..."/>
+					<input type="search" class="form-control col-4 ml-auto m-2" v-model="prezime"  placeholder="Prezime..."/>
+					<input type="search" class="form-control col-4 ml-auto m-2" v-model="jbo"  placeholder="JBO..."/>
 				</div>
 			</div>
 			<table class="table table-hover table-striped">
@@ -61,17 +65,8 @@ Vue.component("pacijenti", {
 	},
 	computed:{
 		filtriraniPacijenti: function(){
-			return this.pacijenti.filter(pacijent => {
-				if(this.search==""){
-					return true;
-				}
-				if(pacijent.ime.toLowerCase().includes(this.search.toLowerCase()) || pacijent.prezime.toLowerCase().includes(this.search.toLowerCase()) || pacijent.jbo.toString().toLowerCase().includes(this.search.toLowerCase()))
-				{
-					return true;
-				}
-				else{
-					return false;
-				}
+			return this.pacijenti.filter ( pacijent => {
+				return pacijent.ime.toLowerCase().includes(this.ime.toLowerCase().trim()) && pacijent.prezime.toLowerCase().includes(this.prezime.toLowerCase().trim()) && pacijent.jbo.toString().toLowerCase().includes(this.jbo.toLowerCase().trim());
 			})
 		}
 	}

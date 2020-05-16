@@ -110,5 +110,8 @@ Vue.component("login", {
 		        .catch(function (error) { console.log(error); });
 			}
 		}
+	},
+	created() {
+		localStorage.removeItem("token");
 	}
 });

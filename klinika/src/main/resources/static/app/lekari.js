@@ -74,7 +74,7 @@ Vue.component("lekari", {
 						
 					}
 					else{
-						toast("Nije moguce izbrisati izabranog lekara.");
+						toast("Nije moguće izbrisati izabranog lekara.");
 						
 					}
 				})

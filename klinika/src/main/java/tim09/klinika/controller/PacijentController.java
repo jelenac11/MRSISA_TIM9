@@ -27,10 +27,10 @@ public class PacijentController {
 
 	@Autowired
 	private PacijentService pacijentService;
-	
+
 	@Autowired
 	private KorisnikService korisnikService;
-	
+
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'LEKAR', 'MED_SESTRA')")
 	public ResponseEntity<PacijentDTO> ucitajPoId(@PathVariable Long id) {
@@ -38,10 +38,10 @@ public class PacijentController {
 		PacijentDTO pac = new PacijentDTO(p);
 		return new ResponseEntity<PacijentDTO>(pac, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/vratiRegZahteve")
 	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
-	public ResponseEntity<List<PacijentDTO>> vratiRegZahteve(){
+	public ResponseEntity<List<PacijentDTO>> vratiRegZahteve() {
 		List<Pacijent> pacijenti = pacijentService.nadjiRegZahteve();
 		List<PacijentDTO> pacijentDTO = new ArrayList<>();
 		for (Pacijent p : pacijenti) {
@@ -49,7 +49,7 @@ public class PacijentController {
 		}
 		return new ResponseEntity<>(pacijentDTO, HttpStatus.OK);
 	}
-	
+
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<PacijentDTO> promeniKorisnika(@RequestBody PacijentDTO korisnikDTO) {
@@ -62,7 +62,6 @@ public class PacijentController {
 		korisnik.setDrzava(korisnikDTO.getDrzava());
 		korisnik.setGrad(korisnikDTO.getGrad());
 		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
 		korisnik.setPrezime(korisnikDTO.getPrezime());
 		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());
@@ -72,11 +71,11 @@ public class PacijentController {
 		korisnik = pacijentService.save(korisnik);
 		return new ResponseEntity<>(new PacijentDTO(korisnik), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("dobaviSvePoIdKlinike/{id}")
-	@PreAuthorize("hasRole('LEKAR')")
-	public ResponseEntity<List<PacijentDTO>> dobaviSvePoIdKlinike(@PathVariable Long id){
-		List<PacijentDTO> p=pacijentService.findByKlinikaID(id);
+	@PreAuthorize("hasAnyRole('LEKAR', 'MED_SESTRA')")
+	public ResponseEntity<List<PacijentDTO>> dobaviSvePoIdKlinike(@PathVariable Long id) {
+		List<PacijentDTO> p = pacijentService.findByKlinikaID(id);
 		return new ResponseEntity<List<PacijentDTO>>(p, HttpStatus.OK);
 	}
 }

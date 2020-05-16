@@ -6,8 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.dto.SalaDTO;
 import tim09.klinika.dto.TipPregledaDTO;
+import tim09.klinika.model.Pregled;
 import tim09.klinika.model.Sala;
+import tim09.klinika.model.TipPregleda;
+import tim09.klinika.repository.PregledRepository;
 import tim09.klinika.repository.SalaRepository;
 
 @Service
@@ -17,10 +21,13 @@ public class SalaService {
 	private SalaRepository salaRepository;
 
 	@Autowired
+	private PregledRepository pregledRepository;
+
+	@Autowired
 	private FormatDatumaService datumService;
 
 	public Sala findByBroj(int broj) {
-		return salaRepository.findByBrojAndAktivan(broj,true);
+		return salaRepository.findByBrojAndAktivan(broj, true);
 	}
 
 	public Sala findOne(Long id) {
@@ -36,12 +43,11 @@ public class SalaService {
 	}
 
 	public boolean remove(Long id) {
-		Sala s=findOne(id);
-		if(s!=null) {
-			if(!salaRepository.findBySalaIdAndVreme(id,new Date().getTime()).isEmpty()) {
+		Sala s = findOne(id);
+		if (s != null) {
+			if (!salaRepository.findBySalaIdAndVreme(id, new Date().getTime()).isEmpty()) {
 				s.setAktivan(false);
 				save(s);
-				
 				return true;
 			}
 		}
@@ -50,5 +56,24 @@ public class SalaService {
 
 	public List<Sala> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, long trajanje) {
 		return salaRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, trajanje);
+	}
+
+	public boolean update(SalaDTO salaDTO, Sala sala) {
+		if (!salaRepository.findBySalaIdAndVreme(salaDTO.getId(), new Date().getTime()).isEmpty()) {
+			Sala postojiNaziv = null;
+			if (!salaDTO.getNaziv().equals(sala.getNaziv())) {
+				postojiNaziv = salaRepository.findByNazivAndAktivan(salaDTO.getNaziv(), true);
+			}
+			if (postojiNaziv == null) {
+				Sala s = salaRepository.findById(salaDTO.getId()).orElseGet(null);
+				s.setNaziv(salaDTO.getNaziv());
+				s.setBroj(salaDTO.getBroj());
+				salaRepository.save(s);
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
 	}
 }

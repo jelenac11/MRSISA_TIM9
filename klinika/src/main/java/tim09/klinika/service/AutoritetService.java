@@ -187,7 +187,6 @@ public class AutoritetService {
 	}
 
 	public ResponseEntity<PregledDTO> dobaviPodatkeoPregledu(String token) {
-		// TODO Auto-generated method stub
 		TokenPotvrdePregleda tpp=tokenPotvrdePregledaService.findByToken(token);
 		Pregled pregled=tpp.getPregled();
 		return new ResponseEntity<PregledDTO>(new PregledDTO(pregled),HttpStatus.OK);

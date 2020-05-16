@@ -76,7 +76,7 @@ Vue.component("na-cekanju-operacije", {
 					<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
 			      </v-tab>
 			      <v-tab href="#2" v-on:click="promijeniTab(2)">
-					<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Slobodni termini</router-link>
+					<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
 			      </v-tab>
 			      <v-tab href="#3" v-on:click="promijeniTab(3)">
 					<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>

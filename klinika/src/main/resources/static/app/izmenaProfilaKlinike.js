@@ -35,9 +35,10 @@ Vue.component("izmena-profilaKlinike", {
 				    		<label for="opis" class="mt-1">Opis</label>
 							<input type="text" v-model="izmenjenaKlinika.opis" class="form-control" id="opis" placeholder="Opis">
 				    	</div>
-				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="izmenjenaKlinika.naziv == klinika.naziv && izmenjenaKlinika.lokacija == klinika.lokacija && izmenjenaKlinika.opis == klinika.opis">
-				  		Sačuvaj izmene
-				  	</button>
+					  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="izmenjenaKlinika.naziv == klinika.naziv && izmenjenaKlinika.lokacija == klinika.lokacija && izmenjenaKlinika.opis == klinika.opis">
+					  		Sačuvaj izmene
+					  	</button>
+				  	</div>
 				</form>
 				<button class="btn btn-lg btn-secondary btn-block mt-4" v-on:click="nazad">Nazad</button>
 			</div>

@@ -41,7 +41,7 @@ Vue.component("definisanje-slobodnog-termina", {
 				<router-link :to="{ name: 'zakazaniPregledi' }">Zakazani pregledi</router-link>
 		      </v-tab>
 		      <v-tab href="#2" v-on:click="promijeniTab(2)">
-				<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Slobodni termini</router-link>
+				<router-link :to="{ name: 'definisanjeSlobodnogTermina' }">Predefinisani termini</router-link>
 		      </v-tab>
 		      <v-tab href="#3" v-on:click="promijeniTab(3)">
 				<router-link :to="{ name: 'naCekanjuTermini' }">Pregledi bez sale</router-link>
@@ -55,31 +55,29 @@ Vue.component("definisanje-slobodnog-termina", {
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
-				      	<th scope="col" width="25%">Lekar</th>
-				      	<th scope="col" width="10%">Vreme</th>
+				      	<th scope="col" width="20%">Lekar</th>
+				      	<th scope="col" width="25%">Vreme</th>
 				      	<th scope="col" width="15%">Sala</th>
-				      	<th scope="col" width="15%">Tip pregleda</th>
-				      	<th scope="col" width="10%">Trajanje</th>
+				      	<th scope="col" width="25%">Tip pregleda</th>
+				      	<th scope="col" width="15%">Trajanje</th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
 			  		<tr v-for="pregled in slobodniPregledi">
-				      	<td width="25%">{{ pregled.lekar.ime }} {{ pregled.lekar.prezime }}</td>
-				      	<td width="10%">{{ formatVreme(pregled.vreme) }}</td>
+				      	<td width="20%">{{ pregled.lekar.ime }} {{ pregled.lekar.prezime }}</td>
+				      	<td width="25%">{{ formatVreme(pregled.vreme) }}</td>
 				      	<td width="15%">{{ pregled.sala.naziv }}</td>
-				      	<td width="15%">{{ pregled.tipPregleda.naziv }}</td>
-				      	<td width="10%">{{ formatTrajanje(pregled.trajanje) }}</td>
+				      	<td width="25%">{{ pregled.tipPregleda.naziv }}</td>
+				      	<td width="15%">{{ formatTrajanje(pregled.trajanje) }}</td>
 			    	</tr>
 			  	</tbody>
 			</table>
 			<v-btn @click="dijalog = true" :block="true" class="primary" v-on:click="reset">
-        		Kreiraj novi slobodan termin
+        		Dodaj novi predefinisani termin
 			</v-btn>
 		</div>
 		
-		<v-dialog v-model="dijalog">
-		
-		
+		<v-dialog width="500" v-model="dijalog">
 			<v-stepper v-model="e6">
 				<v-stepper-step :complete="e6 > 1" step="1">
 			        Odabir lekara i datuma pregleda
@@ -115,27 +113,27 @@ Vue.component("definisanje-slobodnog-termina", {
 					
 					<v-stepper-content step="2">
 						<div class="form-row">
-									<div class="col">
-										<label for="tipPregleda" class="mt-1">Tip pregleda</label>
-										<select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
-											<option v-for="tip in tipoviPregleda" :value="tip">
-												{{ tip.naziv }}
-											</option>
-										</select>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
-									</div>
+							<div class="col">
+								<label for="tipPregleda" class="mt-1">Tip pregleda</label>
+								<select class="custom-select mt-0" v-model="terminPregleda.tipPregleda" id="tipPregleda" v-bind:class="{ 'is-invalid':!odabraniTipPregleda}" required>
+									<option v-for="tip in tipoviPregleda" :value="tip">
+										{{ tip.naziv }}
+									</option>
+								</select>
+								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali tip pregleda.</div>
+							</div>
 						</div>
 						
 						<div class="form-row">
-									<div class="col">
-										<label for="termin" class="mt-1">Termin</label>
-										<select class="custom-select mt-0" v-model="termin" id="termin" v-bind:class="{ 'is-invalid':!odabraniTermin}" required>
-											<option v-for="termin in termini" :value="termin">
-												{{ urediDatum(termin) }}
-											</option>
-										</select>
-										<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali termin.</div>
-									</div>
+							<div class="col">
+								<label for="termin" class="mt-1">Termin</label>
+								<select class="custom-select mt-0" v-model="termin" id="termin" v-bind:class="{ 'is-invalid':!odabraniTermin}" required>
+									<option v-for="termin in termini" :value="termin">
+										{{ urediDatum(termin) }}
+									</option>
+								</select>
+								<div class="invalid-feedback" id="dodavanjeInvalid">Niste odabrali termin.</div>
+							</div>
 						</div>
 						
 			        	<v-btn v-on:click="next2" class="primary">Next</v-btn>
@@ -366,8 +364,8 @@ Vue.component("definisanje-slobodnog-termina", {
 					toast("Lekar nije specijalizovan ni za jedan tip pregleda.")
 					return;
 				}
-				this.pretragaTermina.id=this.terminPregleda.lekar.id
-				this.pretragaTermina.datum=termin.datumiVreme
+				this.pretragaTermina.id=this.terminPregleda.lekar.id;
+				this.pretragaTermina.datum=termin.datumiVreme - 7200000;
 				axios
 				.put('lekari/vratiSlobodneTermine',this.pretragaTermina, { headers: { Authorization: 'Bearer ' + this.token }})
 				.then(response=>{

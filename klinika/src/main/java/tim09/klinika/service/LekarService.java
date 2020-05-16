@@ -107,6 +107,9 @@ public class LekarService {
 				}
 			}
 		}
+		for (Long long1 : vremena) {
+			System.out.println(new Date(long1).toString());
+		}
 		return vremena;
 	}
 

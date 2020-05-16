@@ -108,8 +108,8 @@ public class PregledController {
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<List<PregledDTO>> ucitajSveSlobodnePreglede(@PathVariable("id") long id) {
 		AdminKlinike admin = adminKlinikeService.findOne(id);
-		List<Pregled> pregledi = pregledService.findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(
-				admin.getKlinika().getId(), false, false, new Date().getTime(), true);
+		List<Pregled> pregledi = pregledService.findByKlinikaIdAndVremeAfterAndPacijentIsNull(
+				admin.getKlinika().getId(), new Date().getTime());
 
 		List<PregledDTO> preglediDTO = new ArrayList<PregledDTO>();
 		for (Pregled pregled : pregledi) {
@@ -131,19 +131,19 @@ public class PregledController {
 		}
 		return new ResponseEntity<List<PregledDTO>>(preglediDTO, HttpStatus.OK);
 	}
-	
-	@PostMapping(value="/provjeraPregledaZaPacijentaOdLekara")
+
+	@PostMapping(value = "/provjeraPregledaZaPacijentaOdLekara")
 	@PreAuthorize("hasRole('LEKAR')")
-	public ResponseEntity<Boolean> provjeraPregledaZaPacijentaOdLekara(@RequestBody LekarPacijentDTO lekarPacijentDTO){
-		List<Pregled> pregledi=pregledService.findByLekarIdAndPacijentIdAndVreme(lekarPacijentDTO.getIdLekara(),lekarPacijentDTO.getIdPacijenta(),new Date().getTime());
+	public ResponseEntity<Boolean> provjeraPregledaZaPacijentaOdLekara(@RequestBody LekarPacijentDTO lekarPacijentDTO) {
+		List<Pregled> pregledi = pregledService.findByLekarIdAndPacijentIdAndVreme(lekarPacijentDTO.getIdLekara(),
+				lekarPacijentDTO.getIdPacijenta(), new Date().getTime());
 		boolean odgovor;
-		if(pregledi.isEmpty()) {
-			odgovor=false;
-		}
-		else {
-			odgovor=true;
+		if (pregledi.isEmpty()) {
+			odgovor = false;
+		} else {
+			odgovor = true;
 		}
 		return new ResponseEntity<Boolean>(odgovor, HttpStatus.OK);
-		
+
 	}
 }

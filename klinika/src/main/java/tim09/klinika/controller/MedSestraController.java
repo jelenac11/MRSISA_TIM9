@@ -87,8 +87,8 @@ public class MedSestraController {
 		medSestra.setDrzava(medSestraDTO.getDrzava());
 		medSestra.setGrad(medSestraDTO.getGrad());
 		medSestra.setEmail(medSestraDTO.getEmail());
-		medSestra.setIme(medSestraDTO.getIme());
 		medSestra.setLozinka(korisnikService.encodePassword(medSestraDTO.getLozinka()));
+		medSestra.setIme(medSestraDTO.getIme());
 		medSestra.setPrezime(medSestraDTO.getPrezime());
 		medSestra.setBrojTelefona(medSestraDTO.getBrojTelefona());
 		medSestra.setPocetakRadnogVremena(medSestraDTO.getPocetakRadnogVremena());
@@ -116,7 +116,6 @@ public class MedSestraController {
 		korisnik.setDrzava(korisnikDTO.getDrzava());
 		korisnik.setGrad(korisnikDTO.getGrad());
 		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
 		korisnik.setPrezime(korisnikDTO.getPrezime());
 		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());

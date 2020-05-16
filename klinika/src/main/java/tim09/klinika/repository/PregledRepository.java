@@ -13,15 +13,17 @@ import tim09.klinika.model.Pregled;
 
 public interface PregledRepository extends JpaRepository<Pregled, Long> {
 
-	public List<Pregled> findByTipPregledaIdAndOtkazanAndVremeGreaterThan(long id, boolean otkazano, long vreme);
+	@Query(value = "select * from pregled pr where pr.tip_pregleda_id=?1 and"
+			+ "((pr.vreme >= ?2 or pr.vreme+pr.trajanje >= ?2) or (pr.pacijent_id is not null and pr.otkazan = false));", nativeQuery = true)
+	public List<Pregled> findByTipPregledaIdAndVremeGreaterThan(long id, long vreme);
 
 	@Query(value = "SELECT * FROM pregled p WHERE p.vreme >= ?2 and p.vreme <= ?3 and p.lekar_id = ?1", nativeQuery = true)
 	public List<Pregled> findByLekarAndVreme(Long id, long datum, long l);
 
 	@Modifying
 	@Transactional
-	@Query(value = "insert into pregled(lekar_id,tip_pregleda_id,sala_id,vreme,trajanje,klinika_id,pacijent_id, otkazan, zauzet, potvrdjen) values(?1,?2,?3,?4,?5,?6,null,false,false,true)",nativeQuery = true)
-	public int insertPregled(long lekar,long tipPregleda,long sala,long vreme,int trajanje,long klinika); 
+	@Query(value = "insert into pregled(lekar_id,tip_pregleda_id,sala_id,vreme,trajanje,klinika_id,pacijent_id, otkazan, zauzet, potvrdjen) values(?1,?2,?3,?4,?5,?6,null,false,false,true)", nativeQuery = true)
+	public int insertPregled(long lekar, long tipPregleda, long sala, long vreme, int trajanje, long klinika);
 
 	@Query(value = "SELECT * FROM pregled p WHERE p.vreme >= ?2 and p.vreme <= ?3 and p.klinika_id = ?1 and p.tip_pregleda_id = ?4 and p.pacijent_id is null", nativeQuery = true)
 	public List<Pregled> findByKlinikaAndVremeAndTip(long klinika_id, long vreme, long kraj, long tip);
@@ -50,5 +52,7 @@ public interface PregledRepository extends JpaRepository<Pregled, Long> {
 
 	@Query(value = "SELECT * FROM pregled p where p.lekar_id=?1 and p.pacijent_id=?2 and p.otkazan=false and (p.vreme<=?3 or ?3 between p.vreme and (p.vreme+p.trajanje))", nativeQuery = true)
 	public List<Pregled> findByLekarIdAndPacijentIdAndVreme(long idLekara, long idPacijenta, long time);
+
+	public List<Pregled> findByKlinikaIdAndVremeAfterAndPacijentIsNull(long id, long vreme);
 
 }

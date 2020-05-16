@@ -75,9 +75,6 @@ Vue.component('navig-bar', {
 					</li>
 					
 					<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
-						<router-link :to="{ name: 'klinika' }" data-toggle="pill" class="nav-link">Klinika</router-link>
-					</li>
-					<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
 						<router-link :to="{ name: 'cenovnik' }" data-toggle="pill" class="nav-link">Cenovnik</router-link>
 					</li>
 					<li v-if="this.uloga == 'ROLE_ADMIN_KLINIKE'" class="nav-item">
