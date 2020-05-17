@@ -38,7 +38,7 @@ public class Izvestaj {
 	@JoinColumn(name = "stavkaSifrarnika_id")
 	private StavkaSifrarnika dijagnoza;
 
-	@OneToMany(mappedBy = "izvestaj", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "izvestaj")
 	private Set<Recept> recepti;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -87,5 +87,13 @@ public class Izvestaj {
 
 	public void setRecepti(Set<Recept> recepti) {
 		this.recepti = recepti;
+	}
+
+	public ZdravstveniKarton getZdravstveniKarton() {
+		return zdravstveniKarton;
+	}
+
+	public void setZdravstveniKarton(ZdravstveniKarton zdravstveniKarton) {
+		this.zdravstveniKarton = zdravstveniKarton;
 	}
 }

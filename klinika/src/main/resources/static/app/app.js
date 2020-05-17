@@ -9,10 +9,12 @@ const SifrarnikDijagnoza = {template: '<sifrarnik-dijagnoza></sifrarnik-dijagnoz
 const AdminiKlinike = { template: '<admini-klinike></admini-klinike>' }
 const AdminiCentra = { template: '<admini-centra></admini-centra>' }
 const KlinikeAdmin = { template: '<klinike-admin></klinike-admin>' }
+const OveravanjeRecepata = { template: '<overavanje-recepata></overavanje-recepata>' }
 const IstorijaPregleda = { template: '<istorija-pregleda></istorija-pregleda>' }
 const ZdravstveniKarton = { template: '<zdravstveni-karton></zdravstveni-karton>' }
 const RadniKalendar = { template: '<radni-kalendar></radni-kalendar>' }
 const IzmenaProfila = { template: '<izmena-profila></izmena-profila>' }
+const ZapocniPregled = { template: '<zapocni-pregled></zapocni-pregled>' }
 const IzmenaProfilaKlinike = { template: '<izmena-profilaKlinike></izmena-profilaKlinike>' }
 const DodavanjeSale = { template: '<dodavanje-sale></dodavanje-sale>' }
 const DodavanjeLekara = { template: '<dodavanje-lekara></dodavanje-lekara>' }
@@ -280,6 +282,16 @@ const router = new VueRouter({
 		path: '/potvrdaTerminaPregleda/:token',
 		name: 'potvrdaTerminaPregleda',
 		component: PotvrdaTerminaPregleda
+	},
+	{
+		path: '/overavanjeRecepata',
+		name: 'overavanjeRecepata',
+		component: OveravanjeRecepata
+	},
+	{
+		path: '/zapocniPregled',
+		name: 'zapocniPregled',
+		component: ZapocniPregled
 	},
 	{
 		path: '/profilPacijenta',

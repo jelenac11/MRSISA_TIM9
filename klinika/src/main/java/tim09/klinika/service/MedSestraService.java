@@ -34,4 +34,8 @@ public class MedSestraService {
 	public void remove(Long id) {
 		medSestraRepository.deleteById(id);
 	}
+
+	public MedSestra findByEmail(String name) {
+		return medSestraRepository.findByEmail(name);
+	}
 }

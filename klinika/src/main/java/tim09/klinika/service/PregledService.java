@@ -126,8 +126,8 @@ public class PregledService {
 		List<Pregled> pregledi = pregledRepository.findBySalaIdAndVremeAfter(id, time);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Pregled pregled : pregledi) {
-			kalendar.add(
-					new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme() + pregled.getTrajanje(), "Pregled"));
+			kalendar.add(new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme() + pregled.getTrajanje(), "Pregled",
+					pregled.getPacijent().getId(), "", "", "", ""));
 		}
 		return kalendar;
 	}
@@ -136,8 +136,18 @@ public class PregledService {
 		List<Pregled> pregledi = pregledRepository.findByLekarId(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Pregled pregled : pregledi) {
-			kalendar.add(
-					new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme() + pregled.getTrajanje(), "Pregled"));
+			String sala = "";
+			if (pregled.getSala() != null) {
+				sala = pregled.getSala().getNaziv();
+			}
+			long pacijentId = 0;
+			String pacijent = "";
+			if (pregled.getPacijent() != null) {
+				pacijent = pregled.getPacijent().getIme() + " " + pregled.getPacijent().getPrezime();
+				pacijentId = pregled.getPacijent().getId();
+			}
+			kalendar.add(new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme() + pregled.getTrajanje(), "Pregled",
+					pacijentId, pacijent, pregled.getTipPregleda().getNaziv(), "", sala));
 		}
 		return kalendar;
 	}
@@ -263,6 +273,14 @@ public class PregledService {
 
 	public List<Pregled> findByLekarIdAndPacijentIdAndVreme(long idLekara, long idPacijenta, long time) {
 		return pregledRepository.findByLekarIdAndPacijentIdAndVreme(idLekara, idPacijenta, time);
-
 	}
+
+	public Pregled mozeZapocetiPregled(long idLekara, long idPacijenta, long time) {
+		return pregledRepository.mozeZapocetiPregled(idLekara, idPacijenta, time);
+	}
+
+	public Pregled dobaviPregled(long idLekara, long idPacijenta, long time) {
+		return pregledRepository.mozeZapocetiPregled(idLekara, idPacijenta, time);
+	}
+
 }

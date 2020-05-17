@@ -11,6 +11,7 @@ public class IzvestajDTO {
 	private String opis;
 	private StavkaSifrarnikaDTO dijagnoza;
 	private ArrayList<ReceptDTO> recepti;
+	private PregledDTO pregled;
 
 	public IzvestajDTO() {
 
@@ -20,6 +21,7 @@ public class IzvestajDTO {
 		this.id = i.getId();
 		this.opis = i.getOpis();
 		this.dijagnoza = new StavkaSifrarnikaDTO(i.getDijagnoza());
+		this.pregled = new PregledDTO(i.getPregled());
 		this.recepti = new ArrayList<ReceptDTO>();
 		for (Recept r : i.getRecepti()) {
 			this.recepti.add(new ReceptDTO(r));
@@ -56,5 +58,13 @@ public class IzvestajDTO {
 
 	public void setRecepti(ArrayList<ReceptDTO> recepti) {
 		this.recepti = recepti;
+	}
+
+	public PregledDTO getPregled() {
+		return pregled;
+	}
+
+	public void setPregled(PregledDTO pregled) {
+		this.pregled = pregled;
 	}
 }

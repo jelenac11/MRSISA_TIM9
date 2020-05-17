@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.model.Izvestaj;
 import tim09.klinika.model.ZdravstveniKarton;
 import tim09.klinika.repository.ZdravstveniKartonRepository;
 

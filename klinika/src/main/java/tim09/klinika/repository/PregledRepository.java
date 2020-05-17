@@ -54,5 +54,8 @@ public interface PregledRepository extends JpaRepository<Pregled, Long> {
 	public List<Pregled> findByLekarIdAndPacijentIdAndVreme(long idLekara, long idPacijenta, long time);
 
 	public List<Pregled> findByKlinikaIdAndVremeAfterAndPacijentIsNull(long id, long vreme);
-
+	
+	@Query(value = "SELECT * FROM pregled p where p.lekar_id=?1 and p.pacijent_id=?2 and p.otkazan=false and ?3 between p.vreme and (p.vreme+3600000)", nativeQuery = true)
+	public Pregled mozeZapocetiPregled(long idLekara, long idPacijenta, long time);
+	
 }
