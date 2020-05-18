@@ -23,13 +23,13 @@ Vue.component("istorija-operacija", {
 				    </v-tabs>
 				</div>
 				<div class="naviga tab-content">
-					<table class="table table-hover table-striped">
+					<table class="table table-hover table-striped sortable" id="tabela">
 					  	<thead class="thead-light">
 					    	<tr>
-						      	<th scope="col" width="20%">Klinika</th>
-						      	<th scope="col" width="25%">Vreme</th>
-						      	<th scope="col" width="40%">Lekari</th>
-						      	<th scope="col" width="15%">Broj sale</th>
+						      	<th scope="col" width="20%"><button class="btn">Klinika</button></th>
+						      	<th data-dateformat="DD/MM/YYYY h:mm:ss a" scope="col" width="25%"><button class="btn">Vreme</button></th>
+						      	<th scope="col" width="40%"><button class="btn">Lekari</button></th>
+						      	<th scope="col" width="15%"><button class="btn">Broj sale</button></th>
 					    	</tr>
 					  	</thead>
 					  	<tbody>
@@ -51,7 +51,7 @@ Vue.component("istorija-operacija", {
 		urediDatum: function(datum){
 	        var date = new Date(datum);
 	        datum = date.toLocaleDateString('en-GB', {
-	        day: 'numeric', month: 'short', year: 'numeric'
+	        day: 'numeric', month: 'numeric', year: 'numeric'
 	        }).replace(/ /g, '-');
 	        vreme = date.toLocaleTimeString();
 	        return datum + " " + vreme
@@ -83,5 +83,14 @@ Vue.component("istorija-operacija", {
             .catch(function (error) { console.log(error); });
         })
         .catch(function (error) { console.log(error); });
+	},
+	mounted() {
+		$.bootstrapSortable({ applyLast: true });
+		$("#tabela").on('sorted', function () { 
+			if (!this.sortirano) {
+				this.sortirano = true;
+				$.bootstrapSortable({ applyLast: true });
+			} 
+		});
 	}
 });

@@ -27,8 +27,8 @@ public class Klinika {
 
 	@Column(name = "lokacija", nullable = false)
 	private String lokacija;
-	
-	@Column(name = "opis", nullable = true)
+
+	@Column(name = "opis", nullable = true, columnDefinition = "text", length = 10485760)
 	private String opis;
 
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
@@ -61,7 +61,7 @@ public class Klinika {
 
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<OcenaKlinike> ocene;
-	
+
 	@Column(name = "prosecna_ocena")
 	private double prosecnaOcena;
 

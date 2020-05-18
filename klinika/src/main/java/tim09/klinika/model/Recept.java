@@ -18,9 +18,6 @@ public class Recept {
 	@Column(name = "recept_id")
 	private Long id;
 
-	@Column(name = "opis", nullable = true)
-	private String opis;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "medSestra_id")
 	private MedSestra medSestra;
@@ -45,14 +42,6 @@ public class Recept {
 		this.id = id;
 	}
 
-	public String getOpis() {
-		return opis;
-	}
-
-	public void setOpis(String opis) {
-		this.opis = opis;
-	}
-
 	public MedSestra getMedSestra() {
 		return medSestra;
 	}
@@ -67,5 +56,13 @@ public class Recept {
 
 	public void setLek(StavkaSifrarnika lek) {
 		this.lek = lek;
+	}
+
+	public Izvestaj getIzvestaj() {
+		return izvestaj;
+	}
+
+	public void setIzvestaj(Izvestaj izvestaj) {
+		this.izvestaj = izvestaj;
 	}
 }

@@ -6,9 +6,9 @@ insert into cenovnik default values;
 insert into cenovnik default values;
 insert into cenovnik default values;
 
-insert into klinika (lokacija, naziv, prosecna_ocena, klinicki_centar_id, cenovnik_id) values('Beograd', 'Stomatološka klinika', 1, 1, 1);
-insert into klinika (lokacija, naziv, prosecna_ocena, klinicki_centar_id, cenovnik_id) values('Novi Sad', 'Klinika za neurologiju', 1, 1, 2);
-insert into klinika (lokacija, naziv, prosecna_ocena, klinicki_centar_id, cenovnik_id) values('Novi Sad', 'Klinika za infektivne bolesti', 1, 1, 3);
+insert into klinika (lokacija, naziv, opis, prosecna_ocena, klinicki_centar_id, cenovnik_id) values('Beograd', 'Stomatološka klinika', 'Prilikom posete našoj ordinaciji, vaš osmeh je naš prioritet. Ceo naš tim  posvećen je obezbedjivanju personalizovane i visoko-kvalitetne stomatološke usluge. Cilj nam je da vam obezbedimo najbolju stomatološku negu, dugoročno oralno zdravlje i lep osmeh.',1, 1, 1);
+insert into klinika (lokacija, naziv, opis, prosecna_ocena, klinicki_centar_id, cenovnik_id) values('Novi Sad', 'Klinika za neurologiju', 'Klinika za neurologiju nastavlja najbolju tradiciju ustanovljenu pionirskim radovima oca srpske moderne neurologije Dr Laze Lazarevića. Od svog osnivanja do danas ova ustanova predstavlja mesto okupljanja najeminentnijih kliničkih neurologa u Srbiji, edukacionu maticu u školovanju učenika, studenata, specijalizanata neurologije i drugih disciplina koji u svom programu imaju neurološko usavršavanje i središte naučno-istraživačke delatnosti iz polja kliničke i eksperimentalne neurologije.',1, 1, 2);
+insert into klinika (lokacija, naziv, opis, prosecna_ocena, klinicki_centar_id, cenovnik_id) values('Novi Sad', 'Klinika za infektivne bolesti', 'Klinika za infektivne i tropske bolesti Kliničkog centra Srbije je jedna od ustanova ove vrste u zemlji koja radi 24 sata, svakog dana tokom cele godine i bavi se lečenjem obolelih od infektivnih bolesti ili osoba sumnjivih na infekciju. Ova zdravstvena ustanova osnovana je odlukom 3599 od 25.07.1926. godine i od tada funkcioniše kao samostalna stručno – obrazovna institucija. Klinika posluje u sastavu Kliničkog centra Srbije. Referentna je ustanova za oblast infektologije u stručnom i naučno – istraživačkom radu za celu zemlju. Klinika je ušla u sastav Kliničkog Centra Srbije među prvima, njegovim osnivanjem.',1, 1, 3);
 
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, jbo) values('PA', 'Pariska 33', 'Republika Srbija', 'pacijent@gmail.com', 'Sombor', 'Pera', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Perić', true, true, true, '064-123-1234', 0, '29887654300');
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, jbo) values('PA', 'Zmaj Jovina 17', 'Republika Srbija', 'jelenacupac99@gmail.com', 'Sombor', 'Jelena', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Cupać', true, true, true, '064-123-1235', 0, '10756363221');
@@ -19,7 +19,7 @@ insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, 
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Akšehirska 7', 'Republika Srbija', 'petarpetrovic@gmail.com', 'Beograd', 'Petar', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Petrović', true, true, true, '064-123-1210', 0, 28800000, 46800000, 1, true);
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Topolska 18', 'Republika Srbija', 'milosmilosevic@gmail.com', 'Sombor', 'Miloš', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milošević', true, true, true, '064-123-1211', 0, 28800000, 46800000, 1, true);
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan) values('LE', 'Narodnog fronta 23', 'Republika Srbija', 'jelena@gmail.com', 'Novi Sad', 'Jelena', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Marković', true, true, true, '064-123-1212', 0, 28800000, 46800000, 2, true);
-insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id) values('MS', '16. oktobra 23', 'Republika Srbija', 'mikimiki@gmail.com', 'Beograd', 'Milan', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milanović', true, true, true, '064-123-1213', 0, 28800000, 46800000, 2);
+insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id) values('MS', '16. oktobra 23', 'Republika Srbija', 'mikimiki@gmail.com', 'Beograd', 'Milan', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milanović', true, true, true, '064-123-1213', 0, 28800000, 46800000, 1);
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, jbo) values('PA', 'Dositeja Obradovica 2', 'Republika Srbija', 'zikazikic@gmail.com', 'Sombor', 'Zika', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Zikić', true, true, true, '064-123-1235', 0, '99824366780');
 
 insert into autoritet (name) values ('ROLE_PACIJENT');
@@ -38,6 +38,7 @@ insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (7, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (8, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (9, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (10, 5);
+insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (11, 1);
 
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (1, 180, 72, 0.5, 'A+');
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (2, 177, 75, 0.2, 'AB');
@@ -84,18 +85,18 @@ insert into specijalizovan (lekar_id, tip_pregleda_id) values (9, 6);
 insert into odsustvo (podnosilac_id, klinika_id, pocetak, kraj, odgovoreno, odobreno) values (8, 2, 1588456800000, 1589493600000, true, true);
 
 -- potvrdjeni pregledi
--- Thu May 28 2020 11:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590656400000, 3600000, 1, false, true, true, 1);
+-- Thu May 28 2020 09:00:00
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590649200000, 3600000, 1, false, true, true, 1);
 -- Thu May 28 2020 10:00:00
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590652800000, 3600000, 1, false, true, true, 1);
 -- Sat May 09 2020 10:00:00
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589011200000, 3600000, 1, false, true, true, 2);
--- Sun May 17 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (8, 11, 2, 1589702400000, 3600000, 1, false, true, true, 1);
+-- Sun May 18 2020 00:00:00
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589752800000, 3600000, 1, false, true, true, 1);
 
 -- zahtevi nepotvrdjeni bez sale
--- Thu May 28 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1590652800000, 3600000, 1, false, false, true, null);
+-- Thu May 30 2020 10:00:00
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1590825600000, 3600000, 1, false, false, true, null);
 -- Fri May 29 2020 10:00:00
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, 1, 1, 1590739200000, 3600000, 1, false, false, true, null);
 -- Fri May 29 2020 10:00:00

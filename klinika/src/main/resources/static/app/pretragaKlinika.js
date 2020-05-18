@@ -25,36 +25,38 @@ Vue.component("pretraga-klinika", {
 			<p class="m-1 ml-3 mt-2 font-weight-normal">*Za pretragu klinika je neophodno uneti tip pregleda i datum.</p>
 			<div class="input-group">
 			  	<span class="input-group-btn">
-			    	<a class="btn btn-secondary m-2" data-toggle="collapse" href="#filteriKlinike" role="button">
+			    	<a class="btn btn-info m-2" data-toggle="collapse" href="#filteriKlinike" role="button">
 				    	Prikaži filtere
 				  	</a>
 			  	</span>
-				<input type="search" class="form-control col-4 ml-auto m-2" v-model="naziv"  placeholder="Naziv..."/>
-				<input type="search" class="form-control col-4 ml-auto m-2" v-model="lokacija"  placeholder="Lokacija..."/>
-				<input type="date" v-model="datum" id="datumID" placeholder="Datum..." class="form-control col-4 ml-auto m-2">
-				<div class="form-control col-4 ml-auto m-2">
-						<select class="custom-select mt-0" v-model="tip" id="tip">
-							<option value="" disabled selected hidden>Tipovi pregleda...</option>
-					    	<option v-for="t in tipovi" :value="t.naziv">
-								{{ t.naziv }}
-					    	</option>
-					  	</select>
-					  	<div class="invalid-feedback" id="dodavanjeInvalid">Niste izabrali tip pregleda.</div>
-				</div>
+				<input type="search" class="form-control col-4 ml-auto my-2 mr-2" style="height:40px" v-model="naziv"  placeholder="Naziv..."/>
+				<input type="search" class="form-control col-4 ml-auto my-2 mr-2" style="height:40px" v-model="lokacija"  placeholder="Lokacija..."/>
+				<input type="date" v-model="datum" id="datumID" placeholder="Datum..." style="height:40px" class="form-control col-4 ml-auto my-2 mr-2">
+				<select class="custom-select my-2 mr-2" v-model="tip" style="height:40px" id="tip">
+					<option value="" disabled selected hidden>Tipovi pregleda...</option>
+			    	<option v-for="t in tipovi" :value="t.naziv">
+						{{ t.naziv }}
+			    	</option>
+			  	</select>
+				<span class="input-group-btn">
+					<button class="btn btn-danger mt-2 mr-2" v-on:click="ocisti">
+				    	Očisti
+				  	</button>
+				</span>
 			</div>
 			<div class="collapse" id="filteriKlinike">
-		  		<div class="card card-body m-2">
+		  		<div class="kartica kartica-body m-2">
 		    		<form>
 					  	<div class="form-row mb-4"> 
 					  		<div class="mt-5 mr-3 custom-control custom-checkbox">
 					  			<input type="checkbox" class="custom-control-input" id="ocenaFilter" v-model="ocenaFilter">
 					  			<label class="custom-control-label" for="ocenaFilter"><font size="4">Ocena</font></label>
 							</div>
-					  		<div class="col-2 mt-1">
+					  		<div class="col-2 mt-1 mx-3">
 					    	 	<label for="odocena">Od</label>
 								<input type="number" v-model="ocenaDonja" class="form-control" id="odocena" placeholder="Od">
 							</div>
-							<div class="col-2 mt-1">
+							<div class="col-2 mt-1 mx-3">
 					    	 	<label for="doocena">Do</label>
 								<input type="number" v-model="ocenaGornja" class="form-control" id="doocena" placeholder="Do">
 							</div>
@@ -62,11 +64,11 @@ Vue.component("pretraga-klinika", {
 					  			<input type="checkbox" class="custom-control-input" id="cena" v-model="cenaFilter">
 					  			<label class="custom-control-label" for="cena"><font size="4">Cena</font></label>
 							</div>
-					  		<div class="col-2 mt-1">
+					  		<div class="col-2 mt-1 mx-3">
 					    	 	<label for="odcena">Od</label>
 								<input type="number" v-model="cenaDonja" class="form-control" id="odcena" placeholder="Od">
 							</div>
-							<div class="col-2 mt-1">
+							<div class="col-2 mt-1 mx-3">
 					    	 	<label for="docena">Do</label>
 								<input type="number" v-model="cenaGornja" class="form-control" id="docena" placeholder="Do">
 							</div>
@@ -74,13 +76,13 @@ Vue.component("pretraga-klinika", {
 					</form>
 		  		</div>
 			</div>
-			<table class="table table-hover table-striped">
+			<table class="table table-hover table-striped sortable" id="tabela">
 			  	<thead class="thead-light">
 			    	<tr>
-				      	<th scope="col" width="30%">Naziv</th>
-				      	<th scope="col" width="30%">Lokacija</th>
-				      	<th scope="col" width="20%">Ocena</th>
-				      	<th id="cenaKolona" scope="col" width="20%">Cena pregleda</th>
+				      	<th scope="col" width="30%"><button class="btn">Naziv</button></th>
+				      	<th scope="col" width="30%"><button class="btn">Lokacija</button></th>
+				      	<th scope="col" width="20%"><button class="btn">Ocena</button></th>
+				      	<th data-defaultsort='disabled' id="cenaKolona" scope="col" width="20%"><button class="btn">Cena pregleda</button></th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
@@ -161,6 +163,19 @@ Vue.component("pretraga-klinika", {
 				return "";
 			}
 		},
+		ocisti : function () {
+			this.pretraga = "";
+			this.ocenaFilter = false;
+			this.cenaFilter = false;
+			this.ocenaDonja = 0;
+			this.ocenaGornja = 0;
+			this.cenaDonja = 0;
+			this.cenaGornja = 0;
+			this.naziv = "";
+			this.lokacija = "";
+			this.datum = null;
+			this.tip = "";
+		},
 	},
 	
 	computed: {
@@ -168,9 +183,9 @@ Vue.component("pretraga-klinika", {
 	    	return this.klinike.filter(klinika => {
 	    		this.dobaviCenu(klinika, this.klinike.indexOf(klinika));
 	    		if (this.tip != "" && this.datum != null) {
-	    			$("#cenaKolona").text("Cena pregleda");
+	    			$("#cenaKolona").html("<button class='btn'>Cena pregleda</button>");
 					this.zadovoljavaDatumITip(klinika);
-					return klinika.naziv.toLowerCase().includes(this.naziv.toLowerCase()) && klinika.lokacija.toLowerCase().includes(this.lokacija.toLowerCase()) &&
+					return klinika.naziv.toLowerCase().includes(this.naziv.toLowerCase().trim()) && klinika.lokacija.toLowerCase().includes(this.lokacija.toLowerCase().trim()) &&
 					this.zadovoljavaOcenu(klinika) && this.zadovoljavaCenu(klinika) && klinika.zadovoljava;
 	    		} else {
 	    			$("#cenaKolona").text("");
@@ -190,5 +205,14 @@ Vue.component("pretraga-klinika", {
         .get('/tipoviPregleda/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => (this.tipovi = response.data))
         .catch(function (error) { console.log(error); });
+	},
+	mounted () {
+		$.bootstrapSortable({ applyLast: true });
+		$("#tabela").on('sorted', function () { 
+			if (!this.sortirano) {
+				this.sortirano = true;
+				$.bootstrapSortable({ applyLast: true });
+			} 
+		});
 	}
 });

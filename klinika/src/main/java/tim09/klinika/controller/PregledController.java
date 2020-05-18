@@ -146,4 +146,44 @@ public class PregledController {
 		return new ResponseEntity<Boolean>(odgovor, HttpStatus.OK);
 
 	}
+	
+	@PostMapping(value = "/mozeZapocetiPregled")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> mozeZapocetiPregled(@RequestBody LekarPacijentDTO lekarPacijentDTO) {
+		Pregled pregled = pregledService.mozeZapocetiPregled(lekarPacijentDTO.getIdLekara(),
+				lekarPacijentDTO.getIdPacijenta(), new Date().getTime());
+		boolean odgovor;
+		if (pregled == null) {
+			odgovor = false;
+		} else {
+			odgovor = true;
+		}
+		return new ResponseEntity<Boolean>(odgovor, HttpStatus.OK);
+
+	}
+	
+	@PostMapping(value = "/dobaviPregled")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<PregledDTO> dobaviPregled(@RequestBody LekarPacijentDTO lekarPacijentDTO) {
+		Pregled pregled = pregledService.dobaviPregled(lekarPacijentDTO.getIdLekara(),
+				lekarPacijentDTO.getIdPacijenta(), new Date().getTime());
+		return new ResponseEntity<PregledDTO>(new PregledDTO(pregled), HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/daLiJeZavrsen")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> daLiJeZavrsen(@RequestBody LekarPacijentDTO lekarPacijentDTO) {
+		Pregled pregled = pregledService.dobaviPregled(lekarPacijentDTO.getIdLekara(),
+				lekarPacijentDTO.getIdPacijenta(), new Date().getTime());
+		boolean zavrsen = false;
+		if (pregled == null) {
+			zavrsen = true;
+		} else {
+			if (pregled.getIzvestaj() != null) {
+				zavrsen = true;
+			}
+		}
+		return new ResponseEntity<Boolean>(zavrsen, HttpStatus.OK);
+
+	}
 }

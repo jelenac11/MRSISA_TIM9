@@ -10,4 +10,6 @@ import tim09.klinika.model.MedSestra;
 public interface MedSestraRepository extends JpaRepository<MedSestra, Long> {
 
 	List<MedSestra> findAllByKlinika(Klinika k);
+
+	MedSestra findByEmail(String name);
 }

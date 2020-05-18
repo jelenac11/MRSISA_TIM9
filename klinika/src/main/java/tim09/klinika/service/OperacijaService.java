@@ -2,6 +2,7 @@ package tim09.klinika.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class OperacijaService {
 		List<Operacija> operacije = operacijaRepository.findBySalaIdAndVremeAfterAndOtkazana(id, time, false);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Operacija operacija : operacije) {
-			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija"));
+			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija", operacija.getPacijent().getId(), "", "", "", ""));
 		}
 		return kalendar;
 	}
@@ -65,7 +66,11 @@ public class OperacijaService {
 		List<Operacija> operacije = operacijaRepository.findByLekar(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Operacija operacija : operacije) {
-			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija"));
+			String sala = "";
+			if (operacija.getSala() != null) {
+				sala = operacija.getSala().getNaziv();
+			}
+			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija", operacija.getPacijent().getId(), operacija.getPacijent().getIme() + " " + operacija.getPacijent().getPrezime(), "", ispisiLekare(operacija.getLekari()), sala));
 		}
 		return kalendar;
 	}
@@ -103,6 +108,14 @@ public class OperacijaService {
 			}
 		}
 		return operacijeDTO;
+	}
+	
+	private String ispisiLekare(Set<Lekar> set) {
+		StringBuilder retVal = new StringBuilder();
+		for (Lekar lekar : set) {
+			retVal.append(lekar.getIme() + " " + lekar.getPrezime() + ", ");
+		}
+		return retVal.toString().substring(0, retVal.toString().length() - 2);
 	}
 
 }

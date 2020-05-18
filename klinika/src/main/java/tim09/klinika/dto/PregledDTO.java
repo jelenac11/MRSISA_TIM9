@@ -24,17 +24,17 @@ public class PregledDTO {
 	}
 
 	public PregledDTO(Pregled os) {
-		this.id=os.getId();
-		this.lekar=new LekarDTO(os.getLekar());
-		this.pacijent=new PacijentDTO(os.getPacijent());
-		this.tipPregleda=new TipPregledaDTO(os.getTipPregleda());
-		this.sala=new SalaDTO(os.getSala());
-		this.vreme=new Date(os.getVreme());
-		this.otkazan=os.isOtkazan();
+		this.id = os.getId();
+		this.lekar = new LekarDTO(os.getLekar());
+		this.pacijent = new PacijentDTO(os.getPacijent());
+		this.tipPregleda = new TipPregledaDTO(os.getTipPregleda());
+		this.sala = new SalaDTO(os.getSala());
+		this.vreme = new Date(os.getVreme());
+		this.otkazan = os.isOtkazan();
 		this.klinika = new KlinikaDTO(os.getKlinika());
-		this.zauzet=os.isZauzet();
-		this.trajanje=os.getTrajanje();
-		this.vreme2=os.getVreme();
+		this.zauzet = os.isZauzet();
+		this.trajanje = os.getTrajanje();
+		this.vreme2 = os.getVreme();
 	}
 
 	public LekarDTO getLekar() {
@@ -132,5 +132,5 @@ public class PregledDTO {
 	public void setVreme2(long vreme2) {
 		this.vreme2 = vreme2;
 	}
-	
+
 }

@@ -6,6 +6,9 @@ Vue.component("radni-kalendar", {
 			type: 'month',
 		    types: ['month', 'week', '4day', 'day'],
 		    weekday: [0, 1, 2, 3, 4, 5, 6],
+		    dialog: false,
+		    mozeZapoceti: false,
+		    dogadjaj: {},
 		    value: '',
 		    events: [],
 		} 
@@ -55,21 +58,77 @@ Vue.component("radni-kalendar", {
 			          		:events="events"
 		  			  		:event-overlap-threshold="30"
 		  			  		:event-color="getEventColor"
+		  			  		@click:event="showEvent"
+		  			  		@click:date="viewDay"
 			        	></v-calendar>
 		      		</v-sheet>
 		      	</div>
+		      	
+		      	<v-dialog width="400" v-model="dialog">
+					<v-card>
+						<v-card-title>
+		        			{{ dogadjaj.name }}
+		        		</v-card-title>
+		        		<v-spacer></v-spacer>
+		        		<v-list-item-subtitle>
+		        			<p class="m-3 h6" v-if="dogadjaj.name == 'Pregled'">Tip pregleda: {{ dogadjaj.tipPregleda }}</br></p>
+		        			<p class="m-3 h6">Pacijent: {{ dogadjaj.pacijent }}</br></p>
+		        			<p class="m-3 h6">Sala: {{ dogadjaj.sala }}</br></p>
+		        		</v-list-item-subtitle>
+		        		<v-btn class="m-3" v-if="dogadjaj.name == 'Pregled'" v-on:click="zapocniPregled" :disabled="!mozeZapoceti">
+							Započni pregled
+						</v-btn>
+					</v-card>
+				</v-dialog>
+				
 			</div>
 		</v-app>
 	</div>
 	`
 	,
 	methods : {
+		formatVreme : function(datum) {
+            var date = new Date(datum);
+            datum = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(/ /g, '-');
+            datum = datum + " " + date.toLocaleTimeString();
+            return datum;
+        },
+        zapocniPregled : function () {
+        	axios
+    		.get('/pacijenti/' + this.dogadjaj.pacijentId, { headers: { Authorization: 'Bearer ' + this.token }} )
+            .then(response => { 
+            	localStorage.setItem("pacijent", JSON.stringify(response.data));
+            	this.$router.replace({ name: 'zapocniPregled' });
+            })
+            .catch(function (error) { console.log(error); });
+		},
 		getEventColor : function (event) {
 			return event.color;
 		},
 		formatDatumKalendar : function (a) {
 			let datum = `${a.getFullYear()}-${a.getMonth() + 1}-${a.getDate()} ${a.getHours()}:${a.getMinutes()}`;
 			return datum;
+		},
+		viewDay : function ({ date }) {
+	        this.focus = date
+	        this.type = 'day'
+		},
+		showEvent : function ({ nativeEvent, event }) {
+			if (event.name == "Pregled" || event.name == "Operacija") {
+				this.dogadjaj = event;
+				this.dialog = true;
+				this.daLiMozeZapoceti();
+			}
+		},
+		daLiMozeZapoceti : function () {
+			if (this.dogadjaj.pacijentId == 0) {
+				this.mozeZapoceti = false;
+			} else {
+				let sada = new Date().getTime();
+				if (this.dogadjaj.pocetak <= sada && this.dogadjaj.kraj >= sada) {
+					this.mozeZapoceti = true;
+				}
+			}
 		},
 	},
 	created() {
@@ -81,7 +140,7 @@ Vue.component("radni-kalendar", {
 
 		axios.
 		get('zaposleni/dobaviRadniKalendar/', { headers: { Authorization: 'Bearer ' + this.token }})
-		.then(response=>{
+		.then(response => {
 			let events = response.data;
 			const kalendar = [];
 			for (let e of events) {
@@ -97,7 +156,14 @@ Vue.component("radni-kalendar", {
 		            name: e.naziv,
 		            start: this.formatDatumKalendar(new Date(e.start)),
 	            	end: this.formatDatumKalendar(new Date(e.end)),
+	            	pocetak: e.start,
+	            	kraj: e.end,
 	            	color: kolor,
+	            	pacijentId: e.pacijentId,
+	            	pacijent: e.pacijent,
+	            	tipPregleda: e.tipPregleda,
+	            	lekari: e.lekari,
+	            	sala: e.sala
 		        });
 			}
 			this.events = kalendar;

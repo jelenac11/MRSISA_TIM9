@@ -3,8 +3,9 @@ Vue.component("pacijenti", {
 		return {
 			pacijenti: [],
 			token: "",
+			sortirano: false,
 			korisnik: {},
-			ime: "",
+			imePrezime: "",
 			prezime: "",
 			jbo: "",
 		} 
@@ -13,19 +14,18 @@ Vue.component("pacijenti", {
 	<div>
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		<div class="naviga tab-content">
-			<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
+			<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel">
 				<div class="input-group">
-					<input type="search" class="form-control col-4 ml-auto m-2" v-model="ime"  placeholder="Ime..."/>
-					<input type="search" class="form-control col-4 ml-auto m-2" v-model="prezime"  placeholder="Prezime..."/>
-					<input type="search" class="form-control col-4 ml-auto m-2" v-model="jbo"  placeholder="JBO..."/>
+					<input type="search" class="form-control col-3 ml-auto m-2" style="height:40px"  v-model="imePrezime"  placeholder="Ime i prezime..."/>
+					<input type="search" class="form-control col-3 my-2 mr-2" style="height:40px"  v-model="jbo"  placeholder="JBO..."/>
 				</div>
 			</div>
-			<table id="tabela" class="table table-hover table-striped">
+			<table id="tabela" class="table table-hover table-striped sortable">
 			  	<thead class="thead-light">
 			    	<tr>
-				      	<th scope="col" width="30%">Ime</th>
-				      	<th scope="col" width="30%">Prezime</th>
-				      	<th scope="col" width="30%">JBO</th>
+				      	<th scope="col" width="30%"><button class="btn">Ime</button></th>
+				      	<th scope="col" width="30%"><button class="btn">Prezime</button></th>
+				      	<th scope="col" width="30%"><button class="btn">JBO</button></th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
@@ -41,25 +41,31 @@ Vue.component("pacijenti", {
 	`
 	,
 	mounted: function(){
-		//$('#tabela').DataTable();
 		axios
 		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => { 
         	this.korisnik=response.data;
 			axios
 			.get('pacijenti/dobaviSvePoIdKlinike/'+this.korisnik.id, { headers: { Authorization: 'Bearer ' + this.token }})
-			.then(response=>{
-				this.pacijenti=response.data;
+			.then(response=> {
+				this.pacijenti = response.data;
 			})
 			.catch(function (error) { console.log(error); });
         })
         .catch(function (error) { console.log(error); });
+		$.bootstrapSortable({ applyLast: true });
+		$("#tabela").on('sorted', function () { 
+			if (!this.sortirano) {
+				this.sortirano = true;
+				$.bootstrapSortable({ applyLast: true });
+			} 
+		});
 	},
 	methods:{
-		pristupiPacijentu: function(p){
+		pristupiPacijentu : function (p) {
 			localStorage.setItem("pacijent", JSON.stringify(p));
 			this.$root.$router.push({ name: 'profilPacijenta'})
-		}
+		},
 	},
 	created() {
 		this.token = localStorage.getItem("token");
@@ -67,7 +73,7 @@ Vue.component("pacijenti", {
 	computed:{
 		filtriraniPacijenti: function(){
 			return this.pacijenti.filter ( pacijent => {
-				return pacijent.ime.toLowerCase().includes(this.ime.toLowerCase().trim()) && pacijent.prezime.toLowerCase().includes(this.prezime.toLowerCase().trim()) && pacijent.jbo.toString().toLowerCase().includes(this.jbo.toLowerCase().trim());
+				return (pacijent.ime.toLowerCase().includes(this.imePrezime.toLowerCase().trim()) || pacijent.prezime.toLowerCase().includes(this.imePrezime.toLowerCase().trim())) && pacijent.jbo.toString().toLowerCase().includes(this.jbo.toLowerCase().trim());
 			})
 		}
 	}

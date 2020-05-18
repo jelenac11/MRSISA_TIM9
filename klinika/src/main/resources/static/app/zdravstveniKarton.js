@@ -3,6 +3,19 @@ Vue.component("zdravstveni-karton", {
 		return {
 			ulogovan: {},
 			zdravstveniKarton: {},
+			izabraniIzvestaj: {
+				opis: "",
+				dijagnoza: {},
+				recepti: [],
+				pregled: {},
+			},
+			noviIzvestaj: {
+				opis: "",
+				dijagnoza: {},
+				recepti: [],
+				pregled: {},
+			},
+			imaBolesti: false,
 			token: "",
 		} 
 	},
@@ -31,7 +44,7 @@ Vue.component("zdravstveni-karton", {
 							  		<p class="mb-0">{{ this.zdravstveniKarton.visina }}</p>
 							  	</div>
 							  	<div class="d-flex w-20 justify-content-between">
-							  		<h6>Tezina:</h6>
+							  		<h6>Težina:</h6>
 							  		<p class="mb-0">{{ this.zdravstveniKarton.tezina }}</p>
 							  	</div>
 						  	</li>
@@ -46,21 +59,86 @@ Vue.component("zdravstveni-karton", {
 						  		</div>
 						  	</li>
 						  	<li class="list-group-item">
-						  		<div class="d-flex w-20 justify-content-between">
-						    		<h6>Izvestaji:</h6>
-						    		<ul class="list-group">
-										<li v-for="izvestaj in this.zdravstveniKarton.bolesti" class="list-group-item">{{ bolest }}</li>
-									</ul>
+						  		<div class="w-20 justify-content-between">
+						    		<h6>Izveštaji:</h6>
+									<table v-if="imaBolesti" class="table table-hover table-striped mt-2">
+									  	<thead class="thead-light">
+									    	<tr>
+									    		<th scope="col" width="33%">Tip pregleda</th>
+										      	<th scope="col" width="33%">Lekar</th>
+										      	<th scope="col" width="34%">Datum</th>
+									    	</tr>
+									  	</thead>
+									  	<tbody>
+									  		<tr v-for="iz in zdravstveniKarton.bolesti" data-toggle="modal" data-target="#prikaziIzvestaj" v-on:click="izaberiIzvestaj(iz)">
+									    		<th class="h6" scope="col" width="33%">{{ iz.pregled.tipPregleda.naziv }}</th>
+									    		<th class="h6" scope="col" width="33%">{{ iz.pregled.lekar.ime + " " + iz.pregled.lekar.prezime }}</th>
+									    		<th class="h6" scope="col" width="34%">{{ urediDatum(iz.pregled.vreme2) }}</th>
+									    	</tr>
+									  	</tbody>
+									</table>
 								</div>
 					  		</li>
 						</ul>
 					</div>
 				</div>
-			</div>	
+			</div>
+			
+			<div class="modal fade" id="prikaziIzvestaj" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-lg" role="document">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+			        		<h5 class="modal-title">Izveštaj o pregledu</h5>
+			        		<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			      		</div>
+			      		<div class="modal-body">
+							<div class="d-flex">
+								<p class="h5 m-2">Informacije: {{ izabraniIzvestaj.opis }}</p>
+							</div>
+							<div class="d-flex">
+								<p class="h5 m-2">Dijagnoza: {{ izabraniIzvestaj.dijagnoza.naziv }}</p>
+							</div>
+							<p class="h3 mt-4 ml-2 font-weight-normal">Recepti</p>
+							<table class="table table-hover table-striped">
+							  	<thead class="thead-light">
+							    	<tr>
+								      	<th scope="col" width="50%">Šifra</th>
+								      	<th scope="col" width="50%">Naziv leka</th>
+							    	</tr>
+							  	</thead>
+							  	<tbody>
+							  		<tr v-for="rec in izabraniIzvestaj.recepti" data-toggle="modal" data-target="#" v-on:click="">
+								      	<td width="50%">{{ rec.lek.sifra }}</td>
+								      	<td width="50%">{{ rec.lek.naziv }}</td>
+							    	</tr>
+							  	</tbody>
+							</table>
+			      		</div>
+			      		<div class="modal-footer">
+			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			      		</div>
+			    	</div>
+				</div>
+			</div>
+		
 		</div>
 	</div>
 	`
 	,
+	methods: {
+		izaberiIzvestaj : function (izv) {
+			this.izabraniIzvestaj = izv;
+			this.noviIzvestaj = JSON.parse(JSON.stringify(this.izabraniIzvestaj));
+		},
+		urediDatum: function(datum){
+	        var date = new Date(datum);
+	        datum = date.toLocaleDateString('en-GB', {
+	        day: 'numeric', month: 'short', year: 'numeric'
+	        }).replace(/ /g, '-');
+	        vreme = date.toLocaleTimeString();
+	        return datum + " " + vreme
+		},
+	},
 	created() {
 		this.token = localStorage.getItem("token");
 	},
@@ -73,10 +151,11 @@ Vue.component("zdravstveni-karton", {
     		.put('/zdravstveniKartoni/dobaviKartonPacijenta', this.ulogovan, { headers: { Authorization: 'Bearer ' + this.token }} )
             .then(response => { 
             	this.zdravstveniKarton = response.data;
+            	var nema = this.zdravstveniKarton.bolesti === undefined || this.zdravstveniKarton.bolesti.length == 0;
+    			this.imaBolesti = !nema;
             })
             .catch(function (error) { console.log(error); });
         })
         .catch(function (error) { console.log(error); });
-	        
 	}
 });

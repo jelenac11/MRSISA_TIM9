@@ -33,7 +33,7 @@ public class Pregled {
 	@JoinColumn(name = "tipPregleda_id")
 	private TipPregleda tipPregleda;
 
-	@OneToOne(mappedBy = "pregled", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "pregled", fetch = FetchType.LAZY)
 	private Izvestaj izvestaj;
 
 	@ManyToOne(fetch = FetchType.LAZY)

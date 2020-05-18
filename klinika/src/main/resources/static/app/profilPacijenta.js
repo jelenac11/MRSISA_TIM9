@@ -4,9 +4,26 @@ Vue.component("profil-pacijenta", {
 			token: "",
 			korisnik:{},
 			pacijent:{},
-			nijeObavioNikadPregled:false,
-			dijalog:false,
-			zdravstveniKarton:{}
+			izabraniIzvestaj: {
+				opis: "",
+				dijagnoza: {},
+				recepti: [],
+				pregled: {},
+			},
+			noviIzvestaj: {
+				opis: "",
+				dijagnoza: {},
+				recepti: [],
+				pregled: {},
+			},
+			sifrarnikLekova: {},
+			sifrarnikDijagnoza: {},
+			imaBolesti: false,
+			nijeObavioNikadPregled: false,
+			dijalog: false,
+			submitovanoIzvestaj: false,
+			zdravstveniKarton: {},
+			izmena: "",
 		} 
 	},
 	template: 
@@ -60,13 +77,12 @@ Vue.component("profil-pacijenta", {
 				    	</div>
 				  	</div>
 				  	<div>
-				  		<button class="btn btn-lg btn-primary" v-on:click="">Započni pregled</button>
+				  		<button class="btn btn-lg btn-primary" v-on:click="zapocni">Započni pregled</button>
 						<button class="btn btn-lg btn-info" @click="dijalog = true" v-on:click="dobaviZdravstveniKarton" :disabled="!nijeObavioNikadPregled">Zdravstveni karton</button>
 						<button class="btn btn-lg btn-secondary" style="float: right;" v-on:click="nazad">Nazad</button>
 				  	</div>
 				</div>
 			</div>
-			
 			
 			<v-dialog v-model="dijalog">
 				<v-card>
@@ -107,11 +123,24 @@ Vue.component("profil-pacijenta", {
 									  		</div>
 									  	</li>
 									  	<li class="list-group-item">
-									  		<div class="d-flex w-20 justify-content-between">
-									    		<h6>Izvestaji:</h6>
-									    		<ul class="list-group">
-													<li v-for="izvestaj in this.zdravstveniKarton.bolesti" class="list-group-item">{{ bolest }}</li>
-												</ul>
+									  		<div class="w-20 justify-content-between">
+									    		<h6>Izveštaji:</h6>
+												<table v-if="imaBolesti" class="table table-hover table-striped mt-2">
+												  	<thead class="thead-light">
+												    	<tr>
+												    		<th scope="col" width="33%">Tip pregleda</th>
+													      	<th scope="col" width="33%">Lekar</th>
+													      	<th scope="col" width="34%">Datum</th>
+												    	</tr>
+												  	</thead>
+												  	<tbody>
+												  		<tr v-for="iz in zdravstveniKarton.bolesti" data-toggle="modal" v-on:click="izaberiIzvestaj(iz)">
+												    		<th class="h6" scope="col" width="33%">{{ iz.pregled.tipPregleda.naziv }}</th>
+												    		<th class="h6" scope="col" width="33%">{{ iz.pregled.lekar.ime + " " + iz.pregled.lekar.prezime }}</th>
+												    		<th class="h6" scope="col" width="34%">{{ urediDatum(iz.pregled.vreme2) }}</th>
+												    	</tr>
+												  	</tbody>
+												</table>
 											</div>
 								  		</li>
 									</ul>
@@ -121,10 +150,134 @@ Vue.component("profil-pacijenta", {
 					</div>	
 				</v-card>		
 			</v-dialog>
+			
+			<div class="modal fade" id="prikaziIzvestajBezIzmene" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-lg" role="document">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+			        		<h5 class="modal-title">Izveštaj o pregledu</h5>
+			        		<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			      		</div>
+			      		<div class="modal-body">
+							<div class="d-flex">
+								<p class="h5 m-2">Informacije: {{ izabraniIzvestaj.opis }}</p>
+							</div>
+							<div class="d-flex">
+								<p class="h5 m-2">Dijagnoza: {{ izabraniIzvestaj.dijagnoza.naziv }}</p>
+							</div>
+							<p class="h3 mt-4 ml-2 font-weight-normal">Recepti</p>
+							<table class="table table-hover table-striped">
+							  	<thead class="thead-light">
+							    	<tr>
+								      	<th scope="col" width="50%">Šifra</th>
+								      	<th scope="col" width="50%">Naziv leka</th>
+							    	</tr>
+							  	</thead>
+							  	<tbody>
+							  		<tr v-for="rec in izabraniIzvestaj.recepti" data-toggle="modal" data-target="#" v-on:click="">
+								      	<td width="50%">{{ rec.lek.sifra }}</td>
+								      	<td width="50%">{{ rec.lek.naziv }}</td>
+							    	</tr>
+							  	</tbody>
+							</table>
+			      		</div>
+			      		<div class="modal-footer">
+			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			      		</div>
+			    	</div>
+				</div>
+			</div>
+			
+			<div class="modal fade" id="prikaziIzvestajSaIzmenom" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-lg" role="document">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+			        		<h5 class="modal-title">Izveštaj o pregledu</h5>
+			        		<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			      		</div>
+			      		<div class="modal-body">
+							<div class="d-flex">
+								<p class="h5">Pacijent: {{ pacijent.ime + " " + pacijent.prezime }}</p>
+							</div>
+						    
+						    <form class="needs-validation mb-4" v-bind:class="{ 'was-validated': submitovanoIzvestaj }" novalidate @submit.prevent="izmeniIzvestaj" id="forma-izmeni-izvestaj">
+							    <div class="form-row">
+							    	<div class="col">
+										<label for="opis">Opis</label>
+										<textarea v-model="noviIzvestaj.opis" class="form-control" id="opis" placeholder="Informacije o pregledu" rows="3" required></textarea>
+										<div class="invalid-feedback" id="dodavanjeInvalid">Niste uneli informacije o pregledu.</div>
+							    	</div>
+							  	</div>
+							  	<div class="form-row">
+							    	<div class="col">
+							    		<label for="dij" class="mt-1">Dijagnoza</label>
+										<select class="custom-select mt-0" v-model="noviIzvestaj.dijagnoza" id="dij" required>
+									    	<option v-for="d in sifrarnikDijagnoza.stavke" :value="d">
+												{{ d.sifra + " - " + d.naziv }}
+									    	</option>
+										</select>
+										<div class="invalid-feedback" id="dodavanjeInvalid">Niste izabrali dijagnozu.</div>
+							    	</div>
+							  	</div>
+							</form>
+		
+							<p class="h3 mt-4 ml-2 font-weight-normal">Recepti</p>
+							<table class="table table-hover table-striped">
+							  	<thead class="thead-light">
+							    	<tr>
+								      	<th scope="col" width="30%">Šifra</th>
+								      	<th scope="col" width="60%">Naziv leka</th>
+								      	<th scope="col" width="10%"></th>
+							    	</tr>
+							  	</thead>
+							  	<tbody>
+							  		<tr v-for="rec in noviIzvestaj.recepti" data-toggle="modal" data-target="#" v-on:click="">
+								      	<td width="30%">{{ rec.lek.sifra }}</td>
+								      	<td width="60%">{{ rec.lek.naziv }}</td>
+								      	<td width="10%"><button class="btn btn-danger btn-sm" v-on:click="ukloniLek(rec)" id="uklon">Ukloni</button></td>
+							    	</tr>
+							  	</tbody>
+							</table>
+							<div class="input-group mb-4">
+							  	<select class="custom-select form-control mt-0" id="lekoviSel">
+							    	<option v-for="l in sifrarnikLekova.stavke" :value="l">
+										{{ l.sifra + " - " + l.naziv }}
+							    	</option>
+								</select>
+								<div class="input-group-prepend">
+									<button class="btn btn-primary ml-2" style="float: left;" v-on:click="dodajRecept">Dodaj lek</button>
+							  	</div>
+							</div>
+					  		<button class="btn btn-lg btn-primary" type="submit" v-on:click="zavrsiIzvestaj">Sačuvaj izmene</button>
+			      		</div>
+			      		<div class="modal-footer">
+			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			      		</div>
+			    	</div>
+				</div>
+			</div>
+			
 		</div>	
 	</v-app>
 	`,
 	methods:{
+		izaberiIzvestaj : function (izv) {
+			this.izabraniIzvestaj = izv;
+			this.noviIzvestaj = JSON.parse(JSON.stringify(this.izabraniIzvestaj));
+			if (this.izabraniIzvestaj.pregled.lekar.id == this.korisnik.id) {
+				$("#prikaziIzvestajSaIzmenom").modal("show");
+			} else {
+				$("#prikaziIzvestajBezIzmene").modal("show");
+			}
+		},
+		urediDatum: function(datum){
+	        var date = new Date(datum);
+	        datum = date.toLocaleDateString('en-GB', {
+	        day: 'numeric', month: 'short', year: 'numeric'
+	        }).replace(/ /g, '-');
+	        vreme = date.toLocaleTimeString();
+	        return datum + " " + vreme
+		},
 		nazad:function(){
 			localStorage.removeItem("pacijent");
 			this.$router.replace({ name: 'pacijenti' });
@@ -134,10 +287,73 @@ Vue.component("profil-pacijenta", {
     		.put('/zdravstveniKartoni/dobaviKartonPacijenta', this.pacijent, { headers: { Authorization: 'Bearer ' + this.token }} )
             .then(response => { 
             	this.zdravstveniKarton = response.data;
+            	var nema = this.zdravstveniKarton.bolesti === undefined || this.zdravstveniKarton.bolesti.length == 0;
+    			this.imaBolesti = !nema;
             })
             .catch(function (error) { console.log(error); });
-		}
-	
+		},
+		zapocni : function() {
+			axios
+			.post('pregledi/mozeZapocetiPregled', { idLekara:this.korisnik.id, idPacijenta:this.pacijent.id }, { headers: { Authorization: 'Bearer ' + this.token }})
+			.then(response => {
+				if (!response.data) {
+					alert("Ne možete započeti pregled. Ne postoji pregled koji je u toku.");
+				} else {
+					axios
+					.post('pregledi/daLiJeZavrsen', { idLekara:this.korisnik.id, idPacijenta:this.pacijent.id }, { headers: { Authorization: 'Bearer ' + this.token }})
+					.then(response => {
+						if (response.data) {
+							alert("Ovaj pregled je završen.");
+						} else {
+							this.$router.replace({ name: 'zapocniPregled' });
+						}
+					})
+					.catch(function (error) { console.log(error); });
+				}
+			})
+			.catch(function (error) { console.log(error); });
+		},
+		zavrsiIzvestaj : function () {
+			this.submitovano = true;
+			if (document.getElementById('forma-izmeni-izvestaj').checkValidity() === true) {
+				axios
+	    		.post('/izvestaji/izmeniIzvestaj', this.noviIzvestaj, { headers: { Authorization: 'Bearer ' + this.token }} )
+	            .then(response => {
+	            	toast("Uspešno izmenjen izveštaj");
+	            	this.dobaviZdravstveniKarton();
+	            })
+	    		.catch(function (error) { console.log(error); });
+			}
+		},
+		dodajRecept : function () {
+			var selekt = document.getElementById("lekoviSel");
+			var lekSifra = selekt.options[selekt.selectedIndex].text.split(" - ")[0];
+			var lekic = this.nadjiLek(lekSifra);
+			if (!this.sadrzi(lekic)) {
+				this.noviIzvestaj.recepti.push({ lek: lekic });
+			}
+		},
+		ukloniLek : function (lek) {
+			const indeks = this.noviIzvestaj.recepti.indexOf(lek);
+			if (indeks > -1) {
+				this.noviIzvestaj.recepti.splice(indeks, 1);
+			}
+		},
+		nadjiLek : function (sifra) {
+			for (let stavka of this.sifrarnikLekova.stavke) {
+				if (stavka.sifra == sifra) {
+					return stavka;
+				}
+			}
+		},
+		sadrzi (lekic) {
+			for (let l of this.noviIzvestaj.recepti) {
+				if (l.lek.id == lekic.id) {
+					return true;
+				}
+			}
+			return false;
+		},
 	},
 	mounted(){
 		this.token = localStorage.getItem("token");
@@ -147,17 +363,28 @@ Vue.component("profil-pacijenta", {
         .then(response => { 
         	this.korisnik=response.data;
 			axios
-			.post('pregledi/provjeraPregledaZaPacijentaOdLekara',{idLekara:this.korisnik.id,idPacijenta:this.pacijent.id},{ headers: { Authorization: 'Bearer ' + this.token }})
+			.post('pregledi/provjeraPregledaZaPacijentaOdLekara', { idLekara:this.korisnik.id, idPacijenta:this.pacijent.id }, { headers: { Authorization: 'Bearer ' + this.token }})
 			.then(response=>{
-				if(response.data==true){
+				if (response.data == true) {
 					this.nijeObavioNikadPregled = true;
-				}
-				else
+				} else
 				{
 					this.nijeObavioNikadPregled = false;
 				}
 			})
 			.catch(function (error) { console.log(error); });
+        })
+		.catch(function (error) { console.log(error); });
+		axios
+		.get('/sifrarnici/ucitajSifrarnikDijagnoza', { headers: { Authorization: 'Bearer ' + this.token }} )
+        .then(response => { 
+        	this.sifrarnikDijagnoza = response.data;
+        })
+		.catch(function (error) { console.log(error); });
+		axios
+		.get('/sifrarnici/ucitajSifrarnikLekova', { headers: { Authorization: 'Bearer ' + this.token }} )
+        .then(response => { 
+        	this.sifrarnikLekova = response.data;
         })
 		.catch(function (error) { console.log(error); });
 	}

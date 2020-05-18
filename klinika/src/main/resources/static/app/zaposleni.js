@@ -8,8 +8,7 @@ Vue.component('zaposleni', {
 			ocenaFilter : false,
 			ocenaDonja: 0,
 			ocenaGornja: 0,
-			ime: "",
-			prezime: "",
+			imePrezime: "",
 			tip: "",
 			vreme: null,
 			id: 0,
@@ -24,42 +23,41 @@ Vue.component('zaposleni', {
 		<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
-			<div class="input-group">
-				<label for="naziv" class="mt-3 ml-2">Naziv</label>
-				<input type="text" v-model="klinika.naziv" class="form-control  m-2" style="background-color: #fff;" id="naziv" readonly>
-				<label for="opis" class="mt-3">Opis</label>
-				<input type="text" v-model="klinika.opis" class="form-control m-2" style="background-color: #fff;" id="opis" readonly>
-				<label for="lokacija" class="mt-3">Lokacija</label>
-				<input type="text" v-model="klinika.lokacija" class="form-control m-2" style="background-color: #fff;" id="lokacija" readonly>
-				<label for="ocena" class="mt-3">Ocena</label>
-				<input type="text" v-model="klinika.ocena" class="form-control m-2" style="background-color: #fff;" id="ocena" readonly>
+			<div class="kartica mt-2 mx-2" style="width: 98.7%;">
+			  <div class="kartica-body">
+			    <h4 class="kartica-title">{{ klinika.naziv + ", " + klinika.ocena }}</h4>
+			    <h6 class="kartica-subtitle mb-2 text-muted">{{ klinika.lokacija }}</h6>
+			    <p class="kartica-text">{{ klinika.opis }}</p>
+			  </div>
 			</div>
+			<p class="m-1 ml-3 mt-2 font-weight-normal">*Za pretragu klinika je neophodno uneti tip pregleda i datum.</p>
 			<div class="input-group">
 				<span class="input-group-btn">
-			    	<a class="btn btn-secondary m-2" data-toggle="collapse" href="#predefinisaniTermini" role="button" v-on:click="dobaviPredefinisane()">
+			    	<a class="btn btn-primary my-2 mx-2" data-toggle="collapse" href="#predefinisaniTermini" role="button" v-on:click="dobaviPredefinisane()">
 				    	Brzo zakazivanje
 				  	</a>
 			  	</span>
 			  	<span class="input-group-btn">
-			    	<a class="btn btn-secondary m-2" data-toggle="collapse" href="#filteriLekari" role="button">
+			    	<a class="btn btn-info my-2 mr-2" data-toggle="collapse" href="#filteriLekari" role="button">
 				    	Prikaži filtere
 				  	</a>
 			  	</span>
-				<input type="search" class="form-control col-4  m-2" v-model="ime"  placeholder="Ime..."/>
-				<input type="search" class="form-control col-4 m-2" v-model="prezime"  placeholder="Prezime..."/>
-				<input type="date" v-model="vreme" id="datumID" placeholder="Datum..." class="form-control col-4 ml-auto m-2">
-				<div class="form-control col-4 ml-auto m-2">
-						<select class="custom-select mt-0" v-model="tip" id="tip">
-							<option value="" disabled selected hidden>Tipovi pregleda...</option>
-					    	<option v-for="t in tipovi" :value="t.naziv">
-								{{ t.naziv }}
-					    	</option>
-					  	</select>
-					  	<div class="invalid-feedback" id="dodavanjeInvalid">Niste izabrali tip pregleda.</div>
-				</div>
+				<input type="search" class="form-control col-4 my-2 mr-2" style="height:40px" v-model="imePrezime"  placeholder="Ime i prezime..."/>
+				<input type="date" v-model="vreme" id="datumID" placeholder="Datum..." style="height:40px" class="form-control col-4 ml-auto my-2 mr-2">
+				<select class="custom-select my-2 mr-2" v-model="tip" style="height:40px" id="tip">
+					<option value="" disabled selected hidden>Tipovi pregleda...</option>
+			    	<option v-for="t in tipovi" :value="t.naziv">
+						{{ t.naziv }}
+			    	</option>
+			  	</select>
+			  	<span class="input-group-btn">
+					<button class="btn btn-danger mt-2 mr-2" v-on:click="ocisti">
+				    	Očisti
+				  	</button>
+				</span>
 			</div>
 			<div class="collapse" id="predefinisaniTermini">
-				<div class="card card-body m-2">
+				<div class="kartica kartica-body m-2">
 		    		<form>
 					  	<div class="form-row mb-4"> 
 					  		<table class="table table-hover">
@@ -91,18 +89,18 @@ Vue.component('zaposleni', {
 		  		</div>
 			</div>
 			<div class="collapse" id="filteriLekari">
-		  		<div class="card card-body m-2">
+		  		<div class="kartica kartica-body m-2">
 		    		<form>
 					  	<div class="form-row mb-4"> 
 					  		<div class="mt-5 mr-3 custom-control custom-checkbox">
 					  			<input type="checkbox" class="custom-control-input" id="ocenaFilter" v-model="ocenaFilter">
 					  			<label class="custom-control-label" for="ocenaFilter"><font size="4">Ocena</font></label>
 							</div>
-					  		<div class="col-2 mt-1">
+					  		<div class="col-2 mt-1 mx-3">
 					    	 	<label for="odocena">Od</label>
 								<input type="number" v-model="ocenaDonja" class="form-control" id="odocena" placeholder="Od">
 							</div>
-							<div class="col-2 mt-1">
+							<div class="col-2 mt-1 mx-3">
 					    	 	<label for="doocena">Do</label>
 								<input type="number" v-model="ocenaGornja" class="form-control" id="doocena" placeholder="Do">
 							</div>
@@ -119,7 +117,7 @@ Vue.component('zaposleni', {
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="le in filtriraniLekari" v-on:click="izaberiLekara(le)" data-toggle="modal" data-target="#prikazSlobodnihTermina">
+			  		<tr v-for="le in filtriraniLekari" v-on:click="izaberiLekara(le)">
 				      	<td width="30%">{{ le.ime }}</td>
 				      	<td width="30%">{{ le.prezime }}</td>
 				      	<td width="20%">{{ le.prosecnaOcena }}</td>
@@ -187,7 +185,12 @@ Vue.component('zaposleni', {
 		    	timestamp = datum.getTime() - 7200000;
 				axios
 				.put("/lekari/vratiSlobodneTermine", {id: lekar.id, datum: timestamp, tipPregleda: this.tip},  { headers: { Authorization: 'Bearer ' + this.token }})
-				 .then(response => (this.termini = response.data))
+				 .then(response => {
+					 this.termini = response.data;
+					 if (this.termini.length > 0) {
+						 $("#prikazSlobodnihTermina").modal("show");
+					 }
+				 })
 			     .catch(function (error) { console.log(error); });
 			}
 		},
@@ -223,13 +226,21 @@ Vue.component('zaposleni', {
 			.then(response => {this.potvrda = response.data; $('#iksic').click(); this.$router.push({ name: 'potvrdaZakazivanja', params: {pregled : this.potvrda, zaposleni: true}});})
 		    .catch(function (error) { console.log(error); });
 		},
+		ocisti : function () {
+			this.imePrezime = "";
+			this.ocenaFilter = false;
+			this.ocenaDonja = 0;
+			this.ocenaGornja = 0;
+			this.vreme = null;
+			this.tip = "";
+		},
 	},
 	computed: {
 	    filtriraniLekari : function () {
 	    	return this.lekari.filter(lekar => {
 	    		if (this.tip != "" && this.vreme != null) {
 	    			this.slobodanLekar(lekar)
-					return lekar.ime.toLowerCase().includes(this.ime.toLowerCase()) && lekar.prezime.toLowerCase().includes(this.prezime.toLowerCase()) &&
+					return (lekar.ime.toLowerCase().includes(this.imePrezime.toLowerCase().trim()) || lekar.prezime.toLowerCase().includes(this.imePrezime.toLowerCase().trim())) &&
 					this.zadovoljavaOcenu(lekar) && lekar.slobodan;
 	    		} else {
 	    			return true;

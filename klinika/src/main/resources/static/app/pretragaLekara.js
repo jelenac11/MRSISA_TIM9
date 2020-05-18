@@ -8,8 +8,7 @@ Vue.component('pretraga-lekara', {
 			ocenaFilter : false,
 			ocenaDonja: 0,
 			ocenaGornja: 0,
-			ime: "",
-			prezime: "",
+			imePrezime: "",
 			tip: "",
 			vreme: "",
 			id: 0,
@@ -23,34 +22,35 @@ Vue.component('pretraga-lekara', {
 		<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
 		<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
-			<div class="input-group">
-				<label for="naziv" class="mt-3 ml-2">Naziv</label>
-				<input type="text" v-model="klinika.naziv" class="form-control  m-2" style="background-color: #fff;" id="naziv" readonly>
-				<label for="opis" class="mt-3">Opis</label>
-				<input type="text" v-model="klinika.opis" class="form-control m-2" style="background-color: #fff;" id="opis" readonly>
-				<label for="lokacija" class="mt-3">Lokacija</label>
-				<input type="text" v-model="klinika.lokacija" class="form-control m-2" style="background-color: #fff;" id="lokacija" readonly>
-				<label for="ocena" class="mt-3">Ocena</label>
-				<input type="text" v-model="klinika.ocena" class="form-control m-2" style="background-color: #fff;" id="ocena" readonly>
+			<div class="kartica mt-2 mx-2" style="width: 98.7%;">
+			  <div class="kartica-body">
+			    <h4 class="kartica-title">{{ klinika.naziv + ", " + klinika.ocena }}</h4>
+			    <h6 class="kartica-subtitle mb-2 text-muted">{{ klinika.lokacija }}</h6>
+			    <p class="kartica-text">{{ klinika.opis }}</p>
+			  </div>
 			</div>
 			<div class="input-group">
 				<span class="input-group-btn">
-			    	<a class="btn btn-secondary m-2" data-toggle="collapse" href="#predefinisaniTermini" role="button">
+			    	<a class="btn btn-primary my-2 mx-2" data-toggle="collapse" href="#predefinisaniTermini" role="button">
 				    	Brzo zakazivanje
 				  	</a>
 			  	</span>
 			  	<span class="input-group-btn">
-			    	<a class="btn btn-secondary m-2" data-toggle="collapse" href="#filteriLekari" role="button">
+			    	<a class="btn btn-info my-2 mr-2" data-toggle="collapse" href="#filteriLekari" role="button">
 				    	Prikaži filtere
 				  	</a>
 			  	</span>
-				<input type="search" class="form-control col-4  m-2" v-model="ime"  placeholder="Ime..."/>
-				<input type="search" class="form-control col-4 m-2" v-model="prezime"  placeholder="Prezime..."/>
+				<input type="search" class="form-control col-4 my-2 mr-2" style="height:40px" v-model="imePrezime" placeholder="Ime i prezime..."/>
+				<span class="input-group-btn">
+					<button class="btn btn-danger mt-2 mr-2" v-on:click="ocisti">
+				    	Očisti
+				  	</button>
+				</span>
 			</div>
 			<div class="collapse" id="predefinisaniTermini">
-				<div class="card card-body m-2">
+				<div class="kartica kartica-body m-2">
 		    		<form>
-					  	<div class="form-row mb-4"> 
+					  	<div class="form-row"> 
 					  		<table class="table table-hover">
 							  	<thead class="thead-light">
 							    	<tr>
@@ -80,18 +80,18 @@ Vue.component('pretraga-lekara', {
 		  		</div>
 			</div>
 			<div class="collapse" id="filteriLekari">
-		  		<div class="card card-body m-2">
+		  		<div class="kartica kartica-body m-2">
 		    		<form>
 					  	<div class="form-row mb-4"> 
 					  		<div class="mt-5 mr-3 custom-control custom-checkbox">
 					  			<input type="checkbox" class="custom-control-input" id="ocenaFilter" v-model="ocenaFilter">
 					  			<label class="custom-control-label" for="ocenaFilter"><font size="4">Ocena</font></label>
 							</div>
-					  		<div class="col-2 mt-1">
+					  		<div class="col-2 mt-1 mx-3">
 					    	 	<label for="odocena">Od</label>
 								<input type="number" v-model="ocenaDonja" class="form-control" id="odocena" placeholder="Od">
 							</div>
-							<div class="col-2 mt-1">
+							<div class="col-2 mt-1 mx-3">
 					    	 	<label for="doocena">Do</label>
 								<input type="number" v-model="ocenaGornja" class="form-control" id="doocena" placeholder="Do">
 							</div>
@@ -116,6 +116,7 @@ Vue.component('pretraga-lekara', {
 			  	</tbody>
 			</table>
 		</div>
+		
 		<div class="modal fade" id="prikazSlobodnihTermina" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-lg" role="document">
 		    	<div class="modal-content">
@@ -196,11 +197,17 @@ Vue.component('pretraga-lekara', {
 			.then(response => {this.potvrda = response.data; $('#iksic').click(); this.$router.push({ name: 'potvrdaZakazivanja', params: {pregled : this.potvrda, zaposleni: false}});})
 		    .catch(function (error) { console.log(error); });
 		},
+		ocisti : function () {
+			this.imePrezime = "";
+			this.ocenaFilter = false;
+			this.ocenaDonja = 0;
+			this.ocenaGornja = 0;
+		},
 	},
 	computed: {
 	    filtriraniLekari : function () {
 	    	return this.lekari.filter(lekar => {
-				return lekar.ime.toLowerCase().includes(this.ime.toLowerCase()) && lekar.prezime.toLowerCase().includes(this.prezime.toLowerCase()) &&
+				return (lekar.ime.toLowerCase().includes(this.imePrezime.toLowerCase().trim()) || lekar.prezime.toLowerCase().includes(this.imePrezime.toLowerCase().trim())) &&
 				this.zadovoljavaOcenu(lekar);
 	    	})
 	    },

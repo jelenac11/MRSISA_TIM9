@@ -23,15 +23,15 @@ Vue.component("istorija-pregleda", {
 				    </v-tabs>
 				</div>
 				<div class="naviga tab-content">
-					<table class="table table-hover table-striped">
+					<table class="table table-hover table-striped sortable" id="tabela">
 					  	<thead class="thead-light">
 					    	<tr>
-						      	<th scope="col" width="20%">Klinika</th>
-						      	<th scope="col" width="20%">Tip pregleda</th>
-						      	<th scope="col" width="20%">Vreme</th>
-						      	<th scope="col" width="20%">Lekar</th>
-						      	<th scope="col" width="10%">Broj sale</th>
-						      	<th scope="col" width="10%"></th>
+						      	<th scope="col" width="20%"><button class="btn">Klinika</button></th>
+						      	<th scope="col" width="20%"><button class="btn">Tip pregleda</button></th>
+						      	<th data-dateformat="DD/MM/YYYY h:mm:ss a" scope="col" width="20%"><button class="btn">Vreme</button></th>
+						      	<th scope="col" width="20%"><button class="btn">Lekar</button></th>
+						      	<th scope="col" width="10%"><button class="btn">Broj sale</button></th>
+						      	<th scope="col" data-defaultsort='disabled' width="10%"></th>
 					    	</tr>
 					  	</thead>
 					  	<tbody>
@@ -55,8 +55,8 @@ Vue.component("istorija-pregleda", {
 		urediDatum: function(datum){
 	        var date = new Date(datum);
 	        datum = date.toLocaleDateString('en-GB', {
-	        day: 'numeric', month: 'short', year: 'numeric'
-	        }).replace(/ /g, '-');
+	        day: 'numeric', month: 'numeric', year: 'numeric'
+	        }).replace(/ /g, '.');
 	        vreme = date.toLocaleTimeString();
 	        return datum + " " + vreme
 		},
@@ -106,5 +106,14 @@ Vue.component("istorija-pregleda", {
         	this.ucitajPreglede();
         })
         .catch(function (error) { console.log(error); });
+	},
+	mounted() {
+		$.bootstrapSortable({ applyLast: true });
+		$("#tabela").on('sorted', function () { 
+			if (!this.sortirano) {
+				this.sortirano = true;
+				$.bootstrapSortable({ applyLast: true });
+			} 
+		});
 	}
 });

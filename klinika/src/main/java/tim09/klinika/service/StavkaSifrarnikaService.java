@@ -17,6 +17,7 @@ public class StavkaSifrarnikaService {
 	public StavkaSifrarnika findBySifra(String sifra) {
 		return stavkaSifrarnikaRepository.findBySifra(sifra);
 	}
+
 	public StavkaSifrarnika findOne(Long id) {
 		return stavkaSifrarnikaRepository.findById(id).orElseGet(null);
 	}

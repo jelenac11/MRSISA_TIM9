@@ -26,4 +26,16 @@ public class ZdravstveniKartonController {
 		ZdravstveniKarton z = zdravstveniKartonService.findOne(p.getId());
 		return ResponseEntity.ok(new ZdravstveniKartonDTO(z));
 	}
+	
+	@PreAuthorize("hasAnyRole('LEKAR', 'MED_SESTRA')")
+	@PutMapping(value = "/izmeniKarton", consumes = "application/json")
+	public ResponseEntity<Boolean> izmeniKarton(@RequestBody ZdravstveniKartonDTO zk) {
+		ZdravstveniKarton z = zdravstveniKartonService.findOne(zk.getId());
+		z.setDioptrija(zk.getDioptrija());
+		z.setKrvnaGrupa(zk.getKrvnaGrupa());
+		z.setTezina(zk.getTezina());
+		z.setVisina(zk.getVisina());
+		zdravstveniKartonService.save(z);
+		return ResponseEntity.ok(true);
+	}
 }
