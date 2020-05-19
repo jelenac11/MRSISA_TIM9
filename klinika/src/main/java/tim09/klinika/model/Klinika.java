@@ -200,4 +200,5 @@ public class Klinika {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
+
 }

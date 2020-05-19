@@ -16,6 +16,10 @@ Vue.component('pretraga-lekara', {
 			predefinisani: [],
 			lekar: 0,
 			potvrda: {},
+			ocena: {},
+			izabraniLekar: {},
+			mozeDaOceniKliniku: false,
+			mozeDaOceniLekara: false,
 		} 
 	},
 	template: `
@@ -24,7 +28,17 @@ Vue.component('pretraga-lekara', {
 		<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
 			<div class="kartica mt-2 mx-2" style="width: 98.7%;">
 			  <div class="kartica-body">
-			    <h4 class="kartica-title">{{ klinika.naziv + ", " + klinika.ocena }}</h4>
+			    <div class="kartica-title">
+			    	<h4 class="alignleft">{{ klinika.naziv + ", Ocena: " + klinika.ocena }}</h4>
+			    	<p v-if="mozeDaOceniKliniku" class="alignright">
+						<i class="far fa-star unchecked" v-on:click="oceni('1z')" id="1z"></i> 
+						<i class="far fa-star unchecked" v-on:click="oceni('2z')" id="2z"></i>
+					   	<i class="far fa-star unchecked" v-on:click="oceni('3z')" id="3z"></i>
+					   	<i class="far fa-star unchecked" v-on:click="oceni('4z')" id="4z"></i>
+					   	<i class="far fa-star unchecked" v-on:click="oceni('5z')" id="5z"></i>
+					</p>
+			    	<div style="clear: both;"></div>
+			  	</div>
 			    <h6 class="kartica-subtitle mb-2 text-muted">{{ klinika.lokacija }}</h6>
 			    <p class="kartica-text">{{ klinika.opis }}</p>
 			  </div>
@@ -102,16 +116,20 @@ Vue.component('pretraga-lekara', {
 			<table class="table table-hover table-striped">
 			  	<thead class="thead-light">
 			    	<tr>
-				      	<th scope="col" width="40%">Ime</th>
-				      	<th scope="col" width="40%">Prezime</th>
-				      	<th scope="col" width="20%">Ocena</th>
+				      	<th scope="col" width="36%">Ime</th>
+				      	<th scope="col" width="36%">Prezime</th>
+				      	<th scope="col" width="10%">Ocena</th>
+				      	<th scope="col" width="18%"></th>
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="le in filtriraniLekari" v-on:click="izaberiLekara(le)" data-toggle="modal" data-target="#prikazSlobodnihTermina">
-				      	<td width="30%">{{ le.ime }}</td>
-				      	<td width="30%">{{ le.prezime }}</td>
-				      	<td width="20%">{{ le.prosecnaOcena }}</td>
+			  		<tr v-for="le in filtriraniLekari" v-on:click="izaberiLekara(le)">
+				      	<td width="36%">{{ le.ime }}</td>
+				      	<td width="36%">{{ le.prezime }}</td>
+				      	<td width="10%">{{ le.prosecnaOcena }}</td>
+				      	<td width="18%" style="text-align:left">
+							
+				      	</td>
 			    	</tr>
 			  	</tbody>
 			</table>
@@ -121,7 +139,17 @@ Vue.component('pretraga-lekara', {
 			<div class="modal-dialog modal-lg" role="document">
 		    	<div class="modal-content">
 		      		<div class="modal-header">
-		        		<h5 class="modal-title">Slobodni termini</h5>
+		        		<div class="modal-title">
+		        			<h4 class="alignleft">Slobodni termini, {{ izabraniLekar.ime + " " + izabraniLekar.prezime }}:&nbsp</h4>
+					    	<p v-if="mozeDaOceniLekara" class="alignright">
+								<i class="far fa-star unchecked" v-on:click="oceniLekara('1zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'1zl' + izabraniLekar.id"></i> 
+								<i class="far fa-star unchecked" v-on:click="oceniLekara('2zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'2zl' + izabraniLekar.id"></i>
+							   	<i class="far fa-star unchecked" v-on:click="oceniLekara('3zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'3zl' + izabraniLekar.id"></i>
+							   	<i class="far fa-star unchecked" v-on:click="oceniLekara('4zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'4zl' + izabraniLekar.id"></i>
+								<i class="far fa-star unchecked" v-on:click="oceniLekara('5zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'5zl' + izabraniLekar.id"></i>
+							</p>
+					    	<div style="clear: both;"></div>
+		        		</div>
 		        		<button type="button" class="close" id = "iksic" data-dismiss="modal"><span>&times;</span></button>
 		      		</div>
 		      		<div class="modal-body">
@@ -163,11 +191,48 @@ Vue.component('pretraga-lekara', {
 	    	}
 		},
 		izaberiLekara: function(lekar){
-			this.lekar = lekar.id;
+			var list = [ '1z', '2z', '3z', '4z', '5z' ];
+			this.izabraniLekar = lekar;
+			axios
+	        .post('/pregledi/mozeDaOceniLekara', this.izabraniLekar, { headers: { Authorization: 'Bearer ' + this.token }} )
+	        .then(response => {
+	        	this.mozeDaOceniLekara = response.data;
+	        })
+	        .catch(function (error) { console.log(error); });
+			if (this.mozeDaOceniLekara) {
+				axios
+		        .post('/ocene/ucitajOcenuPacijentaLekara', this.izabraniLekar, { headers: { Authorization: 'Bearer ' + this.token }} )
+		        .then(response => {
+		        	if (response.data != null) {
+		        		this.$set(this.izabraniLekar, 'ocena', response.data);
+		        	}
+					for (i = 0; i < 5; i++) {
+						document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.remove("checked");
+						document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.add("unchecked");
+						document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.remove("fas");
+						document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.add("far");
+					}
+		        	if (this.izabraniLekar.ocena.ocenjivac != null) {
+		        		for (i = 0; i < this.izabraniLekar.ocena.vrednost; i++) {
+		        			document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.remove("unchecked");
+							document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.add("checked");
+							document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.remove("far");
+							document.getElementById(list[i] + "l" + this.izabraniLekar.id).classList.add("fas");
+		        		}
+		        	}
+		        })
+		        .catch(function (error) { console.log(error); });
+			}
+			
 			axios
 			.put("/lekari/vratiSlobodneTermine", {id: lekar.id, datum: this.vreme, tipPregleda: this.tip},  { headers: { Authorization: 'Bearer ' + this.token }})
-			 .then(response => (this.termini = response.data))
-		     .catch(function (error) { console.log(error); });
+			.then(response => {
+				this.termini = response.data;
+				if (this.termini.length > 0) {
+					$("#prikazSlobodnihTermina").modal("show");
+				}
+			})
+		    .catch(function (error) { console.log(error); });
 		},
 		urediDatum: function(datum){
 	        var date = new Date(datum);
@@ -203,6 +268,82 @@ Vue.component('pretraga-lekara', {
 			this.ocenaDonja = 0;
 			this.ocenaGornja = 0;
 		},
+		oceni : function(element) {
+			var list = [ '1z', '2z', '3z', '4z', '5z' ];
+			var cls = document.getElementById(element).className;
+			if(cls.includes("unchecked")) {
+				for (i = 0; i <= list.indexOf(element); i++) {
+					document.getElementById(list[i]).classList.remove("unchecked");
+					document.getElementById(list[i]).classList.add("checked");
+					document.getElementById(list[i]).classList.remove("far");
+					document.getElementById(list[i]).classList.add("fas");
+				}
+			} else {
+				for (i = list.indexOf(element) + 1; i < list.length; i++) {
+					document.getElementById(list[i]).classList.remove("checked");
+					document.getElementById(list[i]).classList.add("unchecked");
+					document.getElementById(list[i]).classList.remove("fas");
+					document.getElementById(list[i]).classList.add("far");
+				}
+			}
+			this.ocena.id = 0;
+			this.ocena.ocenjivac = this.ulogovan;
+			this.ocena.klinika = this.klinika;
+			this.ocena.vrednost = list.indexOf(element) + 1;
+			
+			axios
+	        .post('/ocene/oceniKliniku', this.ocena, { headers: { Authorization: 'Bearer ' + this.token }} )
+	        .then(response => {
+	        	toast("Ocenili ste kliniku ocenom " + this.ocena.vrednost);
+	        	axios
+	    		.get('/klinike/' +  this.id, { headers: { Authorization: 'Bearer ' + this.token }})
+	    		.then(response => {
+	    			this.klinika = response.data;
+	    		})
+		        .catch(function (error) { console.log(error); });
+	        })
+	        .catch(function (error) { console.log(error); });
+		},
+		oceniLekara : function(element, lekar) {
+			this.neOtvarajModal = true;
+			var list = [ '1zl' + lekar.id, '2zl' + lekar.id, '3zl' + lekar.id, '4zl' + lekar.id, '5zl' + lekar.id ];
+			var cls = document.getElementById(element).className;
+			if(cls.includes("unchecked")) {
+				for (i = 0; i <= list.indexOf(element); i++) {
+					document.getElementById(list[i]).classList.remove("unchecked");
+					document.getElementById(list[i]).classList.add("checked");
+					document.getElementById(list[i]).classList.remove("far");
+					document.getElementById(list[i]).classList.add("fas");
+				}
+			} else {
+				for (i = list.indexOf(element) + 1; i < list.length; i++) {
+					document.getElementById(list[i]).classList.remove("checked");
+					document.getElementById(list[i]).classList.add("unchecked");
+					document.getElementById(list[i]).classList.remove("fas");
+					document.getElementById(list[i]).classList.add("far");
+				}
+			}
+			
+			let ocenaLekara = {
+				id: 0,
+				ocenjivac: this.ulogovan,
+				lekar: lekar,
+				vrednost: list.indexOf(element) + 1,
+			}
+			
+			axios
+	        .post('/ocene/oceniLekara', ocenaLekara, { headers: { Authorization: 'Bearer ' + this.token }} )
+	        .then(response => {
+	        	toast("Ocenili ste lekara " + lekar.ime + " " + lekar.prezime + " ocenom " + ocenaLekara.vrednost);
+	        	axios
+	        	.get('/lekari/ucitajSveLekareKlinike/' + this.id, { headers: { Authorization: 'Bearer ' + this.token }} )
+	            .then(response => {
+	            	this.lekari = response.data;
+	            })
+	            .catch(function (error) { console.log(error); });
+	        })
+	        .catch(function (error) { console.log(error); });
+		},
 	},
 	computed: {
 	    filtriraniLekari : function () {
@@ -217,18 +358,49 @@ Vue.component('pretraga-lekara', {
 		this.tip = this.$route.params.tip;
 		this.vreme = this.$route.params.vreme;
 		this.id = this.$route.params.id;
+	},
+	mounted() {
+		var list = [ '1z', '2z', '3z', '4z', '5z' ];
+
 		axios
 		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => { this.ulogovan = response.data;})
         .catch(function (error) { console.log(error); });
 		axios
-		.get('/klinike/' +  this.id, { headers: { Authorization: 'Bearer ' + this.token }})
-		.then(response => (this.klinika = response.data))
-        .catch(function (error) { console.log(error); });
-		axios
         .put('/klinike/ucitajSlobodneLekare', { id: this.id, datum: this.vreme, tipPregleda: this.tip}, { headers: { Authorization: 'Bearer ' + this.token }} )
-        .then(response => (this.lekari = response.data))
+        .then(response => {
+        	this.lekari = response.data;
+        })
         .catch(function (error) { console.log(error); });
 		this.dobaviPredefinisane();
-	}
+		axios
+		.get('/klinike/' +  this.id, { headers: { Authorization: 'Bearer ' + this.token }})
+		.then(response => {
+			this.klinika = response.data
+			axios
+	        .post('/pregledi/mozeDaOceniKliniku', this.klinika, { headers: { Authorization: 'Bearer ' + this.token }} )
+	        .then(response => {
+	        	this.mozeDaOceniKliniku = response.data;
+	        })
+	        .catch(function (error) { console.log(error); });
+			axios
+	        .post('/ocene/ucitajOcenuPacijentaKlinike', this.klinika, { headers: { Authorization: 'Bearer ' + this.token }} )
+	        .then(response => {
+	        	if (response.data != null) {
+	        		this.ocena = response.data;
+	        	}
+	        	
+	        	if (this.ocena.ocenjivac != null) {
+	        		for (i = 0; i < this.ocena.vrednost; i++) {
+	        			document.getElementById(list[i]).classList.remove("unchecked");
+						document.getElementById(list[i]).classList.add("checked");
+						document.getElementById(list[i]).classList.remove("far");
+						document.getElementById(list[i]).classList.add("fas");
+	        		}
+	        	}
+	        })
+	        .catch(function (error) { console.log(error); });
+		})
+        .catch(function (error) { console.log(error); });
+	},
 })

@@ -30,9 +30,12 @@ public class Lekar extends MedicinskoOsoblje {
 
 	@OneToMany(mappedBy = "lekar", cascade = CascadeType.ALL)
 	private Set<OcenaLekara> ocene;
-	
+
 	@Column(name = "aktivan")
 	private boolean aktivan;
+
+	@Column(name = "prosecna_ocena")
+	private double prosecnaOcena;
 
 	public Lekar() {
 
@@ -76,6 +79,14 @@ public class Lekar extends MedicinskoOsoblje {
 
 	public void setAktivan(boolean aktivan) {
 		this.aktivan = aktivan;
+	}
+	
+	public double getProsecnaOcena() {
+		return this.prosecnaOcena;
+	}
+
+	public void setProsecnaOcena(double prosecnaOcena) {
+		this.prosecnaOcena = prosecnaOcena;
 	}
 
 }

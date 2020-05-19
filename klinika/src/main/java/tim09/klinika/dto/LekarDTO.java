@@ -11,21 +11,21 @@ public class LekarDTO extends MedicinskoOsobljeDTO {
 	private List<TipPregledaDTO> specijalnosti;
 	private double prosecnaOcena;
 	private boolean slobodan;
-	
+
 	public LekarDTO() {
 
 	}
 
 	public LekarDTO(Lekar l) {
 		super(l);
-		if(l==null) {
+		if (l == null) {
 			return;
 		}
 		this.specijalnosti = new ArrayList<TipPregledaDTO>();
 		for (TipPregleda tp : l.getSpecijalnosti()) {
 			this.specijalnosti.add(new TipPregledaDTO(tp));
 		}
-		this.prosecnaOcena = 1;
+		this.prosecnaOcena = l.getProsecnaOcena();
 		this.slobodan = true;
 	}
 

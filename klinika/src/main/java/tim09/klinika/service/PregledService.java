@@ -321,4 +321,12 @@ public class PregledService {
 		return pregledRepository.dobaviSvePregledeBezSale();
 	}
 
+	public List<Pregled> findByKlinikaIdAndPacijentIdAndVremeBeforeAndOtkazan(Long id, Long id2, long time, boolean b) {
+		return pregledRepository.findByKlinikaIdAndPacijentIdAndVremeBeforeAndOtkazan(id, id2, time, b);
+	}
+
+	public List<Pregled> findByLekarIdAndPacijentIdAndVremeBeforeAndOtkazan(Long id, Long id2, long time, boolean b) {
+		return pregledRepository.findByLekarIdAndPacijentIdAndVremeBeforeAndOtkazan(id, id2, time, b);
+	}
+
 }

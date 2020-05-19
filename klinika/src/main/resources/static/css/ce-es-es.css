@@ -3,6 +3,38 @@ body {
   background-color: #f5f5f5;
 }
 
+.alignleft {
+	float: left;
+}
+.alignright {
+	float: right;
+}
+
+.far
+{
+  font-size:25px !important;
+  cursor:pointer;
+  color:grey;
+}
+.fas
+{
+  font-size:25px !important;
+  cursor:pointer;
+  color:#FFEB00;
+}
+.checked
+{
+  color:#FFEB00;
+}
+.unchecked
+{
+  color:grey;
+}
+.unchecked:hover
+{
+  color:#FFEB00;
+}
+
 input[type="date"]::-webkit-clear-button {
     display: none;
 }

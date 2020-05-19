@@ -1,5 +1,7 @@
 package tim09.klinika.dto;
 
+import tim09.klinika.model.OcenaKlinike;
+
 public class OcenaKlinikeDTO extends OcenaDTO {
 
 	private KlinikaDTO klinika;
@@ -11,6 +13,13 @@ public class OcenaKlinikeDTO extends OcenaDTO {
 	public OcenaKlinikeDTO(long id, int vrednost, PacijentDTO ocenjivac, KlinikaDTO klinika) {
 		super(id, vrednost, ocenjivac);
 		this.klinika = klinika;
+	}
+	
+	public OcenaKlinikeDTO(OcenaKlinike o) {
+		this.klinika = new KlinikaDTO(o.getKlinika());
+		this.setId(o.getId());
+		this.setOcenjivac(new PacijentDTO(o.getOcenjivac()));
+		this.setVrednost(o.getVrednost());
 	}
 
 	public KlinikaDTO getKlinika() {

@@ -16,13 +16,16 @@ Vue.component("profil-pacijenta", {
 				recepti: [],
 				pregled: {},
 			},
+			uloga: "",
 			sifrarnikLekova: {},
 			sifrarnikDijagnoza: {},
 			imaBolesti: false,
 			nijeObavioNikadPregled: false,
 			dijalog: false,
 			submitovanoIzvestaj: false,
+			submitovanoKarton: false,
 			zdravstveniKarton: {},
+			noviZdravstveniKarton: {},
 			izmena: "",
 		} 
 	},
@@ -77,8 +80,8 @@ Vue.component("profil-pacijenta", {
 				    	</div>
 				  	</div>
 				  	<div>
-				  		<button class="btn btn-lg btn-primary" v-on:click="zapocni">Započni pregled</button>
-						<button class="btn btn-lg btn-info" @click="dijalog = true" v-on:click="dobaviZdravstveniKarton" :disabled="!nijeObavioNikadPregled">Zdravstveni karton</button>
+				  		<button v-if="uloga == 'ROLE_LEKAR'" class="btn btn-lg btn-primary" v-on:click="zapocni">Započni pregled</button>
+						<button class="btn btn-lg btn-info" @click="dijalog = true" v-on:click="dobaviZdravstveniKarton" :disabled="!nijeObavioNikadPregled && this.uloga == 'ROLE_LEKAR'">Zdravstveni karton</button>
 						<button class="btn btn-lg btn-secondary" style="float: right;" v-on:click="nazad">Nazad</button>
 				  	</div>
 				</div>
@@ -144,12 +147,76 @@ Vue.component("profil-pacijenta", {
 											</div>
 								  		</li>
 									</ul>
+									<button v-if="uloga == 'ROLE_MED_SESTRA'" class="m-2 btn btn-lg btn-primary" data-toggle="modal" data-target="#izmenaKartona">Izmeni podatke</button>
 								</div>
 							</div>
 						</div>	
 					</div>	
 				</v-card>		
 			</v-dialog>
+			
+			<div class="modal fade" id="izmenaKartona" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-lg" role="document">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+			        		<h5 class="modal-title">Zdravstveni karton</h5>
+			        		<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+			      		</div>
+			      		<div class="modal-body">
+			        		<form class="needs-validation mb-4" v-bind:class="{ 'was-validated': submitovanoKarton }" novalidate @submit.prevent="izmeniKarton" id="forma-izmeni-karton">
+							  	<div class="form-row">
+							    	<div class="col">
+							    	 	<label for="ime" class="mt-1">Ime</label>
+										<input type="text" v-model="pacijent.ime" class="form-control" id="ime" placeholder="Ime" disabled required>
+									</div>
+							    	<div class="col">
+							    	 	<label for="prezime" class="mt-1">Prezime</label>
+										<input type="text" v-model="pacijent.prezime" class="form-control" id="prezime" placeholder="Prezime" disabled required>
+									</div>
+							  	</div>
+							  	<div class="form-row">
+							  		<div class="col">
+							    	 	<label for="visina">Visina</label>
+										<input type="number" v-model="noviZdravstveniKarton.visina" min="0" step="1" class="form-control" id="visina" placeholder="Visina">
+										<div class="invalid-feedback" id="izmenaInvalid">Unesite ispravnu visinu.</div>
+									</div>
+									<div class="col">
+							    	 	<label for="tezina">Težina</label>
+										<input type="number" v-model="noviZdravstveniKarton.tezina" min="0" step="1" class="form-control" id="tezina" placeholder="Težina">
+										<div class="invalid-feedback" id="izmenaInvalid">Unesite ispravnu težinu.</div>
+									</div>
+							  	</div>
+							  	<div class="form-row">
+							  		<div class="col">
+							  			<label for="krgr">Krvna grupa</label>
+							    	 	<select class="custom-select mt-0" v-model="noviZdravstveniKarton.krvnaGrupa" id="krgr">
+									    	<option value="A+">A+</option>
+									    	<option value="A-">A-</option>
+									    	<option value="B+">B+</option>
+									    	<option value="B-">B-</option>
+									    	<option value="AB+">AB+</option>
+									    	<option value="AB-">AB-</option>
+									    	<option value="0+">0+</option>
+									    	<option value="0-">0-</option>
+									  	</select>
+									</div>
+									<div class="col">
+							    	 	<label for="diop">Dioptrija</label>
+										<input type="number" v-model="noviZdravstveniKarton.dioptrija" min="0" step=".1" class="form-control" id="diop" placeholder="Dioptrija">
+										<div class="invalid-feedback" id="izmenaInvalid">Unesite dioptriju.</div>
+									</div>
+							  	</div>
+							  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+							  		Sačuvaj izmene
+							  	</button>
+							</form>
+			      		</div>
+			      		<div class="modal-footer">
+			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			      		</div>
+			    	</div>
+				</div>
+			</div>
 			
 			<div class="modal fade" id="prikaziIzvestajBezIzmene" tabindex="-1" role="dialog">
 				<div class="modal-dialog modal-lg" role="document">
@@ -287,8 +354,13 @@ Vue.component("profil-pacijenta", {
     		.put('/zdravstveniKartoni/dobaviKartonPacijenta', this.pacijent, { headers: { Authorization: 'Bearer ' + this.token }} )
             .then(response => { 
             	this.zdravstveniKarton = response.data;
+            	this.noviZdravstveniKarton = JSON.parse(JSON.stringify(this.zdravstveniKarton));
             	var nema = this.zdravstveniKarton.bolesti === undefined || this.zdravstveniKarton.bolesti.length == 0;
     			this.imaBolesti = !nema;
+    			if (this.uloga == "ROLE_MED_SESTRA") {
+    				this.dijalog = false;
+    				$("#izmenaKartona").modal("show");
+    			}
             })
             .catch(function (error) { console.log(error); });
 		},
@@ -346,6 +418,17 @@ Vue.component("profil-pacijenta", {
 				}
 			}
 		},
+		izmeniKarton : function() {
+			this.submitovanoKarton = true;
+			if (document.getElementById('forma-izmeni-karton').checkValidity() === true) {
+				axios
+	    		.put('/zdravstveniKartoni/izmeniKarton', this.noviZdravstveniKarton, { headers: { Authorization: 'Bearer ' + this.token }} )
+	            .then(response => {
+	            	toast("Uspešno izmenjen zdravstveni karton");
+	            })
+	    		.catch(function (error) { console.log(error); });
+			}
+		},
 		sadrzi (lekic) {
 			for (let l of this.noviIzvestaj.recepti) {
 				if (l.lek.id == lekic.id) {
@@ -362,17 +445,25 @@ Vue.component("profil-pacijenta", {
 		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
         .then(response => { 
         	this.korisnik=response.data;
-			axios
-			.post('pregledi/provjeraPregledaZaPacijentaOdLekara', { idLekara:this.korisnik.id, idPacijenta:this.pacijent.id }, { headers: { Authorization: 'Bearer ' + this.token }})
-			.then(response=>{
-				if (response.data == true) {
-					this.nijeObavioNikadPregled = true;
-				} else
-				{
-					this.nijeObavioNikadPregled = false;
-				}
-			})
-			.catch(function (error) { console.log(error); });
+        	axios
+    		.put('/korisnici/dobaviUlogu', this.korisnik, { headers: { Authorization: 'Bearer ' + this.token }} )
+            .then(response => { 
+            	this.uloga = response.data;
+            	if (this.uloga == "ROLE_LEKAR") {
+            		axios
+        			.post('pregledi/provjeraPregledaZaPacijentaOdLekara', { idLekara:this.korisnik.id, idPacijenta:this.pacijent.id }, { headers: { Authorization: 'Bearer ' + this.token }})
+        			.then(response=>{
+        				if (response.data == true) {
+        					this.nijeObavioNikadPregled = true;
+        				} else
+        				{
+        					this.nijeObavioNikadPregled = false;
+        				}
+        			})
+        			.catch(function (error) { console.log(error); });
+            	}
+            })
+            .catch(function (error) { console.log(error); });
         })
 		.catch(function (error) { console.log(error); });
 		axios

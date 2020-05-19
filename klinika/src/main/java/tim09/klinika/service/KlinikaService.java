@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.KlinikaDTO;
 import tim09.klinika.dto.LekarDTO;
+import tim09.klinika.dto.OcenaKlinikeDTO;
 import tim09.klinika.dto.OperacijaDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Lekar;
+import tim09.klinika.model.OcenaKlinike;
 import tim09.klinika.model.Operacija;
 import tim09.klinika.model.Pregled;
 import tim09.klinika.model.TipPregleda;
@@ -24,26 +26,26 @@ import tim09.klinika.repository.TipPregledaRepository;
 
 @Service
 public class KlinikaService {
-	
+
 	@Autowired
 	private KlinikaRepository klinikaRepository;
-	
+
 	@Autowired
 	private LekarRepository lekarRepository;
-	
+
 	@Autowired
 	private TipPregledaRepository tipPregledaRepository;
-	
+
 	@Autowired
 	private OperacijaRepository operacijaRepository;
-	
+
 	@Autowired
 	private PregledRepository pregledRepository;
-	
+
 	public Klinika findByNaziv(String naziv) {
 		return klinikaRepository.findByNaziv(naziv);
 	}
-	
+
 	public Klinika findOne(Long id) {
 		return klinikaRepository.findById(id).orElseGet(null);
 	}
@@ -51,7 +53,7 @@ public class KlinikaService {
 	public List<Klinika> findAll() {
 		return klinikaRepository.findAll();
 	}
-	
+
 	public Klinika save(Klinika klinika) {
 		return klinikaRepository.save(klinika);
 	}
@@ -61,17 +63,21 @@ public class KlinikaService {
 	}
 
 	public Boolean proveriTip(PretragaKlinikeDTO pretragaKlinikeDTO) {
-		TipPregleda tp = tipPregledaRepository.findByIdAndNazivAndAktivan(pretragaKlinikeDTO.getId(), pretragaKlinikeDTO.getTipPregleda());
-		if ( tp != null) {
-			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pretragaKlinikeDTO.getId(), tp.getId(), pretragaKlinikeDTO.getDatum());
+		TipPregleda tp = tipPregledaRepository.findByIdAndNazivAndAktivan(pretragaKlinikeDTO.getId(),
+				pretragaKlinikeDTO.getTipPregleda());
+		if (tp != null) {
+			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pretragaKlinikeDTO.getId(),
+					tp.getId(), pretragaKlinikeDTO.getDatum());
 			if (lekari == null) {
 				return false;
-			} 
+			}
 			for (Lekar l : lekari) {
 				long pocetakRadnog = l.getPocetakRadnogVremena();
 				long krajRadnog = l.getKrajRadnogVremena();
-				List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pretragaKlinikeDTO.getDatum(), pretragaKlinikeDTO.getDatum() + 86400000);
-				List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pretragaKlinikeDTO.getDatum(), pretragaKlinikeDTO.getDatum() + 86400000);
+				List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(),
+						pretragaKlinikeDTO.getDatum(), pretragaKlinikeDTO.getDatum() + 86400000);
+				List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pretragaKlinikeDTO.getDatum(),
+						pretragaKlinikeDTO.getDatum() + 86400000);
 				int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
 				for (int i = 0; i <= pregledi.size() - 1; i++) {
 					if (pregledi.get(i).getPacijent() == null) {
@@ -85,22 +91,21 @@ public class KlinikaService {
 		}
 		return false;
 	}
-	
+
 	public boolean update(KlinikaDTO klinikaDTO) {
-		Klinika klinika=findOne(klinikaDTO.getId());
-		Klinika postojiKlinika=null;
-		
-		if(!klinikaDTO.getNaziv().equals(klinika.getNaziv())) {
-			postojiKlinika=klinikaRepository.findByNaziv(klinikaDTO.getNaziv());
+		Klinika klinika = findOne(klinikaDTO.getId());
+		Klinika postojiKlinika = null;
+
+		if (!klinikaDTO.getNaziv().equals(klinika.getNaziv())) {
+			postojiKlinika = klinikaRepository.findByNaziv(klinikaDTO.getNaziv());
 		}
-		
-		if(postojiKlinika==null) {
+
+		if (postojiKlinika == null) {
 			klinika.setNaziv(klinikaDTO.getNaziv());
 			klinika.setLokacija(klinikaDTO.getLokacija());
 			klinika.setOpis(klinikaDTO.getOpis());
 			klinikaRepository.save(klinika);
-		}
-		else {
+		} else {
 			return false;
 		}
 		return true;
@@ -109,14 +114,17 @@ public class KlinikaService {
 	public List<LekarDTO> vratiSlobodneLekare(PretragaKlinikeDTO pkdto) {
 		ArrayList<LekarDTO> lekariDTO = new ArrayList<LekarDTO>();
 		TipPregleda tp = tipPregledaRepository.findByIdAndNazivAndAktivan(pkdto.getId(), pkdto.getTipPregleda());
-		if ( tp != null) {
-			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pkdto.getId(), tp.getId(), pkdto.getDatum()); 
+		if (tp != null) {
+			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pkdto.getId(), tp.getId(),
+					pkdto.getDatum());
 			for (Lekar l : lekari) {
 				if (l.isAktivan()) {
 					long pocetakRadnog = l.getPocetakRadnogVremena();
 					long krajRadnog = l.getKrajRadnogVremena();
-					List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
-					List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pkdto.getDatum(), pkdto.getDatum() + 86400000);
+					List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pkdto.getDatum(),
+							pkdto.getDatum() + 86400000);
+					List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pkdto.getDatum(),
+							pkdto.getDatum() + 86400000);
 					int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
 					for (int i = 0; i <= pregledi.size() - 1; i++) {
 						if (pregledi.get(i).getPacijent() == null) {
@@ -131,5 +139,27 @@ public class KlinikaService {
 		}
 		return lekariDTO;
 	}
-}
 
+	public void izracunajProsek(Long id) {
+		Klinika k = findOne(id);
+		long suma = 0;
+		for (OcenaKlinike ocena : k.getOcene()) {
+			suma += ocena.getVrednost();
+		}
+		k.setProsecnaOcena(round(suma * 1.0 / k.getOcene().size(), 1));
+		save(k);
+	}
+
+	public void dodajOcenu(OcenaKlinike ocena) {
+		Klinika k = findOne(ocena.getKlinika().getId());
+		k.getOcene().add(ocena);
+	}
+
+	public static double round(double value, int places) {
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}
+
+}

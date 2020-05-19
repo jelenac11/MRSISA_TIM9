@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tim09.klinika.dto.KlinikaDTO;
+import tim09.klinika.dto.LekarDTO;
 import tim09.klinika.dto.LekarPacijentDTO;
 import tim09.klinika.dto.PredefinisaniDTO;
 import tim09.klinika.dto.PregledDTO;
@@ -24,8 +28,12 @@ import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.model.AdminKlinike;
+import tim09.klinika.model.Korisnik;
+import tim09.klinika.model.Pacijent;
 import tim09.klinika.model.Pregled;
 import tim09.klinika.service.AdminKlinikeService;
+import tim09.klinika.service.KorisnikService;
+import tim09.klinika.service.PacijentService;
 import tim09.klinika.service.PregledService;
 
 @RestController
@@ -34,6 +42,9 @@ public class PregledController {
 
 	@Autowired
 	private PregledService pregledService;
+
+	@Autowired
+	private KorisnikService korisnikService;
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
@@ -45,9 +56,32 @@ public class PregledController {
 		return new ResponseEntity<Boolean>(uspesno, HttpStatus.OK);
 	}
 
+	@PostMapping(value = "mozeDaOceniKliniku", consumes = "application/json")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<Boolean> mozeDaOceniKliniku(@RequestBody KlinikaDTO klinikaDTO) {
+		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
+		Korisnik pacijent = korisnikService.findByEmail(trenutniKorisnik.getName());
+
+		List<Pregled> pregledi = pregledService.findByKlinikaIdAndPacijentIdAndVremeBeforeAndOtkazan(klinikaDTO.getId(),
+				pacijent.getId(), new Date().getTime(), false);
+		return new ResponseEntity<Boolean>(!pregledi.isEmpty(), HttpStatus.OK);
+	}
+
+	@PostMapping(value = "mozeDaOceniLekara", consumes = "application/json")
+	@PreAuthorize("hasRole('PACIJENT')")
+	public ResponseEntity<Boolean> mozeDaOceniLekara(@RequestBody LekarDTO lekarDTO) {
+		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
+		Korisnik pacijent = korisnikService.findByEmail(trenutniKorisnik.getName());
+
+		List<Pregled> pregledi = pregledService.findByLekarIdAndPacijentIdAndVremeBeforeAndOtkazan(lekarDTO.getId(),
+				pacijent.getId(), new Date().getTime(), false);
+		return new ResponseEntity<Boolean>(!pregledi.isEmpty(), HttpStatus.OK);
+	}
+
 	@PutMapping(value = "/otkaziPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<Boolean> otkaziPregled(@RequestBody PregledDTO pregled) throws MailException, InterruptedException {
+	public ResponseEntity<Boolean> otkaziPregled(@RequestBody PregledDTO pregled)
+			throws MailException, InterruptedException {
 		return new ResponseEntity<>(pregledService.otkaziPregledPacijenta(pregled), HttpStatus.OK);
 	}
 
@@ -108,8 +142,8 @@ public class PregledController {
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<List<PregledDTO>> ucitajSveSlobodnePreglede(@PathVariable("id") long id) {
 		AdminKlinike admin = adminKlinikeService.findOne(id);
-		List<Pregled> pregledi = pregledService.findByKlinikaIdAndVremeAfterAndPacijentIsNull(
-				admin.getKlinika().getId(), new Date().getTime());
+		List<Pregled> pregledi = pregledService
+				.findByKlinikaIdAndVremeAfterAndPacijentIsNull(admin.getKlinika().getId(), new Date().getTime());
 
 		List<PregledDTO> preglediDTO = new ArrayList<PregledDTO>();
 		for (Pregled pregled : pregledi) {
@@ -146,7 +180,7 @@ public class PregledController {
 		return new ResponseEntity<Boolean>(odgovor, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping(value = "/mozeZapocetiPregled")
 	@PreAuthorize("hasRole('LEKAR')")
 	public ResponseEntity<Boolean> mozeZapocetiPregled(@RequestBody LekarPacijentDTO lekarPacijentDTO) {
@@ -161,7 +195,7 @@ public class PregledController {
 		return new ResponseEntity<Boolean>(odgovor, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping(value = "/dobaviPregled")
 	@PreAuthorize("hasRole('LEKAR')")
 	public ResponseEntity<PregledDTO> dobaviPregled(@RequestBody LekarPacijentDTO lekarPacijentDTO) {
@@ -169,7 +203,7 @@ public class PregledController {
 				lekarPacijentDTO.getIdPacijenta(), new Date().getTime());
 		return new ResponseEntity<PregledDTO>(new PregledDTO(pregled), HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/daLiJeZavrsen")
 	@PreAuthorize("hasRole('LEKAR')")
 	public ResponseEntity<Boolean> daLiJeZavrsen(@RequestBody LekarPacijentDTO lekarPacijentDTO) {
@@ -186,10 +220,11 @@ public class PregledController {
 		return new ResponseEntity<Boolean>(zavrsen, HttpStatus.OK);
 
 	}
-	
+
 	@PutMapping(value = "/otkaziPregledLekara", consumes = "application/json")
 	@PreAuthorize("hasRole('LEKAR')")
-	public ResponseEntity<Boolean> otkaziPregledLekara(@RequestBody PretragaLekaraDTO pldto) throws MailException, InterruptedException {
-		return new ResponseEntity<>(pregledService.otkaziPregledLekara(pldto) , HttpStatus.OK);
+	public ResponseEntity<Boolean> otkaziPregledLekara(@RequestBody PretragaLekaraDTO pldto)
+			throws MailException, InterruptedException {
+		return new ResponseEntity<>(pregledService.otkaziPregledLekara(pldto), HttpStatus.OK);
 	}
 }

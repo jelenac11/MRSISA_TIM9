@@ -27,7 +27,7 @@ public class Ocena {
 	@Column(name = "ocena_id")
 	private Long id;
 	
-	@Column(name = "vrednost", unique = true, nullable = false)
+	@Column(name = "vrednost", nullable = false)
 	private int vrednost;
 	
 	@OneToOne(fetch = FetchType.LAZY)

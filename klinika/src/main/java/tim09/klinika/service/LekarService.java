@@ -14,6 +14,8 @@ import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.TipPregledaDTO;
 import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Lekar;
+import tim09.klinika.model.OcenaKlinike;
+import tim09.klinika.model.OcenaLekara;
 import tim09.klinika.model.Operacija;
 import tim09.klinika.model.Pregled;
 import tim09.klinika.model.TipPregleda;
@@ -148,6 +150,28 @@ public class LekarService {
 			}
 		}
 		return zadovoljava;
+	}
+	
+	public void izracunajProsek(Long id) {
+		Lekar l = findOne(id);
+		long suma = 0;
+		for (OcenaLekara ocena : l.getOcene()) {
+			suma += ocena.getVrednost();
+		}
+		l.setProsecnaOcena(round(suma * 1.0 / l.getOcene().size(), 1));
+		save(l);
+	}
+
+	public void dodajOcenu(OcenaLekara ocena) {
+		Lekar l = findOne(ocena.getLekar().getId());
+		l.getOcene().add(ocena);
+	}
+
+	public static double round(double value, int places) {
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 
 }
