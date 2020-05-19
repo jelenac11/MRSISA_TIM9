@@ -152,6 +152,11 @@ public class AuthenticationController {
 	public RedirectView odgovorNaPotvrduTerminaPregleda(@RequestBody OdgovorPregledDTO odgovorPregledDTO) {
 		return autoritetService.odgovorNaPotvrduTerminaPregleda(odgovorPregledDTO);
 	}
+	
+	@PostMapping(value = "/proveriStanjePregleda")
+	public ResponseEntity<String> proveriStanjePregleda(@RequestBody OdgovorPregledDTO odgovorPregledDTO) {
+		return autoritetService.proveriStanjePregleda(odgovorPregledDTO);
+	}
 
 	@PostMapping(value = "/refresh")
 	public ResponseEntity<KorisnikTokenDTO> refreshAuthenticationToken(HttpServletRequest request) {

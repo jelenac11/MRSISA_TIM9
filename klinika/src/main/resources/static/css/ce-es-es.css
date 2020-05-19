@@ -3,6 +3,10 @@ body {
   background-color: #f5f5f5;
 }
 
+input[type="date"]::-webkit-clear-button {
+    display: none;
+}
+
 .navig {
   margin-left: 0px;
 }

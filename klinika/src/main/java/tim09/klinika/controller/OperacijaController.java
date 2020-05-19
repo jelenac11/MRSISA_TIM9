@@ -7,16 +7,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.OperacijaDTO;
 import tim09.klinika.dto.PregledDTO;
+import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
 import tim09.klinika.model.AdminKlinike;
@@ -75,5 +78,11 @@ public class OperacijaController {
 	public ResponseEntity<Boolean> dodijeliSaluOperaciji(@RequestBody SlobodanTerminOperacijaDTO slobodanTerminDTO) {
 		operacijaService.dodijeliSalu(slobodanTerminDTO);
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "otkaziOperacijuLekara")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> otkaziOperacijuLekara(@RequestBody PretragaLekaraDTO pldto) throws MailException, InterruptedException {
+		return new ResponseEntity<>(operacijaService.otkaziOperacijuLekara(pldto), HttpStatus.OK);
 	}
 }

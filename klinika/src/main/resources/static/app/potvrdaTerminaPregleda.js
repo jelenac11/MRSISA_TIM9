@@ -65,9 +65,21 @@ Vue.component("potvrda-termina-pregleda", {
 	methods:{
 		odgovor:function(odg){
 			axios
-			.post('/auth/odgovorNaPotvrduTerminaPregleda',{token:this.token,odgovor:odg})
+			.post('/auth/proveriStanjePregleda', {token:this.token,odgovor:odg})
 			.then(response=>{
-				this.$router.push({ name: 'login' });
+				if (response.data == "odbijen") {
+					alert("Ovaj pregled ste već odbili.");
+				} else if (response.data == "potvrdjen") {
+					alert("Ovaj pregled ste već potvrdili.");
+				} else if (response.data == "ni jedno ni drugo") {
+					axios
+					.post('/auth/odgovorNaPotvrduTerminaPregleda',{token:this.token,odgovor:odg})
+					.then(response=>{
+						this.$router.push({ name: 'login' });
+					});
+				} else {
+					alert("Greška!");
+				}
 			});
 		},
 		formatTrajanje: function(trajanje){

@@ -1,15 +1,18 @@
 package tim09.klinika.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import tim09.klinika.dto.LekarDTO;
 import tim09.klinika.dto.OperacijaDTO;
 import tim09.klinika.dto.PregledDTO;
+import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
 import tim09.klinika.model.AdminKlinike;
@@ -57,7 +60,11 @@ public class OperacijaService {
 		List<Operacija> operacije = operacijaRepository.findBySalaIdAndVremeAfterAndOtkazana(id, time, false);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Operacija operacija : operacije) {
-			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija", operacija.getPacijent().getId(), "", "", "", ""));
+			long pacid = 0;
+			if (operacija.getPacijent() != null) {
+				pacid = operacija.getPacijent().getId();
+			}
+			kalendar.add(new RadniKalendarDTO(operacija.getVreme(), operacija.getVreme() + 3600000, "Operacija", pacid, "", "", "", ""));
 		}
 		return kalendar;
 	}
@@ -94,7 +101,7 @@ public class OperacijaService {
 		emailService.obavestiPacijentaZaOperaciju(operacija, "aleksa.goljovic4@gmail.com");
 		operacijaRepository.save(operacija);
 	}
-
+	
 	public List<Operacija> findByOtkazanaAndKlinikaIdAndVremeAfter(boolean b, Long id, long time) {
 		return operacijaRepository.findByOtkazanaAndKlinikaIdAndVremeAfterAndSalaIdIsNotNull(b, id, time);
 	}
@@ -116,6 +123,35 @@ public class OperacijaService {
 			retVal.append(lekar.getIme() + " " + lekar.getPrezime() + ", ");
 		}
 		return retVal.toString().substring(0, retVal.toString().length() - 2);
+	}
+
+	public Boolean otkaziOperacijuLekara(PretragaLekaraDTO pldto) throws MailException, InterruptedException {
+		Operacija op = operacijaRepository.findByVremeAndLekarId(pldto.getDatum(), pldto.getId());
+		if (op != null) {
+			op.setOtkazana(true);
+			operacijaRepository.save(op);
+			String to = op.getPacijent().getEmail();
+			String slaBr = "";
+			if (op.getSala() != null) {
+				slaBr = op.getSala().getBroj() + "";
+			}
+			String text = "Poštovani,\nVaša operacija je otkazana.\nPodaci o operaciji: \nKlinika: " + op.getKlinika().getNaziv() + "\nLokacija: " + 
+			op.getKlinika().getLokacija() + "\nVreme: " +  new Date(pldto.getDatum()).toString() +  "\nBroj sale: " + slaBr + "\nLekari: " + this.ispisiLekare(op.getLekari()); 
+			emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Otkazana operacija", text);
+			for (Lekar l : op.getLekari()) {
+				if (l.getId() != pldto.getId()) {
+					String tekst = "Poštovani,\nVaša operacija je otkazana.\nPodaci o operaciji:\nPacijent: " +  op.getPacijent().getIme() + " " + op.getPacijent().getPrezime() +"\nVreme: " + 
+					new Date(pldto.getDatum()).toString() +  "\nBroj sale: " + slaBr + "\nLekari: " + this.ispisiLekare(op.getLekari()); 
+					emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Otkazana operacija", tekst);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public List<Operacija> dobaviSveOperacijeBezSale() {
+		return operacijaRepository.dobaviSveOperacijeBezSale();
 	}
 
 }

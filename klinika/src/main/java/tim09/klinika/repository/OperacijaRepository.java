@@ -26,4 +26,10 @@ public interface OperacijaRepository extends JpaRepository<Operacija, Long> {
 	List<Operacija> findByOtkazanaAndKlinikaIdAndVremeAfterAndSalaIdIsNotNull(boolean b, Long id, long time);
 
 	List<Operacija> findByPacijentIdAndOtkazanaFalse(long id);
+
+	@Query(value = "SELECT * FROM operacija op WHERE op.otkazana=false and op.vreme = ?1 and (select count(o) from operisali o where operacija_id = op.operacija_id and lekar_id = ?2)=1", nativeQuery = true)
+	Operacija findByVremeAndLekarId(long vreme, long id);
+
+	@Query(value = "SELECT * FROM operacija o where o.otkazana=false and o.sala_id is null", nativeQuery = true)
+	List<Operacija> dobaviSveOperacijeBezSale();
 }

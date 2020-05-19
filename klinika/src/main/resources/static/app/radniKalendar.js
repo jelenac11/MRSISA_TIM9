@@ -8,6 +8,7 @@ Vue.component("radni-kalendar", {
 		    weekday: [0, 1, 2, 3, 4, 5, 6],
 		    dialog: false,
 		    mozeZapoceti: false,
+		    mozeOtkazati: false,
 		    dogadjaj: {},
 		    value: '',
 		    events: [],
@@ -78,6 +79,9 @@ Vue.component("radni-kalendar", {
 		        		<v-btn class="m-3" v-if="dogadjaj.name == 'Pregled'" v-on:click="zapocniPregled" :disabled="!mozeZapoceti">
 							Započni pregled
 						</v-btn>
+						<v-btn class="m-3" v-if="dogadjaj.name == 'Pregled' || dogadjaj.name == 'Operacija'" v-on:click="otkazi" :disabled="!mozeOtkazati">
+							Otkaži
+						</v-btn>
 					</v-card>
 				</v-dialog>
 				
@@ -118,6 +122,7 @@ Vue.component("radni-kalendar", {
 				this.dogadjaj = event;
 				this.dialog = true;
 				this.daLiMozeZapoceti();
+				this.daLiMozeOtkazati();
 			}
 		},
 		daLiMozeZapoceti : function () {
@@ -130,6 +135,37 @@ Vue.component("radni-kalendar", {
 				}
 			}
 		},
+		daLiMozeOtkazati: function() {
+			let sada = new Date().getTime();
+			if (this.dogadjaj.pocetak - 86400000 > sada) {
+				this.mozeOtkazati = true;
+			}
+		},
+		otkazi : function() {
+			if (this.dogadjaj.name == 'Pregled') {
+				axios
+				.put("/pregledi/otkaziPregledLekara", { id: this.ulogovan.id, datum: this.dogadjaj.pocetak }, { headers: { Authorization: 'Bearer ' + this.token }} )
+				.then(response => { 
+					this.ukloniDogadjaj();
+					this.dialog = false;
+				})
+		        .catch(function (error) { console.log(error); });
+			} else if (this.dogadjaj.name == 'Operacija') {
+				axios
+				.put("/operacije/otkaziOperacijuLekara", { id: this.ulogovan.id, datum: this.dogadjaj.pocetak }, { headers: { Authorization: 'Bearer ' + this.token }} )
+				.then(response => { 
+					this.ukloniDogadjaj();
+					this.dialog = false;
+				})
+		        .catch(function (error) { console.log(error); });
+			}
+		},
+		ukloniDogadjaj : function() {
+			const indeks = this.events.indexOf(this.dogadjaj);
+			if (indeks > -1) {
+				this.events.splice(indeks, 1);
+			}
+		}
 	},
 	created() {
 		this.token = localStorage.getItem("token");

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
@@ -109,7 +110,7 @@ public class PregledService {
 	}
 
 	public List<Pregled> findByKlinikaIdAndVremeAfterAndPacijentIsNull(long id, long vreme) {
-		return pregledRepository.findByKlinikaIdAndVremeAfterAndPacijentIsNull(id, vreme);
+		return pregledRepository.findByKlinikaIdAndVremeAfterAndOtkazanFalseAndPacijentIsNull(id, vreme);
 	}
 
 	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndPotvrdjen(long id, boolean b, boolean c,
@@ -119,21 +120,26 @@ public class PregledService {
 	}
 
 	public List<Pregled> findByKlinikaIdAndSalaIdAndVremeAfterAndPotvrdjen(Long id, long time, boolean potvrdjen) {
-		return pregledRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndPotvrdjen(id, time, potvrdjen);
+		return pregledRepository.findByKlinikaIdAndSalaIdIsNullAndOtkazanFalseAndVremeAfterAndPotvrdjen(id, time,
+				potvrdjen);
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendar(Long id, long time) {
-		List<Pregled> pregledi = pregledRepository.findBySalaIdAndVremeAfter(id, time);
+		List<Pregled> pregledi = pregledRepository.findBySalaIdAndOtkazanFalseAndVremeAfter(id, time);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Pregled pregled : pregledi) {
+			long pacid = 0;
+			if (pregled.getPacijent() != null) {
+				pacid = pregled.getPacijent().getId();
+			}
 			kalendar.add(new RadniKalendarDTO(pregled.getVreme(), pregled.getVreme() + pregled.getTrajanje(), "Pregled",
-					pregled.getPacijent().getId(), "", "", "", ""));
+					pacid, "", "", "", ""));
 		}
 		return kalendar;
 	}
 
 	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
-		List<Pregled> pregledi = pregledRepository.findByLekarId(id);
+		List<Pregled> pregledi = pregledRepository.findByLekarIdAndOtkazanFalse(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<RadniKalendarDTO>();
 		for (Pregled pregled : pregledi) {
 			String sala = "";
@@ -243,13 +249,18 @@ public class PregledService {
 		return pregledidto;
 	}
 
-	public Boolean otkaziPregledPacijenta(PregledDTO pregled) {
+	public Boolean otkaziPregledPacijenta(PregledDTO pregled) throws MailException, InterruptedException {
 		Optional<Pregled> p = pregledRepository.findById(pregled.getId());
 		if (p != null) {
 			Pregled pr = p.get();
-			pr.setOtkazan(true);
 			pr.setPacijent(null);
 			pregledRepository.save(pr);
+			String to = pr.getLekar().getEmail();
+			String text = "Poštovani,\nVaš pregled je otkazan.\nPodaci o pregledu: \nVreme: "
+					+ new Date(pr.getVreme()).toString() + "\nTip pregleda: " + pr.getTipPregleda().getNaziv()
+					+ "\nBroj sale: " + pr.getSala().getBroj() + "\nPacijent: " + pr.getPacijent().getIme() + " "
+					+ pr.getPacijent().getPrezime();
+			emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Otkazan pregled", text);
 			return true;
 		}
 		return false;
@@ -272,7 +283,7 @@ public class PregledService {
 	}
 
 	public List<Pregled> findByLekarIdAndPacijentIdAndVreme(long idLekara, long idPacijenta, long time) {
-		return pregledRepository.findByLekarIdAndPacijentIdAndVreme(idLekara, idPacijenta, time);
+		return pregledRepository.findByLekarIdAndPacijentIdAndVremeAndOtkazanFalse(idLekara, idPacijenta, time);
 	}
 
 	public Pregled mozeZapocetiPregled(long idLekara, long idPacijenta, long time) {
@@ -281,6 +292,33 @@ public class PregledService {
 
 	public Pregled dobaviPregled(long idLekara, long idPacijenta, long time) {
 		return pregledRepository.mozeZapocetiPregled(idLekara, idPacijenta, time);
+	}
+
+	public Boolean otkaziPregledLekara(PretragaLekaraDTO pldto) throws MailException, InterruptedException {
+		Pregled p = pregledRepository.findPregledByVremeAndLekarId(pldto.getDatum(), pldto.getId());
+		if (p != null) {
+			p.setOtkazan(true);
+			pregledRepository.save(p);
+			String slaBr = "";
+			if (p.getSala() != null) {
+				slaBr = p.getSala().getBroj() + "";
+			}
+			if (p.getPacijent() != null) {
+				String to = p.getPacijent().getEmail();
+				String text = "Poštovani,\nVaš pregled je otkazan.\nPodaci o pregledu: \nKlinika: "
+						+ p.getKlinika().getNaziv() + "\nLokacija: " + p.getKlinika().getLokacija() + "\nVreme: "
+						+ new Date(pldto.getDatum()).toString() + "\nLekar: " + p.getLekar().getIme() + " "
+						+ p.getLekar().getPrezime() + "\nTip pregleda: " + p.getTipPregleda().getNaziv()
+						+ "\nBroj sale: " + slaBr;
+				emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Otkazan pregled", text);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public List<Pregled> dobaviSvePregledeBezSale() {
+		return pregledRepository.dobaviSvePregledeBezSale();
 	}
 
 }

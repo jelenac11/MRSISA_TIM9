@@ -239,6 +239,10 @@ Vue.component('zaposleni', {
 	    filtriraniLekari : function () {
 	    	return this.lekari.filter(lekar => {
 	    		if (this.tip != "" && this.vreme != null) {
+	    			sada = new Date().getTime();
+	    			if (sada > new Date(this.vreme).getTime() - 7200000) {
+	    				return false;
+	    			}
 	    			this.slobodanLekar(lekar)
 					return (lekar.ime.toLowerCase().includes(this.imePrezime.toLowerCase().trim()) || lekar.prezime.toLowerCase().includes(this.imePrezime.toLowerCase().trim())) &&
 					this.zadovoljavaOcenu(lekar) && lekar.slobodan;

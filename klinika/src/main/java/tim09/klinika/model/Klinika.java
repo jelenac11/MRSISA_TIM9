@@ -59,7 +59,7 @@ public class Klinika {
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<Sala> sale;
 
-	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "klinika", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<OcenaKlinike> ocene;
 
 	@Column(name = "prosecna_ocena")

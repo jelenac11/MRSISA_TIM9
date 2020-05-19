@@ -47,7 +47,7 @@ public class PregledController {
 
 	@PutMapping(value = "/otkaziPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<Boolean> otkaziPregled(@RequestBody PregledDTO pregled) {
+	public ResponseEntity<Boolean> otkaziPregled(@RequestBody PregledDTO pregled) throws MailException, InterruptedException {
 		return new ResponseEntity<>(pregledService.otkaziPregledPacijenta(pregled), HttpStatus.OK);
 	}
 
@@ -185,5 +185,11 @@ public class PregledController {
 		}
 		return new ResponseEntity<Boolean>(zavrsen, HttpStatus.OK);
 
+	}
+	
+	@PutMapping(value = "/otkaziPregledLekara", consumes = "application/json")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> otkaziPregledLekara(@RequestBody PretragaLekaraDTO pldto) throws MailException, InterruptedException {
+		return new ResponseEntity<>(pregledService.otkaziPregledLekara(pldto) , HttpStatus.OK);
 	}
 }

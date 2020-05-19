@@ -15,7 +15,7 @@ public class OcenaKlinike extends Ocena {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinika_id")
 	private Klinika klinika;
-
+	
 	public OcenaKlinike() {
 
 	}

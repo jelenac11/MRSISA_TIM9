@@ -27,6 +27,11 @@ public class PretragaLekaraDTO {
 		this.pacijent = pacijent;
 		this.klinika = klinika;
 	}
+	
+	public PretragaLekaraDTO(Long lekar, long datum) {
+		this.id = lekar;
+		this.datum = datum;
+	}
 
 	public Long getId() {
 		return id;

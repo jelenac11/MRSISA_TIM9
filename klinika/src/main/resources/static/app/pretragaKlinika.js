@@ -132,8 +132,8 @@ Vue.component("pretraga-klinika", {
 	    	}
 		},
 		zadovoljavaDatumITip : function (klinika) {
-	    	datum = new Date(this.datum+"");
-	    	timestamp = datum.getTime() - 7200000;
+			datum = new Date(this.datum+"");
+			timestamp = datum.getTime() - 7200000;
 	    	if (this.tip != "") {
 	    		axios
 	    		.put('/klinike/zadovoljavaTip', { id: klinika.id, datum: timestamp, tipPregleda: this.tip}, { headers: { Authorization: 'Bearer ' + this.token }})
@@ -183,10 +183,15 @@ Vue.component("pretraga-klinika", {
 	    	return this.klinike.filter(klinika => {
 	    		this.dobaviCenu(klinika, this.klinike.indexOf(klinika));
 	    		if (this.tip != "" && this.datum != null) {
-	    			$("#cenaKolona").html("<button class='btn'>Cena pregleda</button>");
-					this.zadovoljavaDatumITip(klinika);
-					return klinika.naziv.toLowerCase().includes(this.naziv.toLowerCase().trim()) && klinika.lokacija.toLowerCase().includes(this.lokacija.toLowerCase().trim()) &&
-					this.zadovoljavaOcenu(klinika) && this.zadovoljavaCenu(klinika) && klinika.zadovoljava;
+	    			sada = new Date().getTime();
+	    			if (sada <= new Date(this.datum).getTime() - 7200000) {
+	    				$("#cenaKolona").html("<button class='btn'>Cena pregleda</button>");
+						this.zadovoljavaDatumITip(klinika);
+						return klinika.naziv.toLowerCase().includes(this.naziv.toLowerCase().trim()) && klinika.lokacija.toLowerCase().includes(this.lokacija.toLowerCase().trim()) &&
+						this.zadovoljavaOcenu(klinika) && this.zadovoljavaCenu(klinika) && klinika.zadovoljava;
+	    			} else {
+	    				return false;
+	    			}
 	    		} else {
 	    			$("#cenaKolona").text("");
 	    			return true;

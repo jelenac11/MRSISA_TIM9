@@ -91,8 +91,8 @@ insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, kl
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1590652800000, 3600000, 1, false, true, true, 1);
 -- Sat May 09 2020 10:00:00
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589011200000, 3600000, 1, false, true, true, 2);
--- Sun May 18 2020 00:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589752800000, 3600000, 1, false, true, true, 1);
+-- Sun May 18 2020 23:00:00
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589835600000, 3600000, 1, false, true, true, 1);
 
 -- zahtevi nepotvrdjeni bez sale
 -- Thu May 30 2020 10:00:00

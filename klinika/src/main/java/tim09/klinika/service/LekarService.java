@@ -91,9 +91,21 @@ public class LekarService {
 			Lekar le = l.get();
 			long pocetak = le.getPocetakRadnogVremena();
 			long kraj = le.getKrajRadnogVremena();
-			int sati = (int) ((kraj - pocetak) / 3600000);
-			for (int i = 0; i < sati; i++) {
-				vremena.add(pldto.getDatum() + pocetak + i * 3600000);
+			if (kraj < pocetak) {
+				int pre = (int) (kraj / 3600000);
+				int ostatak = (int) (kraj % 3600000);
+				for (int i = 0; i < pre; i++) {
+					vremena.add(pldto.getDatum() + i * 3600000 + ostatak);
+				}
+				int posle = (int) ((86400000 - pocetak) / 3600000);
+				for (int i = 0; i < posle; i++) {
+					vremena.add(pldto.getDatum() + pocetak + i * 3600000);
+				}
+			} else {
+				int sati = (int) ((kraj - pocetak) / 3600000);
+				for (int i = 0; i < sati; i++) {
+					vremena.add(pldto.getDatum() + pocetak + i * 3600000);
+				}
 			}
 			for (Pregled p : pregledi) {
 				if (vremena.contains(p.getVreme())) {
@@ -105,9 +117,6 @@ public class LekarService {
 					vremena.remove(o.getVreme());
 				}
 			}
-		}
-		for (Long long1 : vremena) {
-			System.out.println(new Date(long1).toString());
 		}
 		return vremena;
 	}

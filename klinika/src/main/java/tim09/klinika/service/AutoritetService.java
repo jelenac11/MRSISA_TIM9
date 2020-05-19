@@ -185,10 +185,29 @@ public class AutoritetService {
 		}
 		return null;
 	}
+	
+	public ResponseEntity<String> proveriStanjePregleda(OdgovorPregledDTO odgovorPregledDTO) {
+		TokenPotvrdePregleda tpp = tokenPotvrdePregledaService.findByToken(odgovorPregledDTO.getToken());
+
+		if (tpp != null) {
+			Pregled pregled = tpp.getPregled();
+			if (pregled.getPacijent() == null) {
+				return new ResponseEntity<String>("odbijen", HttpStatus.OK);
+			} else if (pregled.isPotvrdjen()) {
+				return new ResponseEntity<String>("potvrdjen", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<String>("ni jedno ni drugo", HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<String>("", HttpStatus.OK);
+	}
 
 	public ResponseEntity<PregledDTO> dobaviPodatkeoPregledu(String token) {
 		TokenPotvrdePregleda tpp = tokenPotvrdePregledaService.findByToken(token);
-		Pregled pregled = tpp.getPregled();
+		Pregled pregled = null;
+		if (tpp != null) {
+			pregled = tpp.getPregled();
+		}
 		return new ResponseEntity<PregledDTO>(new PregledDTO(pregled), HttpStatus.OK);
 	}
 
