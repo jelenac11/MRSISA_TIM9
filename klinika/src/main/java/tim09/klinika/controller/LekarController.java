@@ -185,7 +185,7 @@ public class LekarController {
 	}
 
 	@PutMapping(value = "/vratiSlobodneTermine", consumes = "application/json")
-	@PreAuthorize("hasAnyRole('PACIJENT', 'ADMIN_KLINIKE')")
+	@PreAuthorize("hasAnyRole('PACIJENT', 'ADMIN_KLINIKE', 'LEKAR')")
 	public ResponseEntity<List<Long>> vratiSlobodneTermine(@RequestBody PretragaLekaraDTO pldto) {
 		return new ResponseEntity<>(lekarService.vratiSlobodneTermine(pldto), HttpStatus.OK);
 	}
@@ -210,7 +210,7 @@ public class LekarController {
 	}
 	
 	@GetMapping("/dobaviTipovePregledaZaLekara/{id}")
-	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	@PreAuthorize("hasAnyRole('LEKAR', 'ADMIN_KLINIKE')")
 	public ResponseEntity<List<TipPregledaDTO>> dobaviTipovePregledaZaLekara(@PathVariable Long id){
 		Lekar l=lekarService.findOne(id);
 		Set<TipPregleda> tip=l.getSpecijalnosti();

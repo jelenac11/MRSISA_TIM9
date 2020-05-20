@@ -21,6 +21,7 @@ import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.dto.TipPregledaDTO;
+import tim09.klinika.dto.ZakaziTerminLekarDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Korisnik;
@@ -321,6 +322,24 @@ public class PregledService {
 		return pregledRepository.dobaviSvePregledeBezSale();
 	}
 
+	public Boolean zakaziTerminLekar(ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException {
+		Klinika klinika = lekarService.findOne(ztlDTO.getLekar()).getKlinika();
+		Pacijent pacijent=pacijentRepository.getOne(ztlDTO.getPacijent());
+		Lekar l=lekarRepository.getOne(ztlDTO.getLekar());
+		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(klinika.getId());
+		if (admini != null) {
+			for (AdminKlinike ak : admini) {
+				String text = "Poštovani, \nPristigao je zahtev za zakazivanje pregleda.\nPodaci o pregledu:\nPacijent: "
+						+ pacijent.getIme()+" "+pacijent.getPrezime() + "\nVreme: " + new Date(ztlDTO.getDatumiVreme()).toString()
+						+ "\nLekar: " + l.getIme() + " " + l.getPrezime()
+						+ "\nTip pregleda: " + ztlDTO.getTipPregleda().getNaziv();
+				emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje pregleda", text);
+			}
+		}
+		pregledRepository.insertZakazaniPregled(ztlDTO.getLekar(),ztlDTO.getPacijent(),ztlDTO.getTipPregleda().getId(),ztlDTO.getDatumiVreme(),klinika.getId());
+		return true;
+		
+	}
 	public List<Pregled> findByKlinikaIdAndPacijentIdAndVremeBeforeAndOtkazan(Long id, Long id2, long time, boolean b) {
 		return pregledRepository.findByKlinikaIdAndPacijentIdAndVremeBeforeAndOtkazan(id, id2, time, b);
 	}
@@ -328,5 +347,4 @@ public class PregledService {
 	public List<Pregled> findByLekarIdAndPacijentIdAndVremeBeforeAndOtkazan(Long id, Long id2, long time, boolean b) {
 		return pregledRepository.findByLekarIdAndPacijentIdAndVremeBeforeAndOtkazan(id, id2, time, b);
 	}
-
 }

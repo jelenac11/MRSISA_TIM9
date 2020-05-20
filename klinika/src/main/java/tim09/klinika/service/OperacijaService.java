@@ -2,6 +2,7 @@ package tim09.klinika.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,11 +16,15 @@ import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
+import tim09.klinika.dto.ZakaziTerminLekarDTO;
 import tim09.klinika.model.AdminKlinike;
+import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Lekar;
 import tim09.klinika.model.Operacija;
+import tim09.klinika.model.Pacijent;
 import tim09.klinika.model.Pregled;
 import tim09.klinika.model.Sala;
+import tim09.klinika.repository.AdminKlinikeRepository;
 import tim09.klinika.repository.OperacijaRepository;
 
 @Service
@@ -38,7 +43,13 @@ public class OperacijaService {
 	private AdminKlinikeService adminKlinikeService;
 
 	@Autowired
+	private AdminKlinikeRepository adminKlinikeRepository;
+
+	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private PacijentService pacijentService;
 
 	public Operacija findOne(Long id) {
 		return operacijaRepository.findById(id).orElseGet(null);
@@ -152,6 +163,31 @@ public class OperacijaService {
 
 	public List<Operacija> dobaviSveOperacijeBezSale() {
 		return operacijaRepository.dobaviSveOperacijeBezSale();
+	}
+	
+	public Boolean zakaziTerminLekar(ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException {
+		Klinika klinika = lekarService.findOne(ztlDTO.getLekar()).getKlinika();
+		Pacijent pacijent=pacijentService.findOne(ztlDTO.getPacijent());
+		Lekar l=lekarService.findOne(ztlDTO.getLekar());
+		Set<Lekar> lekari=new HashSet<Lekar>();
+		lekari.add(l);
+		Operacija op=new Operacija();
+		op.setKlinika(klinika);
+		op.setOtkazana(false);
+		op.setLekari(lekari);
+		op.setPacijent(pacijent);
+		op.setVreme(ztlDTO.getDatumiVreme());
+		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(klinika.getId());
+		if (admini != null) {
+			for (AdminKlinike ak : admini) {
+				String text = "Poštovani, \nPristigao je zahtev za zakazivanje operacije.\nPodaci o operaciji:\nPacijent: "
+						+ pacijent.getIme()+" "+pacijent.getPrezime() + "\nVreme: " + new Date(ztlDTO.getDatumiVreme()).toString()
+						+ "\nLekar: " + l.getIme() + " " + l.getPrezime();
+				emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje operacije", text);
+			}
+		}
+		operacijaRepository.save(op);
+		return true;
 	}
 
 }

@@ -22,6 +22,7 @@ import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
 import tim09.klinika.dto.SlobodanTerminOperacijaDTO;
+import tim09.klinika.dto.ZakaziTerminLekarDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Operacija;
 import tim09.klinika.model.Pregled;
@@ -84,5 +85,12 @@ public class OperacijaController {
 	@PreAuthorize("hasRole('LEKAR')")
 	public ResponseEntity<Boolean> otkaziOperacijuLekara(@RequestBody PretragaLekaraDTO pldto) throws MailException, InterruptedException {
 		return new ResponseEntity<>(operacijaService.otkaziOperacijuLekara(pldto), HttpStatus.OK);
+	}
+	@PostMapping(value="zakaziNoviTerminLekar",consumes = "application/json")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> zakaziNoviTerminLekar(@RequestBody ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException{
+		return new ResponseEntity<Boolean>(operacijaService.zakaziTerminLekar(ztlDTO),HttpStatus.OK);
+	
+		
 	}
 }

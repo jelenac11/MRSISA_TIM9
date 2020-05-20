@@ -27,6 +27,7 @@ import tim09.klinika.dto.PregledDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.dto.PretragaLekaraDTO;
 import tim09.klinika.dto.SlobodanTerminDTO;
+import tim09.klinika.dto.ZakaziTerminLekarDTO;
 import tim09.klinika.model.AdminKlinike;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Pacijent;
@@ -226,5 +227,12 @@ public class PregledController {
 	public ResponseEntity<Boolean> otkaziPregledLekara(@RequestBody PretragaLekaraDTO pldto)
 			throws MailException, InterruptedException {
 		return new ResponseEntity<>(pregledService.otkaziPregledLekara(pldto), HttpStatus.OK);
+	}
+	@PostMapping(value="zakaziNoviTerminLekar",consumes = "application/json")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> zakaziNoviTerminLekar(@RequestBody ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException{
+		return new ResponseEntity<Boolean>(pregledService.zakaziTerminLekar(ztlDTO),HttpStatus.OK);
+	
+		
 	}
 }
