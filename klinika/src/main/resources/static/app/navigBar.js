@@ -20,7 +20,7 @@ Vue.component('navig-bar', {
 						<router-link :to="{ name: 'pretragaKlinika' }" data-toggle="pill" class="nav-link">Klinike</router-link>
 					</li>
 					<li v-if="this.uloga == 'ROLE_PACIJENT'" class="nav-item">
-						<router-link :to="{ name: 'istorijaPregleda' }" data-toggle="pill" class="nav-link">Istorija pregleda</router-link>
+						<router-link :to="{ name: 'istorijaPregleda' }" data-toggle="pill" class="nav-link">Pregledi i operacije</router-link>
 					</li>
 					<li v-if="this.uloga == 'ROLE_PACIJENT'" class="nav-item">
 						<router-link :to="{ name: 'zdravstveniKarton' }" data-toggle="pill" class="nav-link">Zdravstveni karton</router-link>
@@ -28,9 +28,6 @@ Vue.component('navig-bar', {
 					
 					<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
 						<router-link :to="{ name: 'pacijenti' }" data-toggle="pill" class="nav-link">Pacijenti</router-link>
-					</li>
-					<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
-						<router-link :to="{ name: 'zapocniPregled' }" data-toggle="pill" class="nav-link">Započni pregled</router-link>
 					</li>
 					<li v-if="this.uloga == 'ROLE_LEKAR'" class="nav-item">
 						<router-link :to="{ name: 'radniKalendar' }" data-toggle="pill" class="nav-link">Radni kalendar</router-link>

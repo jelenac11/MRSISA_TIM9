@@ -152,11 +152,11 @@ Vue.component('zaposleni', {
 				        		<div class="modal-title">
 				        			<h4 class="alignleft">Slobodni termini, {{ izabraniLekar.ime + " " + izabraniLekar.prezime }}&nbsp</h4>
 							    	<p v-if="mozeDaOceniLekara" class="alignright">
-										<i class="far fa-star unchecked" v-on:click="oceniLekara('1zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'1zls' + izabraniLekar.id"></i> 
-										<i class="far fa-star unchecked" v-on:click="oceniLekara('2zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'2zls' + izabraniLekar.id"></i>
-									   	<i class="far fa-star unchecked" v-on:click="oceniLekara('3zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'3zls' + izabraniLekar.id"></i>
-									   	<i class="far fa-star unchecked" v-on:click="oceniLekara('4zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'4zls' + izabraniLekar.id"></i>
-										<i class="far fa-star unchecked" v-on:click="oceniLekara('5zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'5zls' + izabraniLekar.id"></i>
+										<i class="far fa-star unchecked" v-on:click="oceniLekara('1zls' + izabraniLekar.id, izabraniLekar)" v-bind:id="'1zls' + izabraniLekar.id"></i> 
+										<i class="far fa-star unchecked" v-on:click="oceniLekara('2zls' + izabraniLekar.id, izabraniLekar)" v-bind:id="'2zls' + izabraniLekar.id"></i>
+									   	<i class="far fa-star unchecked" v-on:click="oceniLekara('3zls' + izabraniLekar.id, izabraniLekar)" v-bind:id="'3zls' + izabraniLekar.id"></i>
+									   	<i class="far fa-star unchecked" v-on:click="oceniLekara('4zls' + izabraniLekar.id, izabraniLekar)" v-bind:id="'4zls' + izabraniLekar.id"></i>
+										<i class="far fa-star unchecked" v-on:click="oceniLekara('5zls' + izabraniLekar.id, izabraniLekar)" v-bind:id="'5zls' + izabraniLekar.id"></i>
 									</p>
 							    	<div style="clear: both;"></div>
 				        		</div>
@@ -373,27 +373,39 @@ Vue.component('zaposleni', {
 			var list = [ '1zl' + lekar.id, '2zl' + lekar.id, '3zl' + lekar.id, '4zl' + lekar.id, '5zl' + lekar.id ];
 			var list2 = [ '1zls' + lekar.id, '2zls' + lekar.id, '3zls' + lekar.id, '4zls' + lekar.id, '5zls' + lekar.id ];
 			var cls = document.getElementById(element).className;
+			var ocena = 5;
+			if (element[3] == "s") {
+				ocena = list2.indexOf(element) + 1;
+			} else {
+				ocena = list.indexOf(element) + 1;
+			}
 			if(cls.includes("unchecked")) {
-				for (i = 0; i <= list.indexOf(element); i++) {
-					document.getElementById(list[i]).classList.remove("unchecked");
-					document.getElementById(list[i]).classList.add("checked");
-					document.getElementById(list[i]).classList.remove("far");
-					document.getElementById(list[i]).classList.add("fas");
-					document.getElementById(list2[i]).classList.remove("unchecked");
-					document.getElementById(list2[i]).classList.add("checked");
-					document.getElementById(list2[i]).classList.remove("far");
-					document.getElementById(list2[i]).classList.add("fas");
+				for (i = 0; i <= ocena - 1; i++) {
+					if (element[3] == "s") {
+						document.getElementById(list2[i]).classList.remove("unchecked");
+						document.getElementById(list2[i]).classList.add("checked");
+						document.getElementById(list2[i]).classList.remove("far");
+						document.getElementById(list2[i]).classList.add("fas");
+					} else {
+						document.getElementById(list[i]).classList.remove("unchecked");
+						document.getElementById(list[i]).classList.add("checked");
+						document.getElementById(list[i]).classList.remove("far");
+						document.getElementById(list[i]).classList.add("fas");
+					}
 				}
 			} else {
-				for (i = list.indexOf(element) + 1; i < list.length; i++) {
-					document.getElementById(list[i]).classList.remove("checked");
-					document.getElementById(list[i]).classList.add("unchecked");
-					document.getElementById(list[i]).classList.remove("fas");
-					document.getElementById(list[i]).classList.add("far");
-					document.getElementById(list2[i]).classList.remove("checked");
-					document.getElementById(list2[i]).classList.add("unchecked");
-					document.getElementById(list2[i]).classList.remove("fas");
-					document.getElementById(list2[i]).classList.add("far");
+				for (i = ocena; i < list.length; i++) {
+					if (element[3] == "s") {
+						document.getElementById(list2[i]).classList.remove("checked");
+						document.getElementById(list2[i]).classList.add("unchecked");
+						document.getElementById(list2[i]).classList.remove("fas");
+						document.getElementById(list2[i]).classList.add("far");
+					} else {
+						document.getElementById(list[i]).classList.remove("checked");
+						document.getElementById(list[i]).classList.add("unchecked");
+						document.getElementById(list[i]).classList.remove("fas");
+						document.getElementById(list[i]).classList.add("far");
+					}
 				}
 			}
 			
@@ -401,7 +413,7 @@ Vue.component('zaposleni', {
 				id: 0,
 				ocenjivac: this.ulogovan,
 				lekar: lekar,
-				vrednost: list.indexOf(element) + 1,
+				vrednost: ocena,
 			}
 			
 			axios

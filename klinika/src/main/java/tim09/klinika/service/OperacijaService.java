@@ -118,7 +118,7 @@ public class OperacijaService {
 	}
 
 	public List<OperacijaDTO> vratiOperacijePacijenta(long id) {
-		List<Operacija> operacije = operacijaRepository.findByPacijentIdAndOtkazanaFalse(id);
+		List<Operacija> operacije = operacijaRepository.findByPacijentIdAndOtkazanaFalseAndSalaIsNotNull(id);
 		List<OperacijaDTO> operacijeDTO = new ArrayList<OperacijaDTO>();
 		if (operacije != null) {
 			for (Operacija o : operacije) {

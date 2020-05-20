@@ -254,14 +254,16 @@ public class PregledService {
 		Optional<Pregled> p = pregledRepository.findById(pregled.getId());
 		if (p != null) {
 			Pregled pr = p.get();
-			pr.setPacijent(null);
-			pregledRepository.save(pr);
 			String to = pr.getLekar().getEmail();
 			String text = "Poštovani,\nVaš pregled je otkazan.\nPodaci o pregledu: \nVreme: "
 					+ new Date(pr.getVreme()).toString() + "\nTip pregleda: " + pr.getTipPregleda().getNaziv()
 					+ "\nBroj sale: " + pr.getSala().getBroj() + "\nPacijent: " + pr.getPacijent().getIme() + " "
 					+ pr.getPacijent().getPrezime();
 			emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Otkazan pregled", text);
+			pr.setPacijent(null);
+			pr.setZauzet(false);
+			pr.setPotvrdjen(false);
+			pregledRepository.save(pr);
 			return true;
 		}
 		return false;

@@ -390,18 +390,17 @@ Vue.component("definisanje-slobodnog-termina", {
 		dobaviPodatke2: function(){
 			let termin=JSON.parse(JSON.stringify(this.terminPregleda))
 			termin.datumiVreme=this.termin
-				axios
-				.post("/sale/dobaviSlobodneSaleZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
-				.then(response=>{
-					this.sale=response.data;
-					  if(this.sale.length==0){
-						  toast("Nema slobodnih sala za izabrani termin.");
-						  return false;
-					  }
-					  this.e6=3;
-					})
-				.catch(function (error) { console.log(error); });
-			
+			axios
+			.post("/sale/dobaviSlobodneSaleZaPregled",termin, { headers: { Authorization: 'Bearer ' + this.token }})
+			.then(response=>{
+				this.sale=response.data;
+				  if(this.sale.length==0){
+					  toast("Nema slobodnih sala za izabrani termin.");
+					  return false;
+				  }
+				  this.e6=3;
+				})
+			.catch(function (error) { console.log(error); });
 		},
 		formatTrajanje: function(trajanje){
 			return parseInt(trajanje)/60000+ " minuta"

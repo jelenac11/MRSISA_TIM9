@@ -55,7 +55,7 @@ public class SalaService {
 	}
 
 	public List<Sala> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, long trajanje) {
-		return salaRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, trajanje);
+		return salaRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, 3600000);
 	}
 
 	public boolean update(SalaDTO salaDTO, Sala sala) {
