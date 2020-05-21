@@ -15,8 +15,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import tim09.klinika.dto.OdsustvoDTO;
+import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Korisnik;
+import tim09.klinika.model.MedicinskoOsoblje;
+import tim09.klinika.model.Odsustvo;
+import tim09.klinika.model.Operacija;
+import tim09.klinika.model.Pregled;
+import tim09.klinika.repository.KlinikaRepository;
 import tim09.klinika.repository.KorisnikRepository;
+import tim09.klinika.repository.MedicinskoOsobljeRepository;
+import tim09.klinika.repository.OdsustvoRepository;
+import tim09.klinika.repository.OperacijaRepository;
+import tim09.klinika.repository.PregledRepository;
 
 @Service
 public class KorisnikService implements UserDetailsService {
@@ -31,6 +42,22 @@ public class KorisnikService implements UserDetailsService {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private PregledRepository pregledRepository;
+	
+	@Autowired
+	private OperacijaRepository operacijaRepository;
+	
+	@Autowired
+	private OdsustvoRepository odsustvoRepository;
+	
+	@Autowired
+	private KlinikaRepository klinikaRepository;
+	
+	@Autowired
+	private MedicinskoOsobljeRepository medicinskoOsobljeRepository;
+	
 	
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -85,5 +112,28 @@ public class KorisnikService implements UserDetailsService {
 	
 	public String encodePassword(String lozinka) {
 		return passwordEncoder.encode(lozinka);
+	}
+	
+	public boolean zahtevOdsustvo(OdsustvoDTO odsustvoDTO) {
+		List<Pregled> pregledi=pregledRepository.findByLekarAndVreme(odsustvoDTO.getPodnosilac().getId(),odsustvoDTO.getPocetak(),odsustvoDTO.getKraj());
+		List<Operacija> operacije=operacijaRepository.findByLekarIdAndVreme(odsustvoDTO.getPodnosilac().getId(),odsustvoDTO.getPocetak(),odsustvoDTO.getKraj());
+		List<Odsustvo> odsustva=odsustvoRepository.findByPodnosilacPocetakAndKraj(odsustvoDTO.getPodnosilac().getId(),odsustvoDTO.getPocetak(),odsustvoDTO.getKraj());
+		MedicinskoOsoblje kor=medicinskoOsobljeRepository.getOne(odsustvoDTO.getPodnosilac().getId());
+		Klinika k=kor.getKlinika();
+		
+		if(pregledi.isEmpty() && operacije.isEmpty() && odsustva.isEmpty()) {
+			Odsustvo odsustvo=new Odsustvo();
+			odsustvo.setKlinika(k);
+			odsustvo.setKraj(odsustvoDTO.getKraj());
+			odsustvo.setPocetak(odsustvoDTO.getPocetak());
+			odsustvo.setOdgovoreno(false);
+			odsustvo.setOdobreno(false);
+			odsustvo.setObrazlozenje("");
+			odsustvo.setPodnosilac(kor);
+			odsustvo.setKlinika(k);
+			odsustvoRepository.save(odsustvo);
+			return true;
+		}
+		return false;
 	}
 }

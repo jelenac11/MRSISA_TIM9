@@ -12,10 +12,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import tim09.klinika.dto.MedicinskoOsobljeDTO;
+import tim09.klinika.dto.OdsustvoDTO;
 import tim09.klinika.dto.RadniKalendarDTO;
 import tim09.klinika.model.Korisnik;
 import tim09.klinika.model.Lekar;
@@ -86,4 +89,10 @@ public class MedicinskoOsoblje {
 		return new ResponseEntity<>(listOne, HttpStatus.CREATED);
 	}
 
+	@PostMapping(value="/zahtevOdsustvo")
+	@PreAuthorize("hasAnyRole('LEKAR','MED_SESTRA')")
+	public ResponseEntity<Boolean> zahtevOdsustvo(@RequestBody OdsustvoDTO odsustvoDTO){
+		boolean odgovor=korisnikService.zahtevOdsustvo(odsustvoDTO);
+		return new ResponseEntity<Boolean>(odgovor, HttpStatus.OK);
+	}
 }

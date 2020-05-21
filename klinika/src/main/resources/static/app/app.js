@@ -47,6 +47,7 @@ const NaCekanjuOperacije = {template : '<na-cekanju-operacije></na-cekanju-opera
 const PotvrdaTerminaPregleda = {template: '<potvrda-termina-pregleda></potvrda-termina-pregleda>'}
 const IstorijaOperacija = {template: '<istorija-operacija></istorija-operacija>'}
 const ProfilPacijenta= {template: '<profil-pacijenta></profil-pacijenta>'}
+const ZahtevOdsustvo = {template: '<zahtev-odsustvo></zahtev-odsustvo>'}
 const router = new VueRouter({
 	mode: 'hash',
 		routes: [
@@ -297,6 +298,11 @@ const router = new VueRouter({
 		path: '/profilPacijenta',
 		name: 'profilPacijenta',
 		component: ProfilPacijenta
+	},
+	{
+		path: '/zahtevOdsustvo',
+		name: 'zahtevOdsustvo',
+		component: ZahtevOdsustvo
 	},
 	]
 });
