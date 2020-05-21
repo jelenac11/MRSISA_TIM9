@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tim09.klinika.dto.DnevniIzvjestajDTO;
+import tim09.klinika.dto.IzvjestajDTO;
+import tim09.klinika.dto.IzvjestajPoslovanjaDTO;
 import tim09.klinika.dto.KlinikaDTO;
 import tim09.klinika.dto.LekarDTO;
+import tim09.klinika.dto.MjesecniIzvjestajDTO;
 import tim09.klinika.dto.PretragaKlinikeDTO;
 import tim09.klinika.model.Cenovnik;
 import tim09.klinika.model.Klinika;
@@ -93,6 +97,38 @@ public class KlinikaController {
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<List<LekarDTO>> ucitajSlobodneLekare(@RequestBody PretragaKlinikeDTO pkdto){
 		return new ResponseEntity<>(klinikaService.vratiSlobodneLekare(pkdto), HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/sedmicniIzvjestaj/",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<ArrayList<ArrayList<Long>>> sedmicniIzvjestaj(@RequestBody IzvjestajDTO izvjestajDTO){
+		ArrayList<ArrayList<Long>> izvjestaj=klinikaService.sedmicniIzvjestaj(izvjestajDTO.getId(),izvjestajDTO.getStart(),izvjestajDTO.getEnd());
+		return new ResponseEntity<ArrayList<ArrayList<Long>>>(izvjestaj, HttpStatus.OK);
+		
+	}
+	
+	@PostMapping(value="/dnevniIzvjestaj/",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<DnevniIzvjestajDTO> dnevniIzvjestaj(@RequestBody IzvjestajDTO izvjestajDTO){
+		DnevniIzvjestajDTO izvjestaj=klinikaService.dnevniIzvjestaj(izvjestajDTO.getId(),izvjestajDTO.getStart());
+		return new ResponseEntity<DnevniIzvjestajDTO>(izvjestaj, HttpStatus.OK);
+		
+	}
+	
+	@PostMapping(value="/mjesecniIzvjestaj/",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<ArrayList<ArrayList<Long>>> mjesecniIzvjestaj(@RequestBody MjesecniIzvjestajDTO izvjestajDTO){
+		ArrayList<ArrayList<Long>> izvjestaj=klinikaService.mjesecniIzvjestaj(izvjestajDTO.getId(),izvjestajDTO.getMjesec());
+		return new ResponseEntity<ArrayList<ArrayList<Long>>>(izvjestaj, HttpStatus.OK);
+		
+	}
+	
+	@PostMapping(value="/izvjestajPoslovanja/",consumes="application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<IzvjestajPoslovanjaDTO> izvjestajPoslovanja(@RequestBody IzvjestajDTO izvjestajDTO){
+		IzvjestajPoslovanjaDTO izvjestaj=klinikaService.izvjestajPoslovanja(izvjestajDTO.getId(),izvjestajDTO.getStart(),izvjestajDTO.getEnd());
+		return new ResponseEntity<IzvjestajPoslovanjaDTO>(izvjestaj, HttpStatus.OK);
+		
 	}
 	
 }

@@ -48,6 +48,7 @@ const PotvrdaTerminaPregleda = {template: '<potvrda-termina-pregleda></potvrda-t
 const IstorijaOperacija = {template: '<istorija-operacija></istorija-operacija>'}
 const ProfilPacijenta= {template: '<profil-pacijenta></profil-pacijenta>'}
 const ZahtevOdsustvo = {template: '<zahtev-odsustvo></zahtev-odsustvo>'}
+const Poslovanje = {template: '<poslovanje></poslovanje>'}
 const router = new VueRouter({
 	mode: 'hash',
 		routes: [
@@ -304,9 +305,15 @@ const router = new VueRouter({
 		name: 'zahtevOdsustvo',
 		component: ZahtevOdsustvo
 	},
+	{
+		path: '/poslovanje',
+		name: 'poslovanje',
+		component: Poslovanje
+	},
 	]
 });
 
+Vue.component('apexchart', VueApexCharts)
 var app = new Vue({
 	router,
 	el: '#login',
