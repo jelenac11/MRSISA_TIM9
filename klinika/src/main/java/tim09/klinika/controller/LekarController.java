@@ -220,4 +220,10 @@ public class LekarController {
 		}
 		return new ResponseEntity<List<TipPregledaDTO>>(dto, HttpStatus.OK);
 	}
+	
+	@PutMapping(value = "/proveriGodisnji", consumes = "application/json")
+	@PreAuthorize("hasRole('LEKAR')")
+	public ResponseEntity<Boolean> proveriGodisnji(@RequestBody PretragaLekaraDTO pldto) {
+		return new ResponseEntity<Boolean>(lekarService.proveriGodisnji(pldto), HttpStatus.OK);
+	}
 }

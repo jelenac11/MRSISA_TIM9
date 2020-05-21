@@ -16,10 +16,12 @@ import tim09.klinika.model.Klinika;
 import tim09.klinika.model.Lekar;
 import tim09.klinika.model.OcenaKlinike;
 import tim09.klinika.model.OcenaLekara;
+import tim09.klinika.model.Odsustvo;
 import tim09.klinika.model.Operacija;
 import tim09.klinika.model.Pregled;
 import tim09.klinika.model.TipPregleda;
 import tim09.klinika.repository.LekarRepository;
+import tim09.klinika.repository.OdsustvoRepository;
 import tim09.klinika.repository.OperacijaRepository;
 import tim09.klinika.repository.PregledRepository;
 
@@ -37,6 +39,9 @@ public class LekarService {
 
 	@Autowired
 	private PregledRepository pregledRepository;
+	
+	@Autowired
+	private OdsustvoRepository odsustvoRepository;
 
 	public List<Lekar> findAllByKlinika(Klinika k) {
 		return lekarRepository.findAllByKlinikaAndAktivan(k, true);
@@ -172,6 +177,16 @@ public class LekarService {
 		value = value * factor;
 		long tmp = Math.round(value);
 		return (double) tmp / factor;
+	}
+
+	public Boolean proveriGodisnji(PretragaLekaraDTO pldto) {
+		List<Odsustvo> odsustva=odsustvoRepository.findByPodnosilacAndVreme(pldto.getId(), pldto.getDatum());
+		if(odsustva.isEmpty()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 }

@@ -347,14 +347,24 @@ Vue.component("zapocni-pregled", {
 			this.pretragaTermina.id=this.terminPregleda.lekar;
 			this.pretragaTermina.datum=Date.parse(this.terminPregleda.datumiVreme) - 7200000;
 			axios
-			.put('lekari/vratiSlobodneTermine',this.pretragaTermina, { headers: { Authorization: 'Bearer ' + this.token }})
+			.put('lekari/proveriGodisnji',this.pretragaTermina, { headers: { Authorization: 'Bearer ' + this.token }})
 			.then(response=>{
-				this.termini=response.data;
-				if(this.termini.length==0){
-					toast("Nema slobodnih termina za izabrani datum.")
+				if(response.data==true){
+					axios
+					.put('lekari/vratiSlobodneTermine',this.pretragaTermina, { headers: { Authorization: 'Bearer ' + this.token }})
+					.then(response=>{
+						this.termini=response.data;
+						if(this.termini.length==0){
+							toast("Nema slobodnih termina za izabrani datum.")
+						}
+						else{
+							this.e6=2;
+						}
+					})
+					.catch(function (error) { console.log(error); });
 				}
 				else{
-					this.e6=2;
+					toast("Za izabrani datum ste na godišnjem odmoru.");
 				}
 			})
 			.catch(function (error) { console.log(error); });

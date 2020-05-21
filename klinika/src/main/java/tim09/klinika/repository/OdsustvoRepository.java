@@ -15,4 +15,7 @@ public interface OdsustvoRepository extends JpaRepository<Odsustvo, Long> {
 	
 	@Query(value = "SELECT * FROM odsustvo o WHERE o.podnosilac_id = ?1 and ((o.odgovoreno=true and o.odobreno=true) or (o.odgovoreno=false and o.odobreno=false)) and ((?2 between o.pocetak and o.kraj) or (?3 between o.pocetak and o.kraj) or (o.pocetak>=?2 and o.kraj<=?3))", nativeQuery = true)
 	public List<Odsustvo> findByPodnosilacPocetakAndKraj(long id,long pocetak,long kraj);
+	
+	@Query(value = "SELECT * FROM odsustvo o WHERE o.podnosilac_id = ?1 and ((o.odgovoreno=true and o.odobreno=true) or (o.odgovoreno=false and o.odobreno=false)) and ((o.pocetak<=?2 and ?2<=o.kraj) or (o.pocetak between ?2 and (?2+86400000)))", nativeQuery = true)
+	public List<Odsustvo> findByPodnosilacAndVreme(long id,long vreme);
 }
