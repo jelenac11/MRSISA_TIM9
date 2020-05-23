@@ -114,6 +114,8 @@ public class KlinikaService {
 			klinika.setNaziv(klinikaDTO.getNaziv());
 			klinika.setLokacija(klinikaDTO.getLokacija());
 			klinika.setOpis(klinikaDTO.getOpis());
+			klinika.setLat(klinikaDTO.getLat());
+			klinika.setLng(klinikaDTO.getLng());
 			klinikaRepository.save(klinika);
 		} else {
 			return false;

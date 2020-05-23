@@ -11,6 +11,8 @@ public class KlinikaDTO {
 	private boolean zadovoljava;
 	private double cena;
 	private String opis;
+	private double lat;
+	private double lng;
 	
 	public KlinikaDTO() {
 
@@ -23,6 +25,8 @@ public class KlinikaDTO {
 		this.ocena = klinika.getProsecnaOcena();
 		this.zadovoljava = true;
 		this.cena = 0;
+		this.lat=klinika.getLat();
+		this.lng=klinika.getLng();
 		this.opis=klinika.getOpis();
 	}
 
@@ -81,6 +85,23 @@ public class KlinikaDTO {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
+
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+	
 	
 
 }

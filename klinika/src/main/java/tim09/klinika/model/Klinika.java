@@ -31,6 +31,12 @@ public class Klinika {
 	@Column(name = "opis", nullable = true, columnDefinition = "text", length = 10485760)
 	private String opis;
 
+	@Column(name = "lat", nullable = false)
+	private double lat;
+	
+	@Column(name = "lng", nullable = false)
+	private double lng;
+	
 	@OneToMany(mappedBy = "klinika", cascade = CascadeType.ALL)
 	private Set<AdminKlinike> admini;
 
@@ -200,5 +206,22 @@ public class Klinika {
 	public void setOpis(String opis) {
 		this.opis = opis;
 	}
+
+	public double getLat() {
+		return lat;
+	}
+
+	public void setLat(double lat) {
+		this.lat = lat;
+	}
+
+	public double getLng() {
+		return lng;
+	}
+
+	public void setLng(double lng) {
+		this.lng = lng;
+	}
+	
 
 }

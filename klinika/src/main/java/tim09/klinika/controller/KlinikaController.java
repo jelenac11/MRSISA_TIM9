@@ -63,7 +63,8 @@ public class KlinikaController {
 		klinika.setLokacija(klinikaDTO.getLokacija());
 		klinika.setOpis(klinikaDTO.getOpis());
 		klinika.setCenovnik(new Cenovnik());
-
+		klinika.setLat(klinikaDTO.getLat());
+		klinika.setLng(klinikaDTO.getLng());
 		klinika = klinikaService.save(klinika);
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
 	}

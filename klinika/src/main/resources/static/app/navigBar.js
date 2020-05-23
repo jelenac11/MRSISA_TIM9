@@ -3,7 +3,7 @@ Vue.component('navig-bar', {
 		return {
 			ulogovan: {},
 			uloga: "",
-			klinika:{}
+			klinika:{lat:0,lng:0}
 		} 
 	},
 	props: ['token'],
@@ -198,10 +198,29 @@ Vue.component('navig-bar', {
 							  	</li>
 							  	<li class="list-group-item">
 							  		<div class="d-flex w-20 justify-content-between">
-								  		<h6>Lokacija:</h6>
-								  		<p class="mb-0">{{ this.klinika.lokacija }}</p>
+									  	<h6>Lokacija:</h6>
+									  	<p class="mb-0">{{ this.klinika.lokacija }}</p>
+								 
 								  	</div>
 							  	</li>
+							  	<li class="list-group-item">
+							  		<div class="d-flex w-20 justify-content-between">									  	
+									  		<GmapMap style="width: 600px; height: 300px;" :zoom="15" :center="{
+										          lat: klinika.lat,
+										          lng: klinika.lng,
+										        }">
+										      <GmapMarker
+										        v-if="klinika"
+										        label="★"
+										        :position="{
+										          lat: klinika.lat,
+										          lng: klinika.lng,
+										        }"
+										        />
+										    </GmapMap>
+								  	</div>
+							  	</li>
+							  	
 							  	<li class="list-group-item">
 							  		<div class="d-flex w-20 justify-content-between">
 							  			<h6>Opis:</h6>

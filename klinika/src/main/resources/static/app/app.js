@@ -314,8 +314,17 @@ const router = new VueRouter({
 });
 
 Vue.component('apexchart', VueApexCharts)
+Vue.use(VueGoogleMaps, {
+      load: {
+        key: 'AIzaSyBUY39s_EZb_CQk3TqK1WTHLxzDFcmzAhA',
+        v: '3.26',
+        libraries: 'places',
+      },
+      installComponents: true,
+    });
 var app = new Vue({
 	router,
 	el: '#login',
 	vuetify:new Vuetify(),
+
 });

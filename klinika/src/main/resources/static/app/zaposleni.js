@@ -2,7 +2,7 @@ Vue.component('zaposleni', {
 	data : function() {
 		return {
 			ulogovan : {},
-			klinika: {},
+			klinika: {lat:0,lng:0},
 			lekari : [],
 			token: "",
 			ocenaFilter : false,
@@ -43,8 +43,23 @@ Vue.component('zaposleni', {
 							</p>
 					    	<div style="clear: both;"></div>
 					  	</div>
-					    <h6 class="kartica-subtitle mb-2 text-muted">{{ klinika.lokacija }}</h6>
 					    <p class="kartica-text">{{ klinika.opis }}</p>
+					    <h6 class="kartica-subtitle mb-2 text-muted">Lokacija: {{ klinika.lokacija }}</h6>
+					    <div class="d-flex w-20 justify-content-between">									  	
+									  		<GmapMap style="width: 600px; height: 300px;" :zoom="15" :center="{
+										          lat: klinika.lat,
+										          lng: klinika.lng,
+										        }">
+										      <GmapMarker
+										        v-if="klinika"
+										        label="★"
+										        :position="{
+										          lat: klinika.lat,
+										          lng: klinika.lng,
+										        }"
+										        />
+										    </GmapMap>
+								  	</div>
 					  </div>
 					</div>
 					<p class="m-1 ml-3 mt-2 font-weight-normal">*Za pretragu klinika je neophodno uneti tip pregleda i datum.</p>
