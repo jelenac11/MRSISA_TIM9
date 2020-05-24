@@ -1,7 +1,5 @@
 package klinika.model;
 
-import klinika.model.Izvestaj;
-
 import java.util.HashSet;
 import java.util.Set;
 

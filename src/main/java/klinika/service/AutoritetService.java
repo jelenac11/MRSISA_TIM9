@@ -1,10 +1,8 @@
 package klinika.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;

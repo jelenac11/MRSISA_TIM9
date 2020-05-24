@@ -32,7 +32,7 @@ import klinika.repository.PregledRepository;
 @Service
 public class KorisnikService implements UserDetailsService {
 
-	protected final Log Logger = LogFactory.getLog(getClass());
+	protected final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired
 	private KorisnikRepository korisnikRepository;
@@ -93,14 +93,14 @@ public class KorisnikService implements UserDetailsService {
 		String username = currentUser.getName();
 
 		if (authenticationManager != null) {
-			Logger.debug("Re-authenticating user '" + username + "' for password change request.");
+			logger.debug("Re-authenticating user '" + username + "' for password change request.");
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
 		} else {
-			Logger.debug("No authentication manager set. can't change Password!");
+			logger.debug("No authentication manager set. can't change Password!");
 			return;
 		}
 
-		Logger.debug("Changing password for user '" + username + "'");
+		logger.debug("Changing password for user '" + username + "'");
 
 		Korisnik korisnik = (Korisnik) loadUserByUsername(username);
 
