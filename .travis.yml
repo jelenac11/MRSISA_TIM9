@@ -8,9 +8,14 @@ services:
 before_install:
   - chmod +x mvnw
 
+addons:
+  sonarcloud:
+  organization: jelenac11
+  token: 98d28b5a3b0ab9b2185a8697b5d320f445943a51
+
 script:
   - ./mvnw clean install -DskipTests=false -B
-
+  - ./mvnw sonar:sonar -Dsonar.projectKey=jelenac11_MRSISA_TIM9 -Dsonar.organization=jelenac11 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=98d28b5a3b0ab9b2185a8697b5d320f445943a51
 dist: trusty
 
 deploy:
