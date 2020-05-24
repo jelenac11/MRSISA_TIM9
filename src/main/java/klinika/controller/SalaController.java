@@ -121,8 +121,7 @@ public class SalaController {
 	public ResponseEntity<List<SalaDTO>> dobaviSlobodneSaleZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
 		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
 		Klinika k = admin.getKlinika();
-		List<Sala> sale = salaService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme(),
-				slobodanTerminDTO.getTrajanje());
+		List<Sala> sale = salaService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme());
 		List<SalaDTO> saleDTO = new ArrayList<>();
 		for (Sala sala : sale) {
 			saleDTO.add(new SalaDTO(sala));
@@ -136,8 +135,7 @@ public class SalaController {
 			@RequestBody SlobodanTerminOperacijaDTO slobodanTerminDTO) {
 		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
 		Klinika k = admin.getKlinika();
-		List<Sala> sale = salaService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme(),
-				slobodanTerminDTO.getTrajanje());
+		List<Sala> sale = salaService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme());
 		List<SalaDTO> saleDTO = new ArrayList<>();
 		for (Sala sala : sale) {
 			saleDTO.add(new SalaDTO(sala));

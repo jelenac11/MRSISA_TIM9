@@ -79,7 +79,7 @@ public class OperacijaService {
 		return kalendar;
 	}
 
-	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
+	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id) {
 		List<Operacija> operacije = operacijaRepository.findByLekar(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
 		for (Operacija operacija : operacije) {

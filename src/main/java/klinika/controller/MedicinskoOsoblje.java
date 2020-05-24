@@ -52,9 +52,6 @@ public class MedicinskoOsoblje {
 	@Autowired
 	private OdsustvoService odsustvoService;
 
-	@Autowired
-	private AutoritetService autoritetService;
-
 	@GetMapping(value = "/ucitajSve")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<List<MedicinskoOsobljeDTO>> ucitajSveZaposlene() {
@@ -80,9 +77,9 @@ public class MedicinskoOsoblje {
 		if (k == null) {
 			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 		}
-		List<RadniKalendarDTO> listOne = pregledService.kreirajRadniKalendarRadnika(k.getId(), new Date().getTime());
-		List<RadniKalendarDTO> listTwo = operacijaService.kreirajRadniKalendarRadnika(k.getId(), new Date().getTime());
-		List<RadniKalendarDTO> listThree = odsustvoService.kreirajRadniKalendarRadnika(k.getId(), new Date().getTime());
+		List<RadniKalendarDTO> listOne = pregledService.kreirajRadniKalendarRadnika(k.getId());
+		List<RadniKalendarDTO> listTwo = operacijaService.kreirajRadniKalendarRadnika(k.getId());
+		List<RadniKalendarDTO> listThree = odsustvoService.kreirajRadniKalendarRadnika(k.getId());
 		listOne.addAll(listTwo);
 		listOne.addAll(listThree);
 		return new ResponseEntity<>(listOne, HttpStatus.CREATED);

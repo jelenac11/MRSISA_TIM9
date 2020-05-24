@@ -1,5 +1,6 @@
 package klinika.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,7 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
-public class ZdravstveniKarton {
+public class ZdravstveniKarton implements Serializable {
+
+	private static final long serialVersionUID = -8738897810994211578L;
 
 	@Id
 	@Column(name = "zdravstveniKarton_id")

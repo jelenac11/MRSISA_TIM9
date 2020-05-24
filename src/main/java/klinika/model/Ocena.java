@@ -1,5 +1,7 @@
 package klinika.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -18,7 +20,9 @@ import javax.persistence.Table;
 @Table(name = "ocene")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tip", discriminatorType = DiscriminatorType.STRING)
-public class Ocena {
+public class Ocena implements Serializable {
+
+	private static final long serialVersionUID = 8585434331759049822L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

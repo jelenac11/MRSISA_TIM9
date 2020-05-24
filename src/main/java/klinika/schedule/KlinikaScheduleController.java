@@ -42,12 +42,10 @@ public class KlinikaScheduleController {
 
 		if (pregledi != null) {
 			for (Pregled p : pregledi) {
-				List<Sala> sale = salaService.findByIdKlinikaAndVreme(p.getKlinika().getId(), p.getVreme(), 3600000);
-				if (sale != null) {
-					if (!sale.isEmpty()) {
-						p.setSala(sale.get(0));
-						pregledService.save(p);
-					}
+				List<Sala> sale = salaService.findByIdKlinikaAndVreme(p.getKlinika().getId(), p.getVreme());
+				if (sale != null && !salePrazne(sale)) {
+					p.setSala(sale.get(0));
+					pregledService.save(p);
 				}
 
 				long dani = 0;
@@ -59,13 +57,11 @@ public class KlinikaScheduleController {
 					List<Long> termini = lekarService.vratiSlobodneTermine(pld);
 					if (termini != null) {
 						for (Long ter : termini) {
-							List<Sala> sale2 = salaService.findByIdKlinikaAndVreme(p.getKlinika().getId(), ter, 3600000);
-							if (sale2 != null) {
-								if (!sale2.isEmpty()) {
-									p.setSala(sale2.get(0));
-									p.setVreme(ter);
-									pregledService.save(p);
-								}
+							List<Sala> sale2 = salaService.findByIdKlinikaAndVreme(p.getKlinika().getId(), ter);
+							if (sale2 != null && !salePrazne(sale2)) {
+								p.setSala(sale2.get(0));
+								p.setVreme(ter);
+								pregledService.save(p);
 							}
 						}
 					}
@@ -77,12 +73,10 @@ public class KlinikaScheduleController {
 		
 		if (operacije != null) {
 			for (Operacija o : operacije) {
-				List<Sala> sale = salaService.findByIdKlinikaAndVreme(o.getKlinika().getId(), o.getVreme(), 3600000);
-				if (sale != null) {
-					if (!sale.isEmpty()) {
-						o.setSala(sale.get(0));
-						operacijaService.save(o);
-					}
+				List<Sala> sale = salaService.findByIdKlinikaAndVreme(o.getKlinika().getId(), o.getVreme());
+				if (sale != null && !salePrazne(sale)) {
+					o.setSala(sale.get(0));
+					operacijaService.save(o);
 				}
 
 				long dani = 0;
@@ -94,16 +88,14 @@ public class KlinikaScheduleController {
 					List<Long> termini = lekarService.vratiSlobodneTermine(pld);
 					if (termini != null) {
 						for (Long ter : termini) {
-							List<Sala> sale2 = salaService.findByIdKlinikaAndVreme(o.getKlinika().getId(), ter, 3600000);
-							if (sale2 != null) {
-								if (!sale2.isEmpty()) {
-									o.setSala(sale2.get(0));
-									o.setVreme(ter);
-									Lekar prvi = o.getLekari().iterator().next();
-									o.getLekari().clear();
-									o.getLekari().add(prvi);
-									operacijaService.save(o);
-								}
+							List<Sala> sale2 = salaService.findByIdKlinikaAndVreme(o.getKlinika().getId(), ter);
+							if (sale2 != null && salePrazne(sale2)) {
+								o.setSala(sale2.get(0));
+								o.setVreme(ter);
+								Lekar prvi = o.getLekari().iterator().next();
+								o.getLekari().clear();
+								o.getLekari().add(prvi);
+								operacijaService.save(o);
 							}
 						}
 					}
@@ -115,5 +107,9 @@ public class KlinikaScheduleController {
 				emailService.obavestiPacijentaZaOperaciju(o, "aleksa.goljovic4@gmail.com");
 			}
 		}
+	}
+
+	private boolean salePrazne(List<Sala> sale) {
+		return sale.isEmpty();
 	}
 }

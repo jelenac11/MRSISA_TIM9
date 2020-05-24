@@ -43,7 +43,7 @@ public class OdsustvoService {
 		return odsustvoRepository.findByOdgovorenoFalseAndKlinikaId(id);
 	}
 
-	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
+	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id) {
 		List<Odsustvo> odsustva = odsustvoRepository.findByPodnosilacIdAndOdobreno(id, true);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
 		for (Odsustvo odsustvo : odsustva) {

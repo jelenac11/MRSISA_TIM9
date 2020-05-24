@@ -1,5 +1,6 @@
 package klinika.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -14,7 +15,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Operacija {
+public class Operacija implements Serializable {
+
+	private static final long serialVersionUID = 2440573496164824484L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

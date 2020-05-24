@@ -1,5 +1,7 @@
 package klinika.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class Pregled {
+public class Pregled implements Serializable {
+
+	private static final long serialVersionUID = 5901849667943364452L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -76,12 +76,12 @@ public class LekarService {
 	}
 
 	public List<Lekar> findByIdKlinikaAndVremeAndTipPregleda(Long klinikaId, long datumiVreme,
-			TipPregledaDTO tipPregleda, int trajanje) {
+			TipPregledaDTO tipPregleda) {
 		return lekarRepository.findByIdKlinikaAndVremeAndTipPregleda(klinikaId, datumiVreme,
 				datumService.getRadnoVrijemeLongIzLong(datumiVreme), tipPregleda.getId());
 	}
 
-	public List<Lekar> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, int trajanje) {
+	public List<Lekar> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme) {
 		return lekarRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, (datumiVreme + 7200000) % 86400000);
 	}
 
@@ -96,22 +96,7 @@ public class LekarService {
 			Lekar le = l.get();
 			long pocetak = le.getPocetakRadnogVremena();
 			long kraj = le.getKrajRadnogVremena();
-			if (kraj < pocetak) {
-				int pre = (int) (kraj / 3600000);
-				int ostatak = (int) (kraj % 3600000);
-				for (int i = 0; i < pre; i++) {
-					vremena.add(pldto.getDatum() + i * 3600000 + ostatak);
-				}
-				int posle = (int) ((86400000 - pocetak) / 3600000);
-				for (int i = 0; i < posle; i++) {
-					vremena.add(pldto.getDatum() + pocetak + i * 3600000);
-				}
-			} else {
-				int sati = (int) ((kraj - pocetak) / 3600000);
-				for (int i = 0; i < sati; i++) {
-					vremena.add(pldto.getDatum() + pocetak + i * 3600000);
-				}
-			}
+			vremena = vratiRadneSate(pocetak, kraj, pldto.getDatum());
 			for (Pregled p : pregledi) {
 				if (vremena.contains(p.getVreme())) {
 					vremena.remove(p.getVreme());
@@ -121,6 +106,27 @@ public class LekarService {
 				if (vremena.contains(o.getVreme())) {
 					vremena.remove(o.getVreme());
 				}
+			}
+		}
+		return vremena;
+	}
+
+	private ArrayList<Long> vratiRadneSate(long pocetak, long kraj, long datum) {
+		ArrayList<Long> vremena = new ArrayList<>();
+		if (kraj < pocetak) {
+			int pre = (int) (kraj / 3600000);
+			int ostatak = (int) (kraj % 3600000);
+			for (int i = 0; i < pre; i++) {
+				vremena.add(datum + i * 3600000 + ostatak);
+			}
+			int posle = (int) ((86400000 - pocetak) / 3600000);
+			for (int i = 0; i < posle; i++) {
+				vremena.add(datum + pocetak + i * 3600000);
+			}
+		} else {
+			int sati = (int) ((kraj - pocetak) / 3600000);
+			for (int i = 0; i < sati; i++) {
+				vremena.add(datum + pocetak + i * 3600000);
 			}
 		}
 		return vremena;

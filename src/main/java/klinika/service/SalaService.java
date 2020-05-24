@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import klinika.dto.SalaDTO;
 import klinika.model.Sala;
-import klinika.repository.PregledRepository;
 import klinika.repository.SalaRepository;
 
 @Service
@@ -16,12 +15,6 @@ public class SalaService {
 
 	@Autowired
 	private SalaRepository salaRepository;
-
-	@Autowired
-	private PregledRepository pregledRepository;
-
-	@Autowired
-	private FormatDatumaService datumService;
 
 	public Sala findByBroj(int broj) {
 		return salaRepository.findByBrojAndAktivan(broj, true);
@@ -41,17 +34,19 @@ public class SalaService {
 
 	public boolean remove(Long id) {
 		Sala s = findOne(id);
-		if (s != null) {
-			if (!salaRepository.findBySalaIdAndVreme(id, new Date().getTime()).isEmpty()) {
-				s.setAktivan(false);
-				save(s);
-				return true;
-			}
+		if (s != null && !imaLiSale(id, new Date().getTime())) {
+			s.setAktivan(false);
+			save(s);
+			return true;
 		}
 		return false;
 	}
 
-	public List<Sala> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme, long trajanje) {
+	private boolean imaLiSale(Long id, long time) {
+		return salaRepository.findBySalaIdAndVreme(id, new Date().getTime()).isEmpty();
+	}
+
+	public List<Sala> findByIdKlinikaAndVreme(Long klinikaId, long datumiVreme) {
 		return salaRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, 3600000);
 	}
 
@@ -67,8 +62,6 @@ public class SalaService {
 				s.setBroj(salaDTO.getBroj());
 				salaRepository.save(s);
 				return true;
-			} else {
-				return false;
 			}
 		}
 		return false;

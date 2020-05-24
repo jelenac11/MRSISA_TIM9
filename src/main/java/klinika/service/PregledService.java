@@ -134,7 +134,7 @@ public class PregledService {
 		return kalendar;
 	}
 
-	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id, long time) {
+	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id) {
 		List<Pregled> pregledi = pregledRepository.findByLekarIdAndOtkazanFalse(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
 		for (Pregled pregled : pregledi) {

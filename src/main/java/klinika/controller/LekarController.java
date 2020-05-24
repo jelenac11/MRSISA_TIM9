@@ -156,8 +156,7 @@ public class LekarController {
 		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
 		Klinika k = admin.getKlinika();
 		List<Lekar> lekari = lekarService.findByIdKlinikaAndVremeAndTipPregleda(k.getId(),
-				slobodanTerminDTO.getDatumiVreme(), slobodanTerminDTO.getTipPregleda(),
-				slobodanTerminDTO.getTrajanje());
+				slobodanTerminDTO.getDatumiVreme(), slobodanTerminDTO.getTipPregleda());
 		List<LekarDTO> lekariDTO = new ArrayList<>();
 		for (Lekar lekar : lekari) {
 			lekariDTO.add(new LekarDTO(lekar));
@@ -171,8 +170,7 @@ public class LekarController {
 			@RequestBody SlobodanTerminOperacijaDTO slobodanTerminDTO) {
 		AdminKlinike admin = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
 		Klinika k = admin.getKlinika();
-		List<Lekar> lekari = lekarService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme(),
-				slobodanTerminDTO.getTrajanje());
+		List<Lekar> lekari = lekarService.findByIdKlinikaAndVreme(k.getId(), slobodanTerminDTO.getDatumiVreme());
 		List<LekarDTO> lekariDTO = new ArrayList<>();
 		for (Lekar lekar : lekari) {
 			lekariDTO.add(new LekarDTO(lekar));
