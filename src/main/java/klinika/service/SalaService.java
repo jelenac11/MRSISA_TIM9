@@ -34,7 +34,7 @@ public class SalaService {
 
 	public boolean remove(Long id) {
 		Sala s = findOne(id);
-		if (s != null && !imaLiSale(id, new Date().getTime())) {
+		if (s != null && !imaLiSale(id)) {
 			s.setAktivan(false);
 			save(s);
 			return true;
@@ -42,7 +42,7 @@ public class SalaService {
 		return false;
 	}
 
-	private boolean imaLiSale(Long id, long time) {
+	private boolean imaLiSale(Long id) {
 		return salaRepository.findBySalaIdAndVreme(id, new Date().getTime()).isEmpty();
 	}
 

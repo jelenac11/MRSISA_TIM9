@@ -1,5 +1,6 @@
 package klinika.model;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -11,7 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Sifrarnik {
+public class Sifrarnik implements Serializable {
+
+	private static final long serialVersionUID = 5874043670917218458L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

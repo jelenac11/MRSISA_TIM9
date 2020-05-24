@@ -1,7 +1,6 @@
 package klinika.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import klinika.dto.RadniKalendarDTO;
 import klinika.model.Korisnik;
 import klinika.model.Lekar;
 import klinika.model.MedSestra;
-import klinika.service.AutoritetService;
 import klinika.service.KorisnikService;
 import klinika.service.LekarService;
 import klinika.service.MedSestraService;

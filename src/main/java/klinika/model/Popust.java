@@ -1,5 +1,7 @@
 package klinika.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Popust {
+public class Popust implements Serializable {
+
+	private static final long serialVersionUID = -6250597383419757589L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
