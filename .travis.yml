@@ -1,0 +1,19 @@
+sudo: required
+language: java
+jdk: oraclejdk8
+
+services:
+  - postgresql
+
+before_install:
+  - chmod +x mvnw
+
+script:
+  - ./mvnw clean install -DskipTests=false -B
+
+dist: trusty
+
+deploy:
+  provider: heroku
+  api_key: 6b6a8330-5f24-4ab9-9289-850dfa358215
+  app: mrsisa09
