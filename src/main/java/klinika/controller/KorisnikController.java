@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import klinika.dto.KorisnikDTO;
 import klinika.model.Autoritet;
 import klinika.model.Korisnik;
-import klinika.security.TokenUtils;
 import klinika.service.KorisnikService;
 
 @RestController
@@ -26,12 +24,6 @@ public class KorisnikController {
 
 	@Autowired
 	KorisnikService korisnikService;
-
-	@Autowired
-	private AuthenticationManager authenticationManager;
-
-	@Autowired
-	private TokenUtils tokenUtils;
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'PACIJENT', 'ADMIN_KLINIKE', 'LEKAR', 'MED_SESTRA')")
@@ -45,6 +37,7 @@ public class KorisnikController {
 		korisnik.setDrzava(korisnikDTO.getDrzava());
 		korisnik.setGrad(korisnikDTO.getGrad());
 		korisnik.setIme(korisnikDTO.getIme());
+		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
 		korisnik.setPrezime(korisnikDTO.getPrezime());
 		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());

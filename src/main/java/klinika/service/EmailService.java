@@ -33,9 +33,6 @@ public class EmailService {
 	@Autowired
 	private TokenPotvrdePregledaService tokenPotvrdePregledaService;
 
-	@Autowired
-	private TokenPotvrdeOperacijeService tokenPotvrdeOperacijeService;
-
 	@Async
 	public void posaljiEmail(String to, String subject, String text) throws MailException, InterruptedException {
 		SimpleMailMessage message = new SimpleMailMessage();

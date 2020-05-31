@@ -29,9 +29,6 @@ public class IzvestajService {
 	private ReceptService receptService;
 	
 	@Autowired
-	private ZdravstveniKartonService kartonService;
-	
-	@Autowired
 	private StavkaSifrarnikaService stavkaSifrarnikaService;
 
 	public Izvestaj findOne(Long id) {

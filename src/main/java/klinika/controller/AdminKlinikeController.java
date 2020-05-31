@@ -94,24 +94,24 @@ public class AdminKlinikeController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<AdminKlinikeDTO> promeniKorisnika(@RequestBody AdminKlinikeDTO korisnikDTO) {
-
-		AdminKlinike korisnik = adminKlinikeService.findOne(korisnikDTO.getId());
-		if (korisnik == null) {
+	public ResponseEntity<AdminKlinikeDTO> promeniKorisnika(@RequestBody AdminKlinikeDTO akDTO) {
+		AdminKlinike ak = adminKlinikeService.findOne(akDTO.getId());
+		if (ak == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		korisnik.setAdresa(korisnikDTO.getAdresa());
-		korisnik.setDrzava(korisnikDTO.getDrzava());
-		korisnik.setGrad(korisnikDTO.getGrad());
-		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setPrezime(korisnikDTO.getPrezime());
-		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
-		korisnik.setAktiviran(korisnikDTO.isAktiviran());
-		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
-		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
-		korisnik.setKlinika(klinikaService.findByNaziv(korisnikDTO.getKlinika()));
+		ak.setAdresa(akDTO.getAdresa());
+		ak.setDrzava(akDTO.getDrzava());
+		ak.setGrad(akDTO.getGrad());
+		ak.setIme(akDTO.getIme());
+		ak.setLozinka(korisnikService.encodePassword(akDTO.getLozinka()));
+		ak.setPrezime(akDTO.getPrezime());
+		ak.setBrojTelefona(akDTO.getBrojTelefona());
+		ak.setAktiviran(akDTO.isAktiviran());
+		ak.setPromenjenaLozinka(akDTO.isPromenjenaLozinka());
+		ak.setVerifikovan(akDTO.isVerifikovan());
+		ak.setKlinika(klinikaService.findByNaziv(akDTO.getKlinika()));
 
-		korisnik = adminKlinikeService.save(korisnik);
-		return new ResponseEntity<>(new AdminKlinikeDTO(korisnik), HttpStatus.OK);
+		ak = adminKlinikeService.save(ak);
+		return new ResponseEntity<>(new AdminKlinikeDTO(ak), HttpStatus.OK);
 	}
 }

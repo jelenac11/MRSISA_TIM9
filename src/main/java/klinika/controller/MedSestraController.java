@@ -104,27 +104,27 @@ public class MedSestraController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('MED_SESTRA')")
-	public ResponseEntity<MedSestraDTO> promeniKorisnika(@RequestBody MedSestraDTO korisnikDTO) {
+	public ResponseEntity<MedSestraDTO> promeniKorisnika(@RequestBody MedSestraDTO msDTO) {
 
-		MedSestra korisnik = medicinskaSestraService.findOne(korisnikDTO.getId());
-		if (korisnik == null) {
+		MedSestra ms = medicinskaSestraService.findOne(msDTO.getId());
+		if (ms == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		korisnik.setAdresa(korisnikDTO.getAdresa());
-		korisnik.setDrzava(korisnikDTO.getDrzava());
-		korisnik.setGrad(korisnikDTO.getGrad());
-		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setPrezime(korisnikDTO.getPrezime());
-		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
-		korisnik.setAktiviran(korisnikDTO.isAktiviran());
-		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
-		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
-		korisnik.setKlinika(klinikaService.findByNaziv(korisnikDTO.getKlinika()));
-		korisnik.setPocetakRadnogVremena(korisnikDTO.getPocetakRadnogVremena());
-		korisnik.setKrajRadnogVremena(korisnikDTO.getKrajRadnogVremena());
+		ms.setAdresa(msDTO.getAdresa());
+		ms.setDrzava(msDTO.getDrzava());
+		ms.setGrad(msDTO.getGrad());
+		ms.setIme(msDTO.getIme());
+		ms.setPrezime(msDTO.getPrezime());
+		ms.setBrojTelefona(msDTO.getBrojTelefona());
+		ms.setAktiviran(msDTO.isAktiviran());
+		ms.setPromenjenaLozinka(msDTO.isPromenjenaLozinka());
+		ms.setVerifikovan(msDTO.isVerifikovan());
+		ms.setKlinika(klinikaService.findByNaziv(msDTO.getKlinika()));
+		ms.setPocetakRadnogVremena(msDTO.getPocetakRadnogVremena());
+		ms.setKrajRadnogVremena(msDTO.getKrajRadnogVremena());
 
-		korisnik = medicinskaSestraService.save(korisnik);
-		return new ResponseEntity<>(new MedSestraDTO(korisnik), HttpStatus.OK);
+		ms = medicinskaSestraService.save(ms);
+		return new ResponseEntity<>(new MedSestraDTO(ms), HttpStatus.OK);
 	}
 
 }

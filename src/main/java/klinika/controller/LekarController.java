@@ -57,7 +57,7 @@ public class LekarController {
 
 	@Autowired
 	private KlinikaService klinikaService;
-
+	
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAnyRole('PACIJENT', 'ADMIN_KLINIKE', 'LEKAR', 'MED_SESTRA')")
 	public ResponseEntity<LekarDTO> ucitajPoId(@PathVariable Long id) {
@@ -126,27 +126,26 @@ public class LekarController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('LEKAR')")
-	public ResponseEntity<LekarDTO> promeniKorisnika(@RequestBody LekarDTO korisnikDTO) {
-
-		Lekar korisnik = lekarService.findOne(korisnikDTO.getId());
-		if (korisnik == null) {
+	public ResponseEntity<LekarDTO> promeniKorisnika(@RequestBody LekarDTO lDTO) {
+		Lekar l = lekarService.findOne(lDTO.getId());
+		if (l == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		korisnik.setAdresa(korisnikDTO.getAdresa());
-		korisnik.setDrzava(korisnikDTO.getDrzava());
-		korisnik.setGrad(korisnikDTO.getGrad());
-		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setPrezime(korisnikDTO.getPrezime());
-		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
-		korisnik.setAktiviran(korisnikDTO.isAktiviran());
-		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
-		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
-		korisnik.setKlinika(klinikaService.findByNaziv(korisnikDTO.getKlinika()));
-		korisnik.setPocetakRadnogVremena(korisnikDTO.getPocetakRadnogVremena());
-		korisnik.setKrajRadnogVremena(korisnikDTO.getKrajRadnogVremena());
+		l.setAdresa(lDTO.getAdresa());
+		l.setDrzava(lDTO.getDrzava());
+		l.setGrad(lDTO.getGrad());
+		l.setIme(lDTO.getIme());
+		l.setPrezime(lDTO.getPrezime());
+		l.setBrojTelefona(lDTO.getBrojTelefona());
+		l.setAktiviran(lDTO.isAktiviran());
+		l.setPromenjenaLozinka(lDTO.isPromenjenaLozinka());
+		l.setVerifikovan(lDTO.isVerifikovan());
+		l.setKlinika(klinikaService.findByNaziv(lDTO.getKlinika()));
+		l.setPocetakRadnogVremena(lDTO.getPocetakRadnogVremena());
+		l.setKrajRadnogVremena(lDTO.getKrajRadnogVremena());
 
-		korisnik = lekarService.save(korisnik);
-		return new ResponseEntity<>(new LekarDTO(korisnik), HttpStatus.OK);
+		l = lekarService.save(l);
+		return new ResponseEntity<>(new LekarDTO(l), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "dobaviSlobodneLekareZaPregled", consumes = "application/json")

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import klinika.dto.PacijentDTO;
 import klinika.model.Pacijent;
-import klinika.service.KorisnikService;
 import klinika.service.PacijentService;
 
 @RestController
@@ -25,9 +24,6 @@ public class PacijentController {
 
 	@Autowired
 	private PacijentService pacijentService;
-
-	@Autowired
-	private KorisnikService korisnikService;
 
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'LEKAR', 'MED_SESTRA')")
@@ -50,24 +46,24 @@ public class PacijentController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<PacijentDTO> promeniKorisnika(@RequestBody PacijentDTO korisnikDTO) {
+	public ResponseEntity<PacijentDTO> promeniKorisnika(@RequestBody PacijentDTO pDTO) {
 
-		Pacijent korisnik = pacijentService.findOne(korisnikDTO.getId());
-		if (korisnik == null) {
+		Pacijent p = pacijentService.findOne(pDTO.getId());
+		if (p == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		korisnik.setAdresa(korisnikDTO.getAdresa());
-		korisnik.setDrzava(korisnikDTO.getDrzava());
-		korisnik.setGrad(korisnikDTO.getGrad());
-		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setPrezime(korisnikDTO.getPrezime());
-		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
-		korisnik.setAktiviran(korisnikDTO.isAktiviran());
-		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
-		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
+		p.setAdresa(pDTO.getAdresa());
+		p.setDrzava(pDTO.getDrzava());
+		p.setGrad(pDTO.getGrad());
+		p.setIme(pDTO.getIme());
+		p.setPrezime(pDTO.getPrezime());
+		p.setBrojTelefona(pDTO.getBrojTelefona());
+		p.setAktiviran(pDTO.isAktiviran());
+		p.setPromenjenaLozinka(pDTO.isPromenjenaLozinka());
+		p.setVerifikovan(pDTO.isVerifikovan());
 
-		korisnik = pacijentService.save(korisnik);
-		return new ResponseEntity<>(new PacijentDTO(korisnik), HttpStatus.OK);
+		p = pacijentService.save(p);
+		return new ResponseEntity<>(new PacijentDTO(p), HttpStatus.OK);
 	}
 
 	@GetMapping("dobaviSvePoIdKlinike/{id}")

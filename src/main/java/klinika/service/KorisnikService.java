@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import klinika.dto.OdsustvoDTO;
 import klinika.model.Klinika;
 import klinika.model.Korisnik;
@@ -22,7 +21,6 @@ import klinika.model.MedicinskoOsoblje;
 import klinika.model.Odsustvo;
 import klinika.model.Operacija;
 import klinika.model.Pregled;
-import klinika.repository.KlinikaRepository;
 import klinika.repository.KorisnikRepository;
 import klinika.repository.MedicinskoOsobljeRepository;
 import klinika.repository.OdsustvoRepository;
@@ -51,9 +49,6 @@ public class KorisnikService implements UserDetailsService {
 
 	@Autowired
 	private OdsustvoRepository odsustvoRepository;
-
-	@Autowired
-	private KlinikaRepository klinikaRepository;
 
 	@Autowired
 	private MedicinskoOsobljeRepository medicinskoOsobljeRepository;

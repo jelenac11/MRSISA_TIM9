@@ -133,14 +133,12 @@ public class KlinikaService {
 					long krajRadnog = l.getKrajRadnogVremena();
 					List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(l.getId(), pkdto.getDatum(),
 							pkdto.getDatum() + 86400000);
-					List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(l.getId(), pkdto.getDatum(),
+					List<Pregled> pregledi = pregledRepository.findByLekarAndVremeAndPacijentIdIsNotNull(l.getId(), pkdto.getDatum(),
 							pkdto.getDatum() + 86400000);
 					int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
 					for (int i = 0; i <= pregledi.size() - 1; i++) {
-						if (pregledi.get(i).getPacijent() == null) {
-							pregledi.remove(i);
-							i--;
-						}
+						pregledi.remove(i);
+						i--;
 					}
 					if ((operacije.size() + pregledi.size()) < sati) {
 						lekariDTO.add(new LekarDTO(l));

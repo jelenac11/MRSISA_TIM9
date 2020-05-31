@@ -77,23 +77,23 @@ public class AdminCentraController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
-	public ResponseEntity<AdminCentraDTO> promeniKorisnika(@RequestBody AdminCentraDTO korisnikDTO) {
-
-		AdminCentra korisnik = adminCentraService.findOne(korisnikDTO.getId());
-		if (korisnik == null) {
+	public ResponseEntity<AdminCentraDTO> promeniKorisnika(@RequestBody AdminCentraDTO adminDTO) {
+		AdminCentra admin = adminCentraService.findOne(adminDTO.getId());
+		if (admin == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		korisnik.setAdresa(korisnikDTO.getAdresa());
-		korisnik.setDrzava(korisnikDTO.getDrzava());
-		korisnik.setGrad(korisnikDTO.getGrad());
-		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setPrezime(korisnikDTO.getPrezime());
-		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
-		korisnik.setAktiviran(korisnikDTO.isAktiviran());
-		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
-		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
+		admin.setAdresa(adminDTO.getAdresa());
+		admin.setDrzava(adminDTO.getDrzava());
+		admin.setGrad(adminDTO.getGrad());
+		admin.setIme(adminDTO.getIme());
+		admin.setLozinka(korisnikService.encodePassword(adminDTO.getLozinka()));
+		admin.setPrezime(adminDTO.getPrezime());
+		admin.setBrojTelefona(adminDTO.getBrojTelefona());
+		admin.setAktiviran(adminDTO.isAktiviran());
+		admin.setPromenjenaLozinka(adminDTO.isPromenjenaLozinka());
+		admin.setVerifikovan(adminDTO.isVerifikovan());
 
-		korisnik = adminCentraService.save(korisnik);
-		return new ResponseEntity<>(new AdminCentraDTO(korisnik), HttpStatus.OK);
+		admin = adminCentraService.save(admin);
+		return new ResponseEntity<>(new AdminCentraDTO(admin), HttpStatus.OK);
 	}
 }
