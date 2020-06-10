@@ -28,10 +28,10 @@ Vue.component("sale", {
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="sala in filtriraneSale" data-toggle="modal" data-target="#izmenaSaleModal" v-on:click="izaberiSalu(sala)">
-				      	<td width="33%">{{ sala.broj }}</td>
-				      	<td width="33%">{{ sala.naziv }}</td>
-				      	<td width="33%"><button class="btn btn-danger btn-sm" v-on:click="obrisiSalu(sala)" id="brisanjeSale">Ukloni</button></td>
+			  		<tr v-for="sala in filtriraneSale">
+				      	<td width="30%" data-toggle="modal" data-target="#izmenaSaleModal" v-on:click="izaberiSalu(sala)">{{ sala.broj }}</td>
+				      	<td width="60%" data-toggle="modal" data-target="#izmenaSaleModal" v-on:click="izaberiSalu(sala)">{{ sala.naziv }}</td>
+				      	<td width="10%"><button class="btn btn-danger btn-sm" v-on:click="obrisiSalu(sala)" id="brisanjeSale">Ukloni</button></td>
 			    	</tr>
 			  	</tbody>
 			</table>
@@ -85,11 +85,9 @@ Vue.component("sale", {
 					if (response.data==true) {
 						toast("Uspešno izbrisana sala!");
 						this.dobaviSve();
-						this.$router.go();
 					} else {
 						toast("Nije moguće izbrisati salu!")
 						this.dobaviSve();
-						this.$router.go();
 					}
 				})
 		        .catch(function (error) { console.log(error); });
@@ -125,7 +123,7 @@ Vue.component("sale", {
 		},
 		dobaviSve : function() {
 			axios
-	        .get('/sale/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
+	        .get('/sale/ucitajSve/'+this.ulogovan.id, { headers: { Authorization: 'Bearer ' + this.token }} )
 	        .then(response => (this.sale = response.data))
 	        .catch(function (error) { console.log(error); });
 		},
@@ -133,9 +131,13 @@ Vue.component("sale", {
 	created() {
 		this.token = localStorage.getItem("token");
 		axios
-        .get('/sale/ucitajSve', { headers: { Authorization: 'Bearer ' + this.token }} )
-        .then(response => (this.sale = response.data))
+		.get('/auth/dobaviUlogovanog', { headers: { Authorization: 'Bearer ' + this.token }} )
+        .then(response => { 
+        	this.ulogovan=response.data
+        	this.dobaviSve();
+        })
         .catch(function (error) { console.log(error); });
+		
 	},
 	computed : {
 		filtriraneSale : function() {

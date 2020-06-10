@@ -3,9 +3,13 @@ package klinika.schedule;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
+import klinika.dto.LekarDTO;
+import klinika.dto.PacijentDTO;
+import klinika.dto.PredefinisaniDTO;
 import klinika.dto.PretragaLekaraDTO;
 import klinika.model.Lekar;
 import klinika.model.Operacija;

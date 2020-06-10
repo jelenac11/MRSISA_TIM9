@@ -32,6 +32,7 @@ import klinika.model.AdminKlinike;
 import klinika.model.Korisnik;
 import klinika.model.Pregled;
 import klinika.service.AdminKlinikeService;
+import klinika.service.EmailService;
 import klinika.service.KorisnikService;
 import klinika.service.PregledService;
 
@@ -48,6 +49,9 @@ public class PregledController {
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
 
+	@Autowired
+	private EmailService emailService;
+	
 	@PostMapping(value = "dodajSlobodanTerminZaPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> dodajSlobodanTerminZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
@@ -99,7 +103,13 @@ public class PregledController {
 	@PostMapping(value = "dodijeliSaluPregledu", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> dodijeliSaluPregledu(@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
+		try {
 		pregledService.dodijeliSalu(slobodanTerminDTO);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 

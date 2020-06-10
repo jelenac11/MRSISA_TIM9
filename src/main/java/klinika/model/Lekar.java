@@ -1,5 +1,6 @@
 package klinika.model;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,6 +39,9 @@ public class Lekar extends MedicinskoOsoblje {
 
 	@Column(name = "prosecna_ocena")
 	private double prosecnaOcena;
+	
+	@Column
+	private Date izmjena;
 
 	public Lekar() {
 		super();
@@ -90,5 +94,18 @@ public class Lekar extends MedicinskoOsoblje {
 	public void setProsecnaOcena(double prosecnaOcena) {
 		this.prosecnaOcena = prosecnaOcena;
 	}
+
+	public Date getPoslednjaIzmena() {
+		return izmjena;
+	}
+
+	public void setPoslednjaIzmena(Date poslednjaIzmena) {
+		this.izmjena = poslednjaIzmena;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 
 }

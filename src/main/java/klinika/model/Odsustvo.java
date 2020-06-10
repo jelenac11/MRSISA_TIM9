@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 @Entity
 public class Odsustvo implements Serializable  {
@@ -44,6 +45,8 @@ public class Odsustvo implements Serializable  {
 	@Column(name = "obrazlozenje", nullable = true)
 	private String obrazlozenje;
 
+	@Version
+	private long version;
 	public Odsustvo() {
 		super();
 	}
@@ -110,6 +113,18 @@ public class Odsustvo implements Serializable  {
 
 	public void setKlinika(Klinika klinika) {
 		this.klinika = klinika;
+	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 }

@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import klinika.dto.OdsustvoDTO;
 import klinika.dto.RadniKalendarDTO;
 import klinika.model.Odsustvo;
 import klinika.repository.OdsustvoRepository;
@@ -23,6 +27,7 @@ public class OdsustvoService {
 	@Autowired
 	EmailService mailService;
 
+	@Transactional(readOnly = true)
 	public Odsustvo findOne(Long id) {
 		return odsustvoRepository.findById(id).orElseGet(null);
 	}
@@ -31,6 +36,7 @@ public class OdsustvoService {
 		return odsustvoRepository.findAll();
 	}
 
+	@Transactional(readOnly = false)
 	public Odsustvo save(Odsustvo odsustvo) {
 		return odsustvoRepository.save(odsustvo);
 	}
@@ -62,6 +68,23 @@ public class OdsustvoService {
 			e.printStackTrace();
 		}
 		return ods;
+	}
+	
+	@Transactional(readOnly = false)
+	public Odsustvo azurirajOdsustvo(OdsustvoDTO odsustvoDTO) {
+		Odsustvo odsustvo = findOne(odsustvoDTO.getId());
+		if (odsustvo == null) {
+			return null;
+		}
+
+		odsustvo.setObrazlozenje(odsustvoDTO.getObrazlozenje());
+		odsustvo.setOdgovoreno(odsustvoDTO.isOdgovoreno());
+		odsustvo.setOdobreno(odsustvoDTO.isOdobreno());
+
+		odsustvo = odsustvoRepository.save(odsustvo);
+		
+		return odsustvo;
+		
 	}
 
 }

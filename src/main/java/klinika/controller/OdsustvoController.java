@@ -57,17 +57,16 @@ public class OdsustvoController {
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	@PutMapping(value = "/updateOdsustvo", consumes = "application/json")
 	public ResponseEntity<OdsustvoDTO> updateOdsustvo(@RequestBody OdsustvoDTO odsustvoDTO) {
-		Odsustvo odsustvo = service.findOne(odsustvoDTO.getId());
-		if (odsustvo == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		Odsustvo odsustvo=null;
+		try {
+			odsustvo = service.azurirajOdsustvo(odsustvoDTO);
 		}
-
-		odsustvo.setObrazlozenje(odsustvoDTO.getObrazlozenje());
-		odsustvo.setOdgovoreno(odsustvoDTO.isOdgovoreno());
-		odsustvo.setOdobreno(odsustvoDTO.isOdobreno());
-
-		odsustvo = service.save(odsustvo);
-
+		catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		}
+		if(odsustvo==null) {
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		}
 		odsustvoDTO.setId(odsustvo.getId());
 		odsustvoDTO.setKraj(odsustvo.getKraj());
 		odsustvoDTO.setObrazlozenje(odsustvo.getObrazlozenje());

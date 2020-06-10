@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import klinika.dto.SalaDTO;
 import klinika.model.Sala;
@@ -27,16 +28,17 @@ public class SalaService {
 	public List<Sala> findAll() {
 		return salaRepository.findAllByAktivan(true);
 	}
-
+	@Transactional(readOnly = false)
 	public Sala save(Sala sala) {
 		return salaRepository.save(sala);
 	}
 
+	@Transactional(readOnly = false)
 	public boolean remove(Long id) {
 		Sala s = findOne(id);
 		if (s != null && !imaLiSale(id)) {
 			s.setAktivan(false);
-			save(s);
+			salaRepository.save(s);
 			return true;
 		}
 		return false;
@@ -50,14 +52,15 @@ public class SalaService {
 		return salaRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, 3600000);
 	}
 
+	@Transactional(readOnly = false)
 	public boolean update(SalaDTO salaDTO, Sala sala) {
+		Sala s = salaRepository.findById(salaDTO.getId()).orElseGet(null);
 		if (!salaRepository.findBySalaIdAndVreme(salaDTO.getId(), new Date().getTime()).isEmpty()) {
 			Sala postojiNaziv = null;
 			if (!salaDTO.getNaziv().equals(sala.getNaziv())) {
 				postojiNaziv = salaRepository.findByNazivAndAktivan(salaDTO.getNaziv(), true);
 			}
 			if (postojiNaziv == null) {
-				Sala s = salaRepository.findById(salaDTO.getId()).orElseGet(null);
 				s.setNaziv(salaDTO.getNaziv());
 				s.setBroj(salaDTO.getBroj());
 				salaRepository.save(s);

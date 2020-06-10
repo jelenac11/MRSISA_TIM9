@@ -13,9 +13,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 
 @Entity
 public class Sala implements Serializable {
+
+	public long getIzmjena() {
+		return izmjena;
+	}
+
+	public void setIzmjena(long izmjena) {
+		this.izmjena = izmjena;
+	}
 
 	private static final long serialVersionUID = -8670179321910541563L;
 
@@ -43,6 +52,12 @@ public class Sala implements Serializable {
 	@Column(name = "aktivan")
 	private boolean aktivan;
 
+	@Version
+	private long version;
+	
+	@Column(nullable = true)
+	private long izmjena;
+	
 	public Sala() {
 		super();
 	}
@@ -102,4 +117,17 @@ public class Sala implements Serializable {
 	public void setAktivan(boolean aktivan) {
 		this.aktivan = aktivan;
 	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 }

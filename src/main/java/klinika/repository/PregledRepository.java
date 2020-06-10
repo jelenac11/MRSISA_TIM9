@@ -21,7 +21,7 @@ public interface PregledRepository extends JpaRepository<Pregled, Long> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "insert into pregled(lekar_id,tip_pregleda_id,sala_id,vreme,trajanje,klinika_id,pacijent_id, otkazan, zauzet, potvrdjen) values(?1,?2,?3,?4,?5,?6,null,false,false,true)", nativeQuery = true)
+	@Query(value = "insert into pregled(lekar_id,tip_pregleda_id,sala_id,vreme,trajanje,klinika_id,pacijent_id, otkazan, zauzet, potvrdjen,version) values(?1,?2,?3,?4,?5,?6,null,false,false,true,0)", nativeQuery = true)
 	public int insertPregled(long lekar, long tipPregleda, long sala, long vreme, int trajanje, long klinika);
 
 	@Query(value = "SELECT * FROM pregled p WHERE p.vreme >= ?2 and p.vreme <= ?3 and p.klinika_id = ?1 and p.otkazan=false and p.tip_pregleda_id = ?4 and p.pacijent_id is null", nativeQuery = true)
@@ -32,7 +32,7 @@ public interface PregledRepository extends JpaRepository<Pregled, Long> {
 
 	@Modifying
 	@Transactional
-	@Query(value = "insert into pregled(lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, sala_id, otkazan, zauzet, potvrdjen) values (?1, ?2, ?3, ?4, 3600000, ?5, null, false, true, false)", nativeQuery = true)
+	@Query(value = "insert into pregled(lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, sala_id, otkazan, zauzet, potvrdjen,version) values (?1, ?2, ?3, ?4, 3600000, ?5, null, false, true, false,0)", nativeQuery = true)
 	public void insertZakazaniPregled(long lekar, long pacijent, long tip, long vreme, long klinikaId);
 
 	public List<Pregled> findByOtkazanAndZauzetAndKlinikaIdAndVremeAfterAndSalaIdIsNotNullAndPotvrdjen(boolean b,

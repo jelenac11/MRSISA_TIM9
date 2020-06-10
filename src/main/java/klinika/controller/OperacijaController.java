@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import klinika.dto.LekarDTO;
 import klinika.dto.OperacijaDTO;
 import klinika.dto.PretragaLekaraDTO;
 import klinika.dto.SlobodanTerminOperacijaDTO;
@@ -24,6 +25,7 @@ import klinika.dto.ZakaziTerminLekarDTO;
 import klinika.model.AdminKlinike;
 import klinika.model.Operacija;
 import klinika.service.AdminKlinikeService;
+import klinika.service.EmailService;
 import klinika.service.OperacijaService;
 
 @RestController
@@ -35,6 +37,9 @@ public class OperacijaController {
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@GetMapping(value = "ucitajSveOperacijeNaCekanju/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
@@ -73,7 +78,13 @@ public class OperacijaController {
 	@PostMapping(value = "dodijeliSaluOperaciji", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> dodijeliSaluOperaciji(@RequestBody SlobodanTerminOperacijaDTO slobodanTerminDTO) {
-		operacijaService.dodijeliSalu(slobodanTerminDTO);
+		try {
+			operacijaService.dodijeliSalu(slobodanTerminDTO);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 

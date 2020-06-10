@@ -44,11 +44,11 @@ insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_gr
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (2, 177, 75, 0.2, 'AB');
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (11, 175, 75, 0.0, '0+');
 
-insert into sala (broj, naziv, klinika_id,aktivan) values(1, 'Sala 1', 1, true);
-insert into sala (broj, naziv, klinika_id,aktivan) values(2, 'Sala 2', 1, true);
-insert into sala (broj, naziv, klinika_id,aktivan) values(3, 'Sala 3', 1, false);
-insert into sala (broj, naziv, klinika_id,aktivan) values(4, 'Sala 4', 1, false);
-insert into sala (broj, naziv, klinika_id,aktivan) values(5, 'Sala 5', 1, false);
+insert into sala (broj, naziv, klinika_id,aktivan,version,izmjena) values(1, 'Sala 1', 1, true,0,0);
+insert into sala (broj, naziv, klinika_id,aktivan,version,izmjena) values(2, 'Sala 2', 1, true,0,0);
+insert into sala (broj, naziv, klinika_id,aktivan,version,izmjena) values(3, 'Sala 3', 1, false,0,0);
+insert into sala (broj, naziv, klinika_id,aktivan,version,izmjena) values(4, 'Sala 4', 1, false,0,0);
+insert into sala (broj, naziv, klinika_id,aktivan,version,izmjena) values(5, 'Sala 5', 1, false,0,0);
 
 insert into sifrarnik (naziv, tip_sifrarnika) values('Šifrarnik lekova', 'LEKOVI');
 insert into sifrarnik (naziv, tip_sifrarnika) values('Šifrarnik dijagnoza', 'DIJAGNOZE');
@@ -66,9 +66,9 @@ insert into stavka_sifrarnika (sifra, naziv, tip_sifre, sifrarnik_id) values('D1
 insert into stavka_sifrarnika (sifra, naziv, tip_sifre, sifrarnik_id) values('D787', 'Šarlah', 'DIJAGNOZE', 2);
 
 -- od Thu Jun 04 2020 01:00:00 do Fri Jun 19 2020 15:00:00
-insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591225200000, 1, 6);
-insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591225200000, 1, 7);
-insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id) values(1592571600000, '', false, false, 1591225200000, 1, 8);
+insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id,version) values(1592571600000, '', false, false, 1591225200000, 1, 6,0);
+insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id,version) values(1592571600000, '', false, false, 1591225200000, 1, 7,0);
+insert into odsustvo (kraj, obrazlozenje, odgovoreno, odobreno, pocetak, klinika_id, podnosilac_id,version) values(1592571600000, '', false, false, 1591225200000, 1, 8,0);
 
 insert into tip_pregleda (naziv, opis, klinika_id, aktivan) values ('Uklanjanje mekih naslaga', 'Dečija stomatologija', 1,true);
 insert into tip_pregleda (naziv, opis, klinika_id, aktivan) values ('Stomatološki pregled', 'Klinički pregled zuba, uzimanje statusa svakog zuba pojedinačno', 1,true);
@@ -88,39 +88,39 @@ insert into specijalizovan (lekar_id, tip_pregleda_id) values (9, 6);
 
 -- potvrdjeni pregledi
 -- Thu May 9 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1589011200000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1589011200000, 3600000, 1, false, true, true, 1, 1);
 -- Thu May 10 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 1, 1, 1589097600000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 1, 1, 1589097600000, 3600000, 1, false, true, true, 1, 1);
 -- Sat May 20 2020 21:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1590004800000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1590004800000, 3600000, 1, false, true, true, 1, 1);
 -- Sun May 20 2020 21:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, 1, 1, 1590004800000, 3600000, 1, false, true, true, 2);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (7, 1, 1, 1590004800000, 3600000, 1, false, true, true, 2, 1);
 -- Sun May 21 2020 08:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1590040800000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1590040800000, 3600000, 1, false, true, true, 1, 1);
 -- Sun May 22 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1590134400000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1590134400000, 3600000, 1, false, true, true, 1, 1);
 -- Sun May 24 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1590307200000, 3600000, 1, false, true, true, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1590307200000, 3600000, 1, false, true, true, 1, 1);
 
 -- zahtevi bez sale
 -- Fri May 27 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, 1, 1, 1590566400000, 3600000, 1, false, false, true, null);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (7, 1, 1, 1590566400000, 3600000, 1, false, false, true, null, 1);
 -- Fri May 27 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (8, 11, 2, 1590566400000, 3600000, 1, false, false, true, null);
--- Fri May 27 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, 2, 1, 1590566400000, 3600000, 1, false, false, true, null);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (8, 11, 2, 1590566400000, 3600000, 1, false, false, true, null, 1);
+-- Fri May 15 2020 10:00:00
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1592215200000, 3600000, 1, false, false, true, null, 1);
 
 -- predefinisani
--- Wed Jun 01 2020 08:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (6, null, 1, 1590991200000, 3600000, 1, false, false, false, 1);
+-- Wed Jun 15 2020 08:00:00
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, null, 1, 1592215200000, 3600000, 1, false, false, false, 1, 1);
 -- Wed Jun 01 2020 09:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 1, 1590994800000, 3600000, 1, false, false, false, 2);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (7, null, 1, 1590994800000, 3600000, 1, false, false, false, 2, 1);
 -- Wed Jun 01 2020 10:00:00
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id) values (7, null, 3, 1590998400000, 3600000, 1, false, false, false, 1);
+insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (7, null, 3, 1590998400000, 3600000, 1, false, false, false, 1, 1);
 
 -- operacije
--- Tue Jun 02 2020 10:00:00
-insert into operacija (pacijent_id, vreme, klinika_id, otkazana) values (1, 1591084800000, 1, false);
+-- Tue Jun 15 2020 10:00:00
+insert into operacija (pacijent_id, vreme, klinika_id, otkazana) values (1, 1592215200000, 1, false);
 -- Tue Jun 02 2020 10:00:00
 insert into operacija (pacijent_id, vreme, klinika_id, otkazana) values (2, 1591084800000, 1, false);
 -- Tue Jun 02 2020 10:00:00

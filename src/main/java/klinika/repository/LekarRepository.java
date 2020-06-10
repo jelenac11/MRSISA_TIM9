@@ -1,9 +1,16 @@
 package klinika.repository;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.LockModeType;
+import javax.persistence.QueryHint;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 
 import klinika.model.Klinika;
 import klinika.model.Lekar;
@@ -31,4 +38,5 @@ public interface LekarRepository extends JpaRepository<Lekar, Long> {
 			+ "(select count(god) from odsustvo god where god.podnosilac_id=l.korisnik_id and (?2 between god.pocetak and god.kraj or (?2+3600000) between god.pocetak and god.kraj) and ((god.odgovoreno=true and god.odobreno=true) or god.odgovoreno=false))=0 and "
 			+ "(select count(ope) from operacija ope where ope.otkazana=false and (select op.lekar_id from operisali op where op.lekar_id=l.korisnik_id and op.operacija_id=ope.operacija_id)=l.korisnik_id and ope.vreme >= ?2 and ope.vreme < (?2+3600000))=0", nativeQuery = true)
 	List<Lekar> findByIdKlinikaAndVreme(long klinikaId, long datumiVreme, long satnica);
+	
 }

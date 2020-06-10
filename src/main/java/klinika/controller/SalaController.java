@@ -24,6 +24,7 @@ import klinika.dto.SlobodanTerminOperacijaDTO;
 import klinika.model.AdminKlinike;
 import klinika.model.Klinika;
 import klinika.model.Sala;
+import klinika.repository.SalaRepository;
 import klinika.service.AdminKlinikeService;
 import klinika.service.OperacijaService;
 import klinika.service.PregledService;
@@ -35,6 +36,9 @@ public class SalaController {
 
 	@Autowired
 	private SalaService salaService;
+	
+	@Autowired
+	private SalaRepository salaRepository;
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
@@ -45,10 +49,11 @@ public class SalaController {
 	@Autowired
 	private OperacijaService operacijaService;
 
-	@GetMapping(value = "/ucitajSve")
+	@GetMapping(value = "/ucitajSve/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<List<SalaDTO>> ucitajSveSale() {
-		List<Sala> sale = salaService.findAll();
+	public ResponseEntity<List<SalaDTO>> ucitajSveSale(@PathVariable Long id) {
+		
+		List<Sala> sale = salaRepository.findAllByKlinikaIdAndAktivan(adminKlinikeService.findOne(id).getKlinika().getId(),true);
 
 		List<SalaDTO> salaDTO = new ArrayList<>();
 		for (Sala s : sale) {
@@ -64,8 +69,14 @@ public class SalaController {
 		if (sala == null) {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
-		boolean uspesno = salaService.update(salaDTO, sala);
-		return new ResponseEntity<>(uspesno, HttpStatus.OK);
+		try {
+			boolean uspesno = salaService.update(salaDTO, sala);
+			return new ResponseEntity<>(uspesno, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 	}
 
 	@PostMapping(consumes = "application/json")
@@ -97,9 +108,14 @@ public class SalaController {
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> izbrisiSalu(@PathVariable Long id) {
 		Sala sala = salaService.findOne(id);
-
+		boolean odg;
 		if (sala != null) {
-			boolean odg = salaService.remove(id);
+			try {
+				odg = salaService.remove(id);
+			}
+			catch (Exception e) {
+				return new ResponseEntity<>(false, HttpStatus.NOT_FOUND); 
+			}
 			return new ResponseEntity<>(odg, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);

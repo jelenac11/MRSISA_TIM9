@@ -9,6 +9,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import klinika.dto.LekarDTO;
 import klinika.dto.OperacijaDTO;
@@ -24,6 +25,7 @@ import klinika.model.Pacijent;
 import klinika.model.Sala;
 import klinika.repository.AdminKlinikeRepository;
 import klinika.repository.OperacijaRepository;
+import klinika.repository.SalaRepository;
 
 @Service
 public class OperacijaService {
@@ -33,6 +35,9 @@ public class OperacijaService {
 
 	@Autowired
 	private SalaService salaService;
+	
+	@Autowired
+	private SalaRepository salaRepository;
 
 	@Autowired
 	private LekarService lekarService;
@@ -99,20 +104,41 @@ public class OperacijaService {
 		return operacijaRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndOtkazana(id, time, false);
 	}
 
-	public void dodijeliSalu(SlobodanTerminOperacijaDTO slobodanTerminDTO) {
+	@Transactional(readOnly = false)
+	public Operacija dodijeliSalu(SlobodanTerminOperacijaDTO slobodanTerminDTO) {
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
+		List<Sala> sale = salaService.findByIdKlinikaAndVreme(sala.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme());
+		boolean zauzeta=true;
+		for(Sala s:sale) {
+			if(s.getId()==sala.getId()) {
+				zauzeta=false;
+			}
+		}
+		if(zauzeta) {
+			System.out.println("Sala je zauzeta.");
+			return null;
+		}
 		Operacija operacija = operacijaRepository.findById(slobodanTerminDTO.getOperacijaId()).orElseGet(null);
+		if(operacija.getSala()!=null) {
+			System.out.println("Vec zauzeta sala.");
+			return null;
+		}
 		operacija.setSala(sala);
 		AdminKlinike ak = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
 		operacija.setKlinika(ak.getKlinika());
 		operacija.setVreme(slobodanTerminDTO.getDatumiVreme());
+		sala.setIzmjena(new Date().getTime());
+		salaRepository.save(sala);
+		
 		for (LekarDTO lekarDTO : slobodanTerminDTO.getLekari()) {
 			Lekar lekar = lekarService.findOne(lekarDTO.getId());
 			operacija.getLekari().add(lekar);
-			emailService.obavestiLekaraZaOperaciju(operacija, "aleksa.goljovic4@gmail.com");
+			emailService.obavestiLekaraZaOperaciju(operacija, "milan_marinkovic98@hotmail.com");	
 		}
-		emailService.obavestiPacijentaZaOperaciju(operacija, "aleksa.goljovic4@gmail.com");
+		emailService.obavestiPacijentaZaOperaciju(operacija, "milan_marinkovic98@hotmail.com");
+
 		operacijaRepository.save(operacija);
+		return operacija;
 	}
 
 	public List<Operacija> findByOtkazanaAndKlinikaIdAndVremeAfter(boolean b, Long id, long time) {

@@ -5,9 +5,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import klinika.dto.KlinikaDTO;
 import klinika.dto.KorisnikDTO;
@@ -36,6 +40,7 @@ import klinika.repository.LekarRepository;
 import klinika.repository.PacijentRepository;
 import klinika.repository.PopustRepository;
 import klinika.repository.PregledRepository;
+import klinika.repository.SalaRepository;
 import klinika.repository.TipPregledaRepository;
 
 @Service
@@ -49,6 +54,9 @@ public class PregledService {
 
 	@Autowired
 	private SalaService salaService;
+	
+	@Autowired
+	private SalaRepository salaRepository;
 
 	@Autowired
 	private LekarService lekarService;
@@ -154,18 +162,38 @@ public class PregledService {
 		return kalendar;
 	}
 
-	public void dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO) {
+	@Transactional(readOnly = false)
+	public Pregled dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO) {
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
+		List<Sala> sale = salaService.findByIdKlinikaAndVreme(sala.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme());
+		boolean zauzeta=true;
+		for(Sala s:sale) {
+			if(s.getId()==sala.getId()) {
+				zauzeta=false;
+			}
+		}
+		if(zauzeta) {
+			System.out.println("Sala je zauzeta.");
+			return null;
+		}
 		Pregled pregled = pregledRepository.findById(slobodanTerminDTO.getPregledId()).orElseGet(null);
+		if(pregled.getSala()!=null) {
+			System.out.println("Vec zauzeta sala.");
+			return null;
+		}
 		pregled.setSala(sala);
 		AdminKlinike ak = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
 		pregled.setKlinika(ak.getKlinika());
 		pregled.setVreme(slobodanTerminDTO.getDatumiVreme());
 		Lekar lekar = lekarService.findOne(slobodanTerminDTO.getLekar().getId());
 		pregled.setLekar(lekar);
+		sala.setIzmjena(new Date().getTime());
+		
+		salaRepository.save(sala);
+		
+		Pregled p=pregledRepository.save(pregled);
 		emailService.posaljiLinkPotvrdePregleda(pregled, "aleksa.goljovic4@gmail.com");
-		pregledRepository.save(pregled);
-
+		return p;
 	}
 
 	public List<PredefinisaniDTO> ucitajPredefinisane(PretragaKlinikeDTO pkdto) {
@@ -197,6 +225,10 @@ public class PregledService {
 
 	public Boolean zakaziPredefinisani(PredefinisaniDTO predef) throws MailException, InterruptedException {
 		Pregled p = pregledRepository.findPregledByVremeAndLekarId(predef.getDatum(), predef.getLekar().getId());
+		if(p.getPacijent()!=null) {
+			System.out.println("Vec ima pacijenta.");
+			return false;
+		}
 		Optional<Pacijent> pa = pacijentRepository.findById(predef.getPacijent().getId());
 		if (pa.isPresent()) {
 			p.setPacijent(pa.get());
@@ -210,15 +242,19 @@ public class PregledService {
 					+ predef.getSala() + "\nCena: " + (predef.getCena() / 100.00) * (100 - predef.getPopust());
 			emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Potvrda o zakazanom pregledu", text);
 		}
+		else {
+			System.out.println("Ne postoji pacijent sa id: "+predef.getPacijent().getId());
+			return false;
+		}
 		return true;
 	}
-
 	public PredefinisaniDTO zakaziTermin(PretragaLekaraDTO pldto) {
 		PredefinisaniDTO p = new PredefinisaniDTO();
 		p.setDatum(pldto.getDatum());
-		Optional<Lekar> le = lekarRepository.findById(pldto.getId());
-		if (le.isPresent()) {
-			p.setLekar(new LekarDTO(le.get()));
+		Lekar le= lekarRepository.findById(pldto.getId()).orElseGet(null);
+
+		if (le!=null) {
+			p.setLekar(new LekarDTO(le));
 			TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pldto.getTipPregleda(), true);
 			p.setTip(new TipPregledaDTO(tp));
 			p.setCena(tp.getStavkaCenovnika().getCena());
@@ -270,11 +306,19 @@ public class PregledService {
 		}
 		return false;
 	}
-
+	@Transactional(readOnly = false)
 	public Boolean potvrdiZakazivanje(PredefinisaniDTO predef) throws MailException, InterruptedException {
+		Lekar lekar=lekarRepository.findById(predef.getLekar().getId()).orElseGet(null);
+		List<Pregled> p=pregledRepository.findByLekarAndVreme(predef.getLekar().getId(),predef.getDatum(),predef.getDatum()+3600000);
+		if(!p.isEmpty()) {
+			System.out.println("Vec postoji zakazan termin.");
+			return false;
+		}
+		
 		pregledRepository.insertZakazaniPregled(predef.getLekar().getId(), predef.getPacijent().getId(),
 				predef.getTip().getId(), predef.getDatum(), predef.getLokacija().getId());
 		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(predef.getLokacija().getId());
+		lekarRepository.save(lekar);
 		if (admini != null) {
 			for (AdminKlinike ak : admini) {
 				String text = "Poštovani, \nPristigao je zahtev za zakazivanje pregleda.\nPodaci o pregledu:\nPacijent: "
