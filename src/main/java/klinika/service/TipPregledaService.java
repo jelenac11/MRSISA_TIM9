@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import klinika.dto.TipPregledaDTO;
 import klinika.model.Lekar;
@@ -41,7 +42,7 @@ public class TipPregledaService {
 	public TipPregleda save(TipPregleda tipPregleda) {
 		return tipPregledaRepository.save(tipPregleda);
 	}
-
+	@Transactional(readOnly = false)
 	public boolean remove(Long id) {
 		List<Pregled> pregledi = pregledService.findByTipPregledaIdAndVremeGreaterThan(id, new Date().getTime());
 

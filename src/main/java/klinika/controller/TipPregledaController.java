@@ -100,10 +100,14 @@ public class TipPregledaController {
 		if (pregled == null) {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
-
+		try {
 		boolean uspesno = tipPregledaService.remove(pregled.getId());
-
 		return new ResponseEntity<>(uspesno, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 	}
 
 	@PostMapping(value = "/izmenaTipaPregleda", consumes = "application/json")
@@ -113,8 +117,14 @@ public class TipPregledaController {
 		if (pregled == null) {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
+		try {
 		boolean uspesno = tipPregledaService.update(tipPregledaDTO, pregled);
 		return new ResponseEntity<>(uspesno, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 	}
 
 	@GetMapping(value = "/ucitajSve")
