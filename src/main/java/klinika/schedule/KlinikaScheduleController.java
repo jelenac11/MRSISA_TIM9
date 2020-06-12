@@ -1,5 +1,6 @@
 package klinika.schedule;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,9 @@ public class KlinikaScheduleController {
 				List<Sala> sale = salaService.findByIdKlinikaAndVreme(p.getKlinika().getId(), p.getVreme());
 				if (sale != null && !salePrazne(sale)) {
 					p.setSala(sale.get(0));
+					Sala sala=sale.get(0);
+					sala.setIzmjena(new Date().getTime());
+					salaService.save(sala);
 					pregledService.save(p);
 				}
 
@@ -64,6 +68,9 @@ public class KlinikaScheduleController {
 							List<Sala> sale2 = salaService.findByIdKlinikaAndVreme(p.getKlinika().getId(), ter);
 							if (sale2 != null && !salePrazne(sale2)) {
 								p.setSala(sale2.get(0));
+								Sala sala=sale2.get(0);
+								sala.setIzmjena(new Date().getTime());
+								salaService.save(sala);
 								p.setVreme(ter);
 								pregledService.save(p);
 							}
@@ -80,6 +87,9 @@ public class KlinikaScheduleController {
 				List<Sala> sale = salaService.findByIdKlinikaAndVreme(o.getKlinika().getId(), o.getVreme());
 				if (sale != null && !salePrazne(sale)) {
 					o.setSala(sale.get(0));
+					Sala sala=sale.get(0);
+					sala.setIzmjena(new Date().getTime());
+					salaService.save(sala);
 					operacijaService.save(o);
 				}
 
@@ -95,10 +105,15 @@ public class KlinikaScheduleController {
 							List<Sala> sale2 = salaService.findByIdKlinikaAndVreme(o.getKlinika().getId(), ter);
 							if (sale2 != null && salePrazne(sale2)) {
 								o.setSala(sale2.get(0));
+								Sala sala=sale2.get(0);
+								sala.setIzmjena(new Date().getTime());
+								salaService.save(sala);
 								o.setVreme(ter);
 								Lekar prvi = o.getLekari().iterator().next();
 								o.getLekari().clear();
 								o.getLekari().add(prvi);
+								prvi.setLastChange(new Date().getTime());
+								lekarService.save(prvi);
 								operacijaService.save(o);
 							}
 						}

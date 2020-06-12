@@ -85,7 +85,7 @@ Vue.component("izmena-profila", {
 							<input type="text" v-model="izmenjeniKorisnik.klinika" class="form-control" id="klinika" placeholder="Klinika" disabled required>
 				    	</div>
 				  	</div>
-				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+				  	<button style="color:white;" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Sačuvaj izmene
 				  	</button>
 				</form>
@@ -106,7 +106,7 @@ Vue.component("izmena-profila", {
 						<input type="password" v-model="potvrdaLozinke" class="form-control" v-bind:class="{ nePoklapajuSe : !poklapajuSeLozinke }" id="lozinka2" v-bind:disabled="novaLozinka == ''" placeholder="Lozinka">
 						<div class="invalid-feedback" v-bind:class="{ 'd-block' : !poklapajuSeLozinke }" id="dodavanjeInvalid">Lozinke se ne poklapaju!</div>
 			    	</div>
-			    	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="novaLozinka == ''">
+			    	<button style="color:white;" class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="novaLozinka == ''">
 				  		Promeni lozinku
 				  	</button>
 				</form>

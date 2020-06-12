@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import klinika.dto.LekarDTO;
 import klinika.dto.PretragaLekaraDTO;
@@ -53,6 +54,7 @@ public class LekarService {
 		return lekarRepository.findAll();
 	}
 
+	@Transactional(readOnly = false)
 	public Lekar save(Lekar lekar) {
 		return lekarRepository.save(lekar);
 	}

@@ -6,63 +6,65 @@ Vue.component("zahtevi-registracija",{
             ulogovan: {},
             submitovano: false,
             token: "",
+            dijalog: false,
 		}
 	},
 	
     template: `
 	<div>
-	    <navig-bar v-bind:token="this.token"></navig-bar>
-	    
-        <table class="naviga table table-hover table-striped">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Email</th>
-                    <th scope="col">Ime</th>
-                    <th scope="col">Prezime</th>
-                    <th scope="col">Adresa</th>
-                    <th scope="col">Grad</th>
-                    <th scope="col">Drzava</th>
-                    <th scope="col">JBO</th>
-                    <th scope="col" colspan="2">Akcija</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(zahtev, indeks) in zahtevi">
-                    <td>{{zahtev.email}}</td>
-                    <td>{{zahtev.ime}}</td>
-                    <td>{{zahtev.prezime}}</td>
-                    <td>{{zahtev.adresa}}</td>
-                    <td>{{zahtev.grad}}</td>
-                    <td>{{zahtev.drzava}}</td>
-                    <td>{{zahtev.jbo}}</td>
-                    <td><button type="button" class="btn btn-success" v-on:click="prihvatanjeZahteva(indeks)">Prihvati zahtev</button></td>
-                    <td><button type="button" class="btn btn-danger" data-target="#obrazlozenjeModal" data-toggle="modal" v-on:click="zabeleziIndeks(indeks)">Odbij zahtev</button></td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="modal fade" id="obrazlozenjeModal" tabindex="-1" role="dialog">
-			<div class="modal-dialog" role="document">
-				<form class="needs-validation mb-4" id="forma-obrazlozenje-odbijanja" v-bind:class="{ 'was-validated': submitovano }" novalidate @submit.prevent="odbijanjeZahteva">
-			    	<div class="modal-content">
-						<div class="modal-header">
-			        		<h5 class="modal-title" id="exampleModalLabel">Obrazloženje odbijanja zahteva</h5>
-			        		<button type="button" class="close" data-dismiss="modal">
-			          			<span>&times;</span>
-			        		</button>
-			      		</div>
-			      		<div class="modal-body">
-		                  	<input id="obrazlozenje" type="text" class="form-control" placeholder="Unesite obrazloženje odbijanja zahteva" required>
-			      			<div class="invalid-feedback" id="dodavanjeInvalid">Unesite razlog odbijanja zahteva za odsustvom.</div>
-			      		</div>
-			      		<div class="modal-footer">
-			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
-			        		<button class="btn btn-primary" type="submit">Odbij zahtev</button>
-			      		</div>
-			    	</div>
-			    </form>
-			</div>
-		</div>
+    	<v-app>
+		    <navig-bar v-bind:token="this.token"></navig-bar>
+		    
+	        <table class="naviga table table-hover table-striped">
+	            <thead class="thead-light">
+	                <tr>
+	                    <th scope="col">Email</th>
+	                    <th scope="col">Ime</th>
+	                    <th scope="col">Prezime</th>
+	                    <th scope="col">Adresa</th>
+	                    <th scope="col">Grad</th>
+	                    <th scope="col">Drzava</th>
+	                    <th scope="col">JBO</th>
+	                    <th scope="col" colspan="2">Akcija</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr v-for="(zahtev, indeks) in zahtevi">
+	                    <td>{{zahtev.email}}</td>
+	                    <td>{{zahtev.ime}}</td>
+	                    <td>{{zahtev.prezime}}</td>
+	                    <td>{{zahtev.adresa}}</td>
+	                    <td>{{zahtev.grad}}</td>
+	                    <td>{{zahtev.drzava}}</td>
+	                    <td>{{zahtev.jbo}}</td>
+	                    <td><button type="button" style="color:white;" class="btn btn-success" v-on:click="prihvatanjeZahteva(indeks)">Prihvati zahtev</button></td>
+	                    <td><button type="button" style="color:white;" class="btn btn-danger" @click="dijalog = true" v-on:click="zabeleziIndeks(indeks)">Odbij zahtev</button></td>
+	                </tr>
+	            </tbody>
+	        </table>
+			
+			<v-dialog v-model="dijalog" max-width="400px">
+				<v-card>
+					<div class="naviga">
+						<form class="needs-validation mb-4"  id="forma-obrazlozenje-odbijanja">
+				    	<div class="modal-content">
+							<div class="modal-header">
+				        		<h5 class="modal-title" id="exampleModalLabel">Obrazlozenje odbijanja zahteva</h5>
+				      		</div>
+				      		<div class="modal-body">
+				              	<input id="obrazlozenje" type="text" class="form-control" placeholder="Unesite obrazloženje odbijanja zahteva" required>
+				      			<div class="invalid-feedback" id="dodavanjeInvalid">Unesite razlog odbijanja zahteva za registracijom.</div>
+				      		</div>
+				      		<div class="modal-footer">
+				        		<button type="button" style="color:white;" class="btn btn-secondary mr-auto" @click="dijalog = false">Nazad</button>
+				        		<button class="btn btn-primary" v-on:click="odbijanjeZahteva">Odbij zahtev</button>
+				      		</div>
+				    	</div>
+				    </form>
+					</div>	
+				</v-card>		
+			</v-dialog>
+		</v-app>
     </div>
 	`
 		,
@@ -84,7 +86,7 @@ Vue.component("zahtevi-registracija",{
 				this.zahtevi[this.indeks].aktiviran = false;
 	            this.zahtevi[this.indeks].obrazlozenje = $("#obrazlozenje").val();
 	            jQuery.noConflict();
-				$('#obrazlozenjeModal').modal('hide');
+	            this.dijalog = false;
 	            this.updateZahtev(this.indeks);
 	            this.submitovano = false;
 			}

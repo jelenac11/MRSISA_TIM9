@@ -40,7 +40,7 @@ Vue.component("login", {
 			<div v-if=jesteAktivanNijeVerifikovan class="alert alert-danger" role="alert">
 				<p class="mb-0"><b>Greška!</b> Vaš profil još uvek nije aktiviran. Poslat vam je aktivacioni link, proverite Email.</p>
 			</div>
-			<button class="btn mb-2 btn-lg btn-primary btn-block" type="submit">Prijavite se</button>
+			<button class="btn mb-2 btn-lg btn-primary btn-block" style="color: white;" type="submit">Prijavite se</button>
 			<p class="h7 mt-2 font-weight-normal">Nemate nalog? <router-link :to="{ name: 'registracija' }">Registrujte se.</router-link></p>
 			<p class="mt-5 mb-3 text-muted">&copy;2020</p>
 	    </form>

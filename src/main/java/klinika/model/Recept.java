@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 
 @Entity
 public class Recept implements Serializable {
@@ -33,6 +34,9 @@ public class Recept implements Serializable {
 	@JoinColumn(name = "izvestaj_id")
 	private Izvestaj izvestaj;
 
+	@Version
+	private long version;
+	
 	public Recept() {
 		super();
 	}
@@ -68,4 +72,17 @@ public class Recept implements Serializable {
 	public void setIzvestaj(Izvestaj izvestaj) {
 		this.izvestaj = izvestaj;
 	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 }

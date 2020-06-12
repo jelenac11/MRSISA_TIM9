@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 
 @Entity
 public class TipPregleda implements Serializable {
@@ -47,6 +48,9 @@ public class TipPregleda implements Serializable {
 
 	@OneToMany(mappedBy = "tipPregleda", cascade = CascadeType.ALL)
 	private Set<Pregled> pregledi;
+	
+	@Version
+	private long version;
 
 	public TipPregleda() {
 		super();
@@ -115,5 +119,18 @@ public class TipPregleda implements Serializable {
 	public void setAktivan(boolean aktivan) {
 		this.aktivan = aktivan;
 	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 
 }

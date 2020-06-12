@@ -55,8 +55,14 @@ public class PregledController {
 	@PostMapping(value = "dodajSlobodanTerminZaPregled", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> dodajSlobodanTerminZaPregled(@RequestBody SlobodanTerminDTO slobodanTerminDTO) {
-		boolean uspesno = pregledService.insertPregled(slobodanTerminDTO);
-		return new ResponseEntity<>(uspesno, HttpStatus.OK);
+		try {
+			boolean uspesno = pregledService.insertPregled(slobodanTerminDTO);
+			return new ResponseEntity<>(uspesno, HttpStatus.OK);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 	}
 
 	@PostMapping(value = "mozeDaOceniKliniku", consumes = "application/json")
@@ -117,7 +123,14 @@ public class PregledController {
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<Boolean> zakaziPredefinisani(@RequestBody PredefinisaniDTO predef)
 			throws MailException, InterruptedException {
-		return new ResponseEntity<>(pregledService.zakaziPredefinisani(predef), HttpStatus.OK);
+		try{
+			return new ResponseEntity<>(pregledService.zakaziPredefinisani(predef), HttpStatus.OK);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+			
+		}
 	}
 
 	@PutMapping(value = "/zakaziTermin", consumes = "application/json")
@@ -130,7 +143,13 @@ public class PregledController {
 	@PreAuthorize("hasRole('PACIJENT')")
 	public ResponseEntity<Boolean> potvrdiZakazivanje(@RequestBody PredefinisaniDTO predef)
 			throws MailException, InterruptedException {
+		try {
 		return new ResponseEntity<>(pregledService.potvrdiZakazivanje(predef), HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity<>(false, HttpStatus.OK);
+			
+		}
 	}
 
 	@GetMapping(value = "ucitajSveZakazanePreglede/{id}")

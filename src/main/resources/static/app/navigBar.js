@@ -172,7 +172,7 @@ Vue.component('navig-bar', {
 							</ul>
 			      		</div>
 			      		<div class="modal-footer">
-			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			        		<button type="button" class="btn btn-secondary mr-auto" style="color:white;" data-dismiss="modal">Nazad</button>
 			        		<router-link :to="{ name: 'izmenaProfila' }" class="btn btn-primary" data-dismiss="modal">Izmena podataka</router-link>
 			      		</div>
 			    	</div>
@@ -230,7 +230,7 @@ Vue.component('navig-bar', {
 							</ul>
 			      		</div>
 			      		<div class="modal-footer">
-			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			        		<button type="button" style="color:white;" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
 			        		<router-link :to="{ name: 'izmenaProfilaKlinike', params: {klinikaParam:this.klinika }}" class="btn btn-primary" data-dismiss="modal">Izmena podataka</router-link>
 			      		</div>
 			    	</div>

@@ -98,7 +98,7 @@ Vue.component("registracija", {
 					<div v-if=porukaUspeha class="alert alert-success mt-4" role="alert">
 						<p class="mb-0"><b>Zahtev za registracijom je poslat! Kada administrator odobri zahtev, dobićete aktivacioni link na vašu Email adresu.</b></p>
 					</div>
-				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+				  	<button style="color:white;" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Registruj se
 				  	</button>
 				</form>

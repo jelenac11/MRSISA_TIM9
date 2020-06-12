@@ -18,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -78,6 +79,9 @@ public class Korisnik implements UserDetails {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "klinickiCentar_id")
 	private KlinickiCentar klinickiCentar;
+	
+	@Version
+	private long version;
 
 	public Korisnik() {
 		super();
@@ -238,5 +242,22 @@ public class Korisnik implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public long getVersion() {
+		return version;
+	}
+
+	public void setVersion(long version) {
+		this.version = version;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setPoslednjaPromenaLozinke(Long poslednjaPromenaLozinke) {
+		this.poslednjaPromenaLozinke = poslednjaPromenaLozinke;
+	}
+	
 
 }

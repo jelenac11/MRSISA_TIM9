@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import klinika.dto.ReceptDTO;
 import klinika.model.MedSestra;
@@ -40,14 +41,20 @@ public class ReceptService {
 	public List<Recept> findByMedSestraIdIsNull() {
 		return receptRepository.findByMedSestraIdIsNull();
 	}
-
+	
+	@Transactional(readOnly = false)
 	public boolean overi(ReceptDTO receptDTO) {
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
 		MedSestra ulogovan = medSestraService.findByEmail(trenutniKorisnik.getName());
 
 		Recept r = findOne(receptDTO.getId());
+		if(r.getMedSestra()==null) {
 		r.setMedSestra(ulogovan);
 		receptRepository.save(r);
 		return true;
+		}
+		else {
+			return false;
+		}
 	}
 }

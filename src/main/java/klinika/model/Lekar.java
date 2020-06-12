@@ -1,6 +1,5 @@
 package klinika.model;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -40,8 +38,8 @@ public class Lekar extends MedicinskoOsoblje {
 	@Column(name = "prosecna_ocena")
 	private double prosecnaOcena;
 	
-	@Column
-	private Date izmjena;
+	@Column(name = "last_change")
+	private long lastChange;
 
 	public Lekar() {
 		super();
@@ -95,17 +93,18 @@ public class Lekar extends MedicinskoOsoblje {
 		this.prosecnaOcena = prosecnaOcena;
 	}
 
-	public Date getPoslednjaIzmena() {
-		return izmjena;
+	public long getLastChange() {
+		return lastChange;
 	}
 
-	public void setPoslednjaIzmena(Date poslednjaIzmena) {
-		this.izmjena = poslednjaIzmena;
+	public void setLastChange(long lastChange) {
+		this.lastChange = lastChange;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
 	
 
 }

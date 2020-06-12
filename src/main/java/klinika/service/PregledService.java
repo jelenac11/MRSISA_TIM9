@@ -93,6 +93,7 @@ public class PregledService {
 		return pregledRepository.findAll();
 	}
 
+	@Transactional(readOnly = false)
 	public Pregled save(Pregled pregled) {
 		return pregledRepository.save(pregled);
 	}
@@ -104,12 +105,26 @@ public class PregledService {
 	public List<Pregled> findByTipPregledaIdAndVremeGreaterThan(long id, long vreme) {
 		return pregledRepository.findByTipPregledaIdAndVremeGreaterThan(id, vreme);
 	}
-
+	
+	@Transactional(readOnly = false)
 	public boolean insertPregled(SlobodanTerminDTO slobodanTerminDTO) {
 		Klinika klinika = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina()).getKlinika();
+		Lekar l=lekarRepository.findById(slobodanTerminDTO.getLekar().getId()).orElseGet(null);
+		List<Lekar> dostupniLekari=lekarRepository.findByIdKlinikaAndVreme(klinika.getId(), slobodanTerminDTO.getDatumiVreme(), (slobodanTerminDTO.getDatumiVreme() + 7200000) % 86400000);
+		boolean postoji=false;
+		for(Lekar lekar:dostupniLekari) {
+			if(lekar.getId()==l.getId()) {
+				postoji=true;
+			}
+		}
+		if(!postoji) {
+			return false;
+		}
 		int i = pregledRepository.insertPregled(slobodanTerminDTO.getLekar().getId(),
 				slobodanTerminDTO.getTipPregleda().getId(), slobodanTerminDTO.getSala().getId(),
 				slobodanTerminDTO.getDatumiVreme(), slobodanTerminDTO.getTrajanje(), klinika.getId());
+		l.setLastChange(new Date().getTime());
+		lekarRepository.save(l);
 		return i == 1;
 	}
 
@@ -223,6 +238,7 @@ public class PregledService {
 		return predefinisaniPregledi;
 	}
 
+	@Transactional(readOnly = false)
 	public Boolean zakaziPredefinisani(PredefinisaniDTO predef) throws MailException, InterruptedException {
 		Pregled p = pregledRepository.findPregledByVremeAndLekarId(predef.getDatum(), predef.getLekar().getId());
 		if(p.getPacijent()!=null) {
@@ -248,11 +264,11 @@ public class PregledService {
 		}
 		return true;
 	}
+	@Transactional(readOnly = false)
 	public PredefinisaniDTO zakaziTermin(PretragaLekaraDTO pldto) {
 		PredefinisaniDTO p = new PredefinisaniDTO();
 		p.setDatum(pldto.getDatum());
 		Lekar le= lekarRepository.findById(pldto.getId()).orElseGet(null);
-
 		if (le!=null) {
 			p.setLekar(new LekarDTO(le));
 			TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pldto.getTipPregleda(), true);
@@ -274,6 +290,8 @@ public class PregledService {
 				p.setPacijent(new KorisnikDTO(pa.get()));
 			}
 		}
+		le.setLastChange(new Date().getTime());
+		lekarRepository.save(le);
 		return p;
 	}
 
@@ -318,6 +336,7 @@ public class PregledService {
 		pregledRepository.insertZakazaniPregled(predef.getLekar().getId(), predef.getPacijent().getId(),
 				predef.getTip().getId(), predef.getDatum(), predef.getLokacija().getId());
 		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(predef.getLokacija().getId());
+		lekar.setLastChange(new Date().getTime());
 		lekarRepository.save(lekar);
 		if (admini != null) {
 			for (AdminKlinike ak : admini) {
@@ -370,10 +389,21 @@ public class PregledService {
 		return pregledRepository.dobaviSvePregledeBezSale();
 	}
 
+	@Transactional(readOnly = false)
 	public Boolean zakaziTerminLekar(ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException {
 		Klinika klinika = lekarService.findOne(ztlDTO.getLekar()).getKlinika();
 		Pacijent pacijent = pacijentRepository.getOne(ztlDTO.getPacijent());
 		Lekar l = lekarRepository.getOne(ztlDTO.getLekar());
+		List<Lekar> dostupniLekari=lekarRepository.findByIdKlinikaAndVreme(klinika.getId(), ztlDTO.getDatumiVreme(), (ztlDTO.getDatumiVreme() + 7200000) % 86400000);
+		boolean postoji=false;
+		for(Lekar lekar:dostupniLekari) {
+			if(lekar.getId()==l.getId()) {
+				postoji=true;
+			}
+		}
+		if(!postoji) {
+			return false;
+		}
 		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(klinika.getId());
 		if (admini != null) {
 			for (AdminKlinike ak : admini) {
@@ -384,8 +414,10 @@ public class PregledService {
 				emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje pregleda", text);
 			}
 		}
+		l.setLastChange(new Date().getTime());
 		pregledRepository.insertZakazaniPregled(ztlDTO.getLekar(), ztlDTO.getPacijent(),
 				ztlDTO.getTipPregleda().getId(), ztlDTO.getDatumiVreme(), klinika.getId());
+		lekarRepository.save(l);
 		return true;
 
 	}

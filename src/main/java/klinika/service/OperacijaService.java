@@ -24,6 +24,7 @@ import klinika.model.Operacija;
 import klinika.model.Pacijent;
 import klinika.model.Sala;
 import klinika.repository.AdminKlinikeRepository;
+import klinika.repository.LekarRepository;
 import klinika.repository.OperacijaRepository;
 import klinika.repository.SalaRepository;
 
@@ -41,6 +42,9 @@ public class OperacijaService {
 
 	@Autowired
 	private LekarService lekarService;
+	
+	@Autowired
+	private LekarRepository lekarRepository;
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
@@ -129,11 +133,24 @@ public class OperacijaService {
 		operacija.setVreme(slobodanTerminDTO.getDatumiVreme());
 		sala.setIzmjena(new Date().getTime());
 		salaRepository.save(sala);
-		
+		List<Lekar> dostupniLekari=lekarRepository.findByIdKlinikaAndVreme(ak.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme(), (slobodanTerminDTO.getDatumiVreme() + 7200000) % 86400000);
 		for (LekarDTO lekarDTO : slobodanTerminDTO.getLekari()) {
 			Lekar lekar = lekarService.findOne(lekarDTO.getId());
+			boolean postoji=false;
+			for(Lekar l:dostupniLekari) {
+				if(l.getId()==lekar.getId()) {
+					postoji=true;
+				}
+			}
+			if(!postoji) {
+				return null;
+			}
 			operacija.getLekari().add(lekar);
-			emailService.obavestiLekaraZaOperaciju(operacija, "milan_marinkovic98@hotmail.com");	
+		}
+		for(Lekar lekar:operacija.getLekari()) {
+			lekar.setLastChange(new Date().getTime());
+			lekarRepository.save(lekar);
+			emailService.obavestiLekaraZaOperaciju(operacija, "milan_marinkovic98@hotmail.com");
 		}
 		emailService.obavestiPacijentaZaOperaciju(operacija, "milan_marinkovic98@hotmail.com");
 
@@ -201,6 +218,16 @@ public class OperacijaService {
 		Klinika klinika = lekarService.findOne(ztlDTO.getLekar()).getKlinika();
 		Pacijent pacijent = pacijentService.findOne(ztlDTO.getPacijent());
 		Lekar l = lekarService.findOne(ztlDTO.getLekar());
+		List<Lekar> dostupniLekari=lekarRepository.findByIdKlinikaAndVreme(klinika.getId(), ztlDTO.getDatumiVreme(), (ztlDTO.getDatumiVreme() + 7200000) % 86400000);
+		boolean postoji=false;
+		for(Lekar lekar:dostupniLekari) {
+			if(lekar.getId()==l.getId()) {
+				postoji=true;
+			}
+		}
+		if(!postoji) {
+			return false;
+		}
 		Set<Lekar> lekari = new HashSet<>();
 		lekari.add(l);
 		Operacija op = new Operacija();
@@ -209,6 +236,8 @@ public class OperacijaService {
 		op.setLekari(lekari);
 		op.setPacijent(pacijent);
 		op.setVreme(ztlDTO.getDatumiVreme());
+		l.setLastChange(new Date().getTime());
+		lekarRepository.save(l);
 		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(klinika.getId());
 		if (admini != null) {
 			for (AdminKlinike ak : admini) {

@@ -26,7 +26,7 @@ public class PacijentController {
 	private PacijentService pacijentService;
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'LEKAR', 'MED_SESTRA')")
+	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'LEKAR', 'MED_SESTRA', 'PACIJENT')")
 	public ResponseEntity<PacijentDTO> ucitajPoId(@PathVariable Long id) {
 		Pacijent p = pacijentService.findOne(id);
 		PacijentDTO pac = new PacijentDTO(p);

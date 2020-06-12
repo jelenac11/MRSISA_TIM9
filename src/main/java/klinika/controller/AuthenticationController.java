@@ -126,7 +126,12 @@ public class AuthenticationController {
 
 	@PutMapping(value = "/updateRegZahtev")
 	public void updateRegZahtev(@RequestBody PacijentDTO pacijentDTO) throws MailException, InterruptedException {
-		autoritetService.updateRegZahtev(pacijentDTO);
+		try {
+			autoritetService.updateRegZahtev(pacijentDTO);
+		}
+		catch (Exception e) {
+			System.out.println("Zahtev je vec prihvacen/odbijen.");
+		}
 	}
 
 	@GetMapping(value = "/potvrdaRegistracije/{token}")

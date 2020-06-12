@@ -39,7 +39,13 @@ public class ReceptController {
 	@PostMapping(value = "/overi", consumes = "application/json")
 	@PreAuthorize("hasRole('MED_SESTRA')")
 	public ResponseEntity<Boolean> overi(@RequestBody ReceptDTO receptDTO) {
-		return new ResponseEntity<>(receptService.overi(receptDTO), HttpStatus.OK);
+		try {
+			return new ResponseEntity<>(receptService.overi(receptDTO), HttpStatus.OK);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 	}
 
 }

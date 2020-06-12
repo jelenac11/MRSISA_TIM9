@@ -61,13 +61,13 @@ Vue.component("sale", {
 									<div class="invalid-feedback" id="dodavanjeInvalid">Unesite ispravno naziv sale.</div>
 								</div>
 							</div>
-						  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="novaSala.naziv == izabranaSala.naziv && novaSala.broj == izabranaSala.broj">
+						  	<button style="color: white" class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="novaSala.naziv == izabranaSala.naziv && novaSala.broj == izabranaSala.broj">
 						  		Sačuvaj izmene
 						  	</button>
 						</form>
 		      		</div>
 		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+		        		<button type="button" style="color: white" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
 		      		</div>
 		    	</div>
 			</div>
