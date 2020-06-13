@@ -93,7 +93,13 @@ public class OperacijaController {
 	@PreAuthorize("hasRole('LEKAR')")
 	public ResponseEntity<Boolean> zakaziNoviTerminLekar(@RequestBody ZakaziTerminLekarDTO ztlDTO)
 			throws MailException, InterruptedException {
-		return new ResponseEntity<>(operacijaService.zakaziTerminLekar(ztlDTO), HttpStatus.OK);
+		try{
+			return new ResponseEntity<>(operacijaService.zakaziTerminLekar(ztlDTO), HttpStatus.OK);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 
 	}
 }

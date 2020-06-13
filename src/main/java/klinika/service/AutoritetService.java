@@ -116,9 +116,11 @@ public class AutoritetService {
 		return new ResponseEntity<>(true, HttpStatus.CREATED);
 	}
 
-	public void updateRegZahtev(PacijentDTO pacijentDTO) throws MailException, InterruptedException {
+	public boolean updateRegZahtev(PacijentDTO pacijentDTO) throws MailException, InterruptedException {
 		Pacijent p = (Pacijent) userDetailsService.findByEmail(pacijentDTO.getEmail());
-
+		if(p==null) {
+			return false;
+		}
 		if (pacijentDTO.isAktiviran()) {
 			p.setAktiviran(true);
 			p.setKarton(new ZdravstveniKarton(p, 0, 0, 0, "N/A"));
@@ -130,6 +132,7 @@ public class AutoritetService {
 							+ pacijentDTO.getObrazlozenje());
 			pacijentService.remove(p.getId());
 		}
+		return true;
 	}
 
 	public RedirectView potvrdaRegistracije(String token) {

@@ -64,6 +64,7 @@ Vue.component("na-cekanju-operacije", {
 		    value: '',
 		    events: [],
 		    activeTab: '5',
+		    dijalogGreska: false,
 		} 
 	},
 	template: `
@@ -304,6 +305,16 @@ Vue.component("na-cekanju-operacije", {
 			    	</div>
 				</v-dialog>
 			</div>
+			<v-dialog v-model="dijalogGreska" max-width="300">
+		      <v-card>
+		        <v-card-title class="headline">Greška</v-card-title>
+		        <v-card-text>Neko drugi je upravo zakazao salu ili lekara u istom terminu.</v-card-text>
+		        <v-card-actions>
+		          <v-spacer></v-spacer>
+		          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+		        </v-card-actions>
+		      </v-card>
+		    </v-dialog>
 		</v-app>
 	</div>
 	`,
@@ -373,6 +384,10 @@ Vue.component("na-cekanju-operacije", {
 		            .then(response => (this.naCekanjuOperacije = response.data))
 		            .catch(function (error) { console.log(error); });
 					this.dialog=false;
+				}
+				else{
+					this.dialog=false;
+					this.dijalogGreska = true;
 				}
 				
 			})

@@ -28,7 +28,8 @@ Vue.component("definisanje-slobodnog-termina", {
 			activeTab:"3",
 			termini:[],
 			termin:null,
-			pretragaTermina:{id:0,datum:0,tipPregleda:'',pacijent:0,klinika:0}
+			pretragaTermina:{id:0,datum:0,tipPregleda:'',pacijent:0,klinika:0},
+			dijalogGreska: false,
 		} 
 	},
 	template: `
@@ -165,7 +166,17 @@ Vue.component("definisanje-slobodnog-termina", {
 				      	</v-stepper-content>
 				      </v-stepper>
 					</v-dialog>
-		</div>
+			</div>
+			<v-dialog v-model="dijalogGreska" max-width="300">
+			      <v-card>
+			        <v-card-title class="headline">Greška</v-card-title>
+			        <v-card-text>Neko drugi je upravo zauzeo tu salu u istom terminu.</v-card-text>
+			        <v-card-actions>
+			          <v-spacer></v-spacer>
+			          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+			        </v-card-actions>
+			      </v-card>
+			</v-dialog>
 		</v-app>
 	</div>
 	`,
@@ -235,8 +246,9 @@ Vue.component("definisanje-slobodnog-termina", {
 			            .catch(function (error) { console.log(error); });
 				  }
 				  else{
-					  toast("Neuspesno kreiranje termina za pregled");
-					  return;
+					  this.dijalog=false;
+					  this.dijalogGreska = true;
+					  
 				  }
 			  })
 			  .catch(error => {

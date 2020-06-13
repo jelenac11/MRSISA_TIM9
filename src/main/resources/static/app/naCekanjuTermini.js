@@ -48,6 +48,7 @@ Vue.component("na-cekanju-termini", {
 		    value: '',
 		    events: [],
 		    activeTab:'4',
+		    dijalogGreska: false,
 		} 
 	},
 	template: `
@@ -254,6 +255,16 @@ Vue.component("na-cekanju-termini", {
 					    	</div>
 						</v-dialog>
 			</div>
+			<v-dialog v-model="dijalogGreska" max-width="300">
+		      <v-card>
+		        <v-card-title class="headline">Greška</v-card-title>
+		        <v-card-text>Neko drugi je upravo zauzeo salu u istom terminu.</v-card-text>
+		        <v-card-actions>
+		          <v-spacer></v-spacer>
+		          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+		        </v-card-actions>
+		      </v-card>
+		    </v-dialog>
 		</v-app>
 	</div>
 	`,
@@ -318,6 +329,10 @@ Vue.component("na-cekanju-termini", {
 		            .then(response => (this.naCekanjuTermini = response.data))
 		            .catch(function (error) { console.log(error); });
 					this.dialog=false;
+				}
+				else{
+					this.dialog=false;
+					this.dijalogGreska = true;
 				}
 				
 			})

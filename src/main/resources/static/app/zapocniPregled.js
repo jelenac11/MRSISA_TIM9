@@ -31,7 +31,8 @@ Vue.component("zapocni-pregled", {
 			termin:null,
 			odabraniTermin:true,
 			pretragaTermina:{id:0,datum:0,tipPregleda:'',pacijent:0,klinika:0},
-			radioGroup: "operacija"
+			radioGroup: "operacija",
+			dijalogGreska: false
 		} 
 	},
 	template: 
@@ -219,6 +220,16 @@ Vue.component("zapocni-pregled", {
 				        </v-stepper-content>
 				      </v-stepper>
 					</v-dialog>
+			<v-dialog v-model="dijalogGreska" max-width="300">
+		      <v-card>
+		        <v-card-title class="headline">Greška</v-card-title>
+		        <v-card-text>Neko drugi je upravo zakazao lekara u istom terminu.</v-card-text>
+		        <v-card-actions>
+		          <v-spacer></v-spacer>
+		          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+		        </v-card-actions>
+		      </v-card>
+		    </v-dialog>
 					
 		</div>	
 	</v-app>
@@ -319,6 +330,10 @@ Vue.component("zapocni-pregled", {
 						toast("Novi termin pregleda je rezervisan.");
 						this.dijalog=false;
 					}
+					else{
+						this.dialog=false;
+						this.dijalogGreska = true;
+					}
 				})
 				.catch(function (error) { console.log(error); });
 			}
@@ -329,6 +344,10 @@ Vue.component("zapocni-pregled", {
 					if(response.data==true){
 						toast("Novi termin operacije je rezervisan.");
 						this.dijalog=false;
+					}
+					{
+						this.dialog=false;
+						this.dijalogGreska = true;
 					}
 				})
 				.catch(function (error) { console.log(error); });

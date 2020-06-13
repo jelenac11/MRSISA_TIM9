@@ -8,6 +8,7 @@ Vue.component("zahtjevGodisnji",{
             token: "",
             korisnik:"",
             dijalog:false,
+            dijalogGreska: false,
 		}
 	},
     template: `
@@ -59,6 +60,16 @@ Vue.component("zahtjevGodisnji",{
 				</v-card>		
 			</v-dialog>
 		</div>
+			<v-dialog v-model="dijalogGreska" max-width="300">
+			      <v-card>
+			        <v-card-title class="headline">Greška</v-card-title>
+			        <v-card-text>Neko drugi je upravo zauzeo tu salu u istom terminu.</v-card-text>
+			        <v-card-actions>
+			          <v-spacer></v-spacer>
+			          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+			        </v-card-actions>
+			      </v-card>
+			</v-dialog>
 		</v-app>
     </div>
 	`
@@ -96,7 +107,17 @@ Vue.component("zahtjevGodisnji",{
         },
         updateZahtjev: function(indeks){
             axios.put('/odsustva/updateOdsustvo', this.zahtjevi[indeks], { headers: { Authorization: 'Bearer ' + this.token }} )
-            .then(response=>{ this.dijalog=false;this.dobaviZahtjeve()})
+            .then(response=>{ 
+            	this.dijalog=false;
+            	if(response.data){
+            		toast("Uspesno ste odgovorili na zahtev.");
+            	}
+            	else{
+            		this.dijalogGreska = true;
+            	}
+            	this.dobaviZahtjeve();
+            	
+            })
             .catch(function (error) { console.log(error); });
         },
         dobaviZahtjeve: function() {

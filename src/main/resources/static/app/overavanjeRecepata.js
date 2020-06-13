@@ -4,13 +4,14 @@ Vue.component("overavanje-recepata",{
             recepti : [],
             ulogovan: {},
             token: "",
+            dijalogGreska: false,
 		}
 	},
 	
     template: `
 	<div>
 	    <navig-bar v-bind:token="this.token"></navig-bar>
-	    
+	    <v-app>
         <table class="naviga table table-hover table-striped">
             <thead class="thead-light">
                 <tr>
@@ -33,6 +34,17 @@ Vue.component("overavanje-recepata",{
                 </tr>
             </tbody>
         </table>
+        	<v-dialog v-model="dijalogGreska" max-width="300">
+			      <v-card>
+			        <v-card-title class="headline">Greška</v-card-title>
+			        <v-card-text>Neko drugi je upravo overio taj recept.</v-card-text>
+			        <v-card-actions>
+			          <v-spacer></v-spacer>
+			          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+			        </v-card-actions>
+			      </v-card>
+			</v-dialog>
+        </v-app>
     </div>
 	`
 		,
@@ -50,6 +62,12 @@ Vue.component("overavanje-recepata",{
             axios
             .post('/recepti/overi', recept, { headers: { Authorization: 'Bearer ' + this.token }} )
             .then(response => { 
+            	if(response.data){
+            		toast("Recept uspesno overen.")
+            	}
+            	else{
+            		this.dijalogGreska = true;
+            	}
             	this.dobaviRecepte(); 
             })
             .catch(function (error) { console.log(error); });

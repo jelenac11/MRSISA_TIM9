@@ -130,12 +130,13 @@ public class AuthenticationController {
 	}
 
 	@PutMapping(value = "/updateRegZahtev")
-	public void updateRegZahtev(@RequestBody PacijentDTO pacijentDTO) throws MailException, InterruptedException {
+	public ResponseEntity<Boolean> updateRegZahtev(@RequestBody PacijentDTO pacijentDTO) throws MailException, InterruptedException {
 		try {
-			autoritetService.updateRegZahtev(pacijentDTO);
+			return new ResponseEntity<>(autoritetService.updateRegZahtev(pacijentDTO), HttpStatus.OK);
 		}
 		catch (Exception e) {
 			System.out.println("Zahtev je vec prihvacen/odbijen.");
+			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 	}
 
