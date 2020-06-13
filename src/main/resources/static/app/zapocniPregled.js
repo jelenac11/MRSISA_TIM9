@@ -96,7 +96,7 @@ Vue.component("zapocni-pregled", {
 					</div>
 
 				  	<div>
-				  		<button class="btn btn-lg btn-primary" type="submit" v-on:click="zavrsiIzvestaj">Završi pregled</button>
+				  		<button class="btn btn-lg btn-primary" style="color:white" type="submit" v-on:click="zavrsiIzvestaj">Završi pregled</button>
 						<button class="btn btn-lg btn-info" data-toggle="modal" data-target="#izmenaKartona" v-on:click="dobaviZdravstveniKarton">Zdravstveni karton</button>
 						<button class="btn btn-lg btn-info" @click="dijalog = true" v-on:click="noviTermin">Zakaži novi termin</button>
 						<button class="btn btn-lg btn-secondary" style="float: right;" v-on:click="nazad">Nazad</button>
@@ -155,13 +155,13 @@ Vue.component("zapocni-pregled", {
 										<div class="invalid-feedback" id="izmenaInvalid">Unesite dioptriju.</div>
 									</div>
 							  	</div>
-							  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+							  	<button style="color:white" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 							  		Sačuvaj izmene
 							  	</button>
 							</form>
 			      		</div>
 			      		<div class="modal-footer">
-			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			        		<button type="button" style="color:white" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
 			      		</div>
 			    	</div>
 				</div>

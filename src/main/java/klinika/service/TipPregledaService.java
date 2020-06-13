@@ -80,6 +80,7 @@ public class TipPregledaService {
 		}
 	}
 
+	// Metoda koja vraća sve tipove preglede za izabranu kliniku
 	public List<TipPregledaDTO> vratiTipoveKlinike(long id) {
 		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaIdAndAktivan(id, true);
 		List<TipPregledaDTO> tipovidto = new ArrayList<>();

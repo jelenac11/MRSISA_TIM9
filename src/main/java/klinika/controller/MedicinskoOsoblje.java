@@ -86,7 +86,10 @@ public class MedicinskoOsoblje {
 	@PostMapping(value = "/zahtevOdsustvo")
 	@PreAuthorize("hasAnyRole('LEKAR','MED_SESTRA')")
 	public ResponseEntity<Boolean> zahtevOdsustvo(@RequestBody OdsustvoDTO odsustvoDTO) {
-		boolean odgovor = korisnikService.zahtevOdsustvo(odsustvoDTO);
-		return new ResponseEntity<>(odgovor, HttpStatus.OK);
+		try {
+			return new ResponseEntity<>(korisnikService.zahtevOdsustvo(odsustvoDTO), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
 	}
 }

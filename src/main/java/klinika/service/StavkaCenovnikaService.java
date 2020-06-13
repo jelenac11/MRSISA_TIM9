@@ -45,6 +45,7 @@ public class StavkaCenovnikaService {
 		stavkaCenovnikaRepository.deleteById(id);
 	}
 
+	// Metoda koja vraća cenu za izabrani tip pregleda
 	public double vratiCenuPregleda(PretragaKlinikeDTO pretragaKlinikeDTO) {
 		double cena = 0;
 		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaIdAndAktivan(pretragaKlinikeDTO.getId(), true);

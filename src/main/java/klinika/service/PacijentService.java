@@ -55,6 +55,7 @@ public class PacijentService {
 		pacijentRepository.deleteById(id);
 	}
 
+	// Metoda koja vraća sve pacijente odabrane klinike
 	public List<PacijentDTO> findByKlinikaID(Long id) {
 		Korisnik korisnik = korisnikService.findOne(id);
 		Autoritet a = korisnik.getAutoriteti().get(0);

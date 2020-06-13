@@ -46,7 +46,7 @@ public class PacijentController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<PacijentDTO> promeniKorisnika(@RequestBody PacijentDTO pDTO) {
+	public ResponseEntity<?> promeniKorisnika(@RequestBody PacijentDTO pDTO) {
 
 		Pacijent p = pacijentService.findOne(pDTO.getId());
 		if (p == null) {
@@ -62,7 +62,17 @@ public class PacijentController {
 		p.setPromenjenaLozinka(pDTO.isPromenjenaLozinka());
 		p.setVerifikovan(pDTO.isVerifikovan());
 
-		p = pacijentService.save(p);
+		try {
+			try {
+				p = pacijentService.save(p);
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+			}
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new PacijentDTO(p), HttpStatus.OK);
 	}
 

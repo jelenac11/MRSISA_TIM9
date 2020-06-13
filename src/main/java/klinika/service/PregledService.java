@@ -106,6 +106,7 @@ public class PregledService {
 		return pregledRepository.findByTipPregledaIdAndVremeGreaterThan(id, vreme);
 	}
 	
+	// Metoda koja dodaje novi pregled
 	@Transactional(readOnly = false)
 	public boolean insertPregled(SlobodanTerminDTO slobodanTerminDTO) {
 		Klinika klinika = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina()).getKlinika();
@@ -143,6 +144,7 @@ public class PregledService {
 				potvrdjen);
 	}
 
+	// Metoda koja vraća radni kalendar za preglede
 	public List<RadniKalendarDTO> kreirajRadniKalendar(Long id, long time) {
 		List<Pregled> pregledi = pregledRepository.findBySalaIdAndOtkazanFalseAndVremeAfter(id, time);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
@@ -157,6 +159,7 @@ public class PregledService {
 		return kalendar;
 	}
 
+	// Metoda koja vraća radni kalendar radnika
 	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id) {
 		List<Pregled> pregledi = pregledRepository.findByLekarIdAndOtkazanFalse(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
@@ -177,6 +180,7 @@ public class PregledService {
 		return kalendar;
 	}
 
+	// Metoda koja dodeljuje salu za određeni termin pregleda
 	@Transactional(readOnly = false)
 	public Pregled dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO) {
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
@@ -211,6 +215,7 @@ public class PregledService {
 		return p;
 	}
 
+	// Metoda koja vraća predefinisane preglede
 	public List<PredefinisaniDTO> ucitajPredefinisane(PretragaKlinikeDTO pkdto) {
 		TipPregleda tp = tipoviRepository.findByNazivAndAktivan(pkdto.getTipPregleda(), true);
 		List<PredefinisaniDTO> predefinisaniPregledi = new ArrayList<>();
@@ -238,6 +243,7 @@ public class PregledService {
 		return predefinisaniPregledi;
 	}
 
+	// Metoda kojom pacijent zakazuje predefinisani pregled
 	@Transactional(readOnly = false)
 	public Boolean zakaziPredefinisani(PredefinisaniDTO predef) throws MailException, InterruptedException {
 		Pregled p = pregledRepository.findPregledByVremeAndLekarId(predef.getDatum(), predef.getLekar().getId());
@@ -264,6 +270,8 @@ public class PregledService {
 		}
 		return true;
 	}
+	
+	// Metoda koja zakazuje slobodan termin za pregled
 	@Transactional(readOnly = false)
 	public PredefinisaniDTO zakaziTermin(PretragaLekaraDTO pldto) {
 		PredefinisaniDTO p = new PredefinisaniDTO();
@@ -295,6 +303,7 @@ public class PregledService {
 		return p;
 	}
 
+	// Metoda koja vraća sve preglede za izabranog pacijenta
 	public List<PregledDTO> vratiPregledePacijenta(long id) {
 		List<Pregled> pregledi = pregledRepository.findByPacijentIdAndPotvrdjenAndOtkazan(id, true, false);
 		List<PregledDTO> pregledidto = new ArrayList<>();
@@ -306,6 +315,7 @@ public class PregledService {
 		return pregledidto;
 	}
 
+	// Metoda koja otkazuje pregled od strane pacijenta
 	public Boolean otkaziPregledPacijenta(PregledDTO pregled) throws MailException, InterruptedException {
 		Optional<Pregled> p = pregledRepository.findById(pregled.getId());
 		if (p.isPresent()) {
@@ -324,6 +334,8 @@ public class PregledService {
 		}
 		return false;
 	}
+	
+	// Metoda kojom pacijent potvrdjuje termin pregleda
 	@Transactional(readOnly = false)
 	public Boolean potvrdiZakazivanje(PredefinisaniDTO predef) throws MailException, InterruptedException {
 		Lekar lekar=lekarRepository.findById(predef.getLekar().getId()).orElseGet(null);
@@ -362,6 +374,7 @@ public class PregledService {
 		return pregledRepository.mozeZapocetiPregled(idLekara, idPacijenta, time);
 	}
 
+	// Metoda koja otkazuje pregled od strane lekara
 	public Boolean otkaziPregledLekara(PretragaLekaraDTO pldto) throws MailException, InterruptedException {
 		Pregled p = pregledRepository.findPregledByVremeAndLekarId(pldto.getDatum(), pldto.getId());
 		if (p != null) {
@@ -389,6 +402,7 @@ public class PregledService {
 		return pregledRepository.dobaviSvePregledeBezSale();
 	}
 
+	// Metoda kojom lekar zakazuje pregled
 	@Transactional(readOnly = false)
 	public Boolean zakaziTerminLekar(ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException {
 		Klinika klinika = lekarService.findOne(ztlDTO.getLekar()).getKlinika();

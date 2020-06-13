@@ -7,6 +7,7 @@ Vue.component("dodavanje-sale", {
 			},
 	    	submitovano : false,
 	    	uspesnoDodavanje : true,
+	    	zauzetoIme : false,
 	    	zauzetBroj : false,
 	    	token : "",
 	    }
@@ -33,6 +34,9 @@ Vue.component("dodavanje-sale", {
 				  	</div>
 				  	<div v-if=zauzetBroj class="alert alert-danger" role="alert">
 						<p class="mb-0"><b>Greška!</b> Već postoji sala sa unetim brojem. Pokušajte ponovo.</p>
+					</div>
+					<div v-if="zauzetoIme" class="alert alert-danger" role="alert">
+						<p class="mb-0"><b>Greška!</b> Već postoji sala sa unetim nazivom. Pokušajte ponovo.</p>
 					</div>
 				  	<button style="color: white" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Dodaj
@@ -62,16 +66,17 @@ Vue.component("dodavanje-sale", {
 					})
 					.catch(error => {
 						console.log(error);
-						this.uspesnoDodavanje = false;
+						this.zauzetoIme = true;
+						this.zauzetBroj = false;
 					});
 				})
 				.catch(error => {
 					console.log(error);
-					this.uspesnoDodavanje = false;
+					this.zauzetoIme = false;
 					this.zauzetBroj = true;
 				});
 			} else {
-				this.uspesnoDodavanje = true;
+				this.zauzetoIme = false;
 				this.zauzetBroj = false;
 			}
 		}

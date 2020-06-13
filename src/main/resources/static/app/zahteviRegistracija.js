@@ -12,8 +12,8 @@ Vue.component("zahtevi-registracija",{
 	
     template: `
 	<div>
+    	<navig-bar v-bind:token="this.token"></navig-bar>
     	<v-app>
-		    <navig-bar v-bind:token="this.token"></navig-bar>
 		    
 	        <table class="naviga table table-hover table-striped">
 	            <thead class="thead-light">

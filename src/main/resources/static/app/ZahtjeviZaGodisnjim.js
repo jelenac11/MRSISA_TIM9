@@ -32,8 +32,8 @@ Vue.component("zahtjevGodisnji",{
 		                <td>{{zahtjev.podnosilac.prezime}}</td>
 		                <td>{{urediDatum(zahtjev.pocetak)}}</td>
 		                <td>{{urediDatum(zahtjev.kraj)}}</td>
-		                <td><button type="button" class="btn btn-success" v-on:click="prihvatanjeZahtjeva(indeks)">Prihvati zahtev</button></td>
-		                <td><button type="button" class="btn btn-danger" @click="dijalog = true" v-on:click="zabiljeziIndeks(indeks)">Odbij zahtev</button></td>
+		                <td><button type="button" style="color:white" class="btn btn-success" v-on:click="prihvatanjeZahtjeva(indeks)">Prihvati zahtev</button></td>
+		                <td><button type="button" style="color:white" class="btn btn-danger" @click="dijalog = true" v-on:click="zabiljeziIndeks(indeks)">Odbij zahtev</button></td>
 		            </tr>
 		        </tbody>
 		    </table>

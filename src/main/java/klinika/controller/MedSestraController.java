@@ -48,7 +48,7 @@ public class MedSestraController {
 	private AutoritetService autoritetService;
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	@PreAuthorize("hasAnyRole('ADMIN_KLINIKE', 'MED_SESTRA')")
 	public ResponseEntity<MedSestraDTO> ucitajPoId(@PathVariable Long id) {
 		MedSestra m = medicinskaSestraService.findOne(id);
 		m.getKlinika();
@@ -79,7 +79,7 @@ public class MedSestraController {
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<MedSestraDTO> kreirajMedSestru(@RequestBody MedSestraDTO medSestraDTO) {
+	public ResponseEntity<?> kreirajMedSestru(@RequestBody MedSestraDTO medSestraDTO) {
 		MedSestra medSestra = new MedSestra();
 		medSestra.setAdresa(medSestraDTO.getAdresa());
 		medSestra.setDrzava(medSestraDTO.getDrzava());
@@ -98,13 +98,18 @@ public class MedSestraController {
 		Klinika k = klinikaService.findByNaziv(medSestraDTO.getKlinika());
 		medSestra.setKlinika(k);
 
-		medSestra = medicinskaSestraService.save(medSestra);
+		try {
+			medSestra = medicinskaSestraService.save(medSestra);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new MedSestraDTO(medSestra), HttpStatus.CREATED);
 	}
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('MED_SESTRA')")
-	public ResponseEntity<MedSestraDTO> promeniKorisnika(@RequestBody MedSestraDTO msDTO) {
+	public ResponseEntity<?> promeniKorisnika(@RequestBody MedSestraDTO msDTO) {
 
 		MedSestra ms = medicinskaSestraService.findOne(msDTO.getId());
 		if (ms == null) {
@@ -123,7 +128,12 @@ public class MedSestraController {
 		ms.setPocetakRadnogVremena(msDTO.getPocetakRadnogVremena());
 		ms.setKrajRadnogVremena(msDTO.getKrajRadnogVremena());
 
-		ms = medicinskaSestraService.save(ms);
+		try {
+			ms = medicinskaSestraService.save(ms);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new MedSestraDTO(ms), HttpStatus.OK);
 	}
 

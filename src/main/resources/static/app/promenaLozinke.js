@@ -31,7 +31,7 @@ Vue.component("promena-lozinke", {
 							<div class="invalid-feedback" v-bind:class="{ 'd-block' : !poklapajuSeLozinke }">Lozinke se ne poklapaju!</div>
 				    	</div>
 					</div>
-				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+				  	<button style="color:white" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Sačuvaj izmene
 				  	</button>
 				</form>

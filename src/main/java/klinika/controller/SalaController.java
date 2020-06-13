@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import klinika.model.Klinika;
 import klinika.model.Sala;
 import klinika.repository.SalaRepository;
 import klinika.service.AdminKlinikeService;
+import klinika.service.KlinikaService;
 import klinika.service.OperacijaService;
 import klinika.service.PregledService;
 import klinika.service.SalaService;
@@ -42,7 +45,10 @@ public class SalaController {
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-
+	
+	@Autowired
+	private KlinikaService klinikaService;
+	
 	@Autowired
 	private PregledService pregledService;
 
@@ -74,7 +80,17 @@ public class SalaController {
 			return new ResponseEntity<>(uspesno, HttpStatus.OK);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
+			return new ResponseEntity<>(false, HttpStatus.OK);
+		}
+	}
+	
+	@PostMapping(value = "/proveriIme", consumes = "application/json")
+	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
+	public ResponseEntity<Boolean> proveriIme(@RequestBody SalaDTO salaDTO) {
+		Sala sala = salaService.findByNaziv(salaDTO.getNaziv());
+		if (sala != null) {
+			return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
+		} else {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 	}
@@ -84,6 +100,14 @@ public class SalaController {
 	public ResponseEntity<SalaDTO> kreirajSalu(@RequestBody SalaDTO salaDTO) {
 		Sala sala = new Sala();
 		sala.setBroj(salaDTO.getBroj());
+		Sala postoji = salaService.findByNaziv(salaDTO.getNaziv());
+		if (postoji != null) {
+			return new ResponseEntity<>(new SalaDTO(), HttpStatus.BAD_REQUEST);
+		}
+		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
+		AdminKlinike ulogovan = adminKlinikeService.findByEmail(trenutniKorisnik.getName());
+		
+		sala.setKlinika(klinikaService.findOne(ulogovan.getKlinika().getId()));
 		sala.setNaziv(salaDTO.getNaziv());
 		sala.setAktivan(true);
 		sala = salaService.save(sala);
@@ -125,7 +149,7 @@ public class SalaController {
 	@GetMapping(value = "/proveriBroj/{broj}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> proveriBroj(@PathVariable("broj") int broj) {
-		Sala sala = salaService.findByBroj(broj);
+		Sala sala = salaService.findByBrojZaSve(broj, false);
 		if (sala != null) {
 			return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST);
 		}

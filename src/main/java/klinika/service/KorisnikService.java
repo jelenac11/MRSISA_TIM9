@@ -1,5 +1,6 @@
 package klinika.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -14,9 +15,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import klinika.dto.OdsustvoDTO;
 import klinika.model.Klinika;
 import klinika.model.Korisnik;
+import klinika.model.Lekar;
 import klinika.model.MedicinskoOsoblje;
 import klinika.model.Odsustvo;
 import klinika.model.Operacija;
@@ -49,6 +53,9 @@ public class KorisnikService implements UserDetailsService {
 
 	@Autowired
 	private OdsustvoRepository odsustvoRepository;
+	
+	@Autowired
+	private LekarService lekarService;
 
 	@Autowired
 	private MedicinskoOsobljeRepository medicinskoOsobljeRepository;
@@ -83,6 +90,7 @@ public class KorisnikService implements UserDetailsService {
 		korisnikRepository.deleteById(id);
 	}
 
+	// Metoda koja radi promenu lozinke
 	public void changePassword(String oldPassword, String newPassword) {
 		Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 		String username = currentUser.getName();
@@ -108,6 +116,8 @@ public class KorisnikService implements UserDetailsService {
 		return passwordEncoder.encode(lozinka);
 	}
 
+	// Metoda koja dodaje zahteve za odsustvo
+	@Transactional(readOnly = false)
 	public boolean zahtevOdsustvo(OdsustvoDTO odsustvoDTO) {
 		List<Pregled> pregledi = pregledRepository.findByLekarAndVreme(odsustvoDTO.getPodnosilac().getId(),
 				odsustvoDTO.getPocetak(), odsustvoDTO.getKraj());
@@ -127,6 +137,11 @@ public class KorisnikService implements UserDetailsService {
 			odsustvo.setOdobreno(false);
 			odsustvo.setObrazlozenje("");
 			odsustvo.setPodnosilac(kor);
+			Lekar l = lekarService.findOne(kor.getId());
+			if (l != null) {
+				l.setLastChange(new Date().getTime());
+				lekarService.save(l);
+			}
 			odsustvo.setKlinika(k);
 			odsustvoRepository.save(odsustvo);
 			return true;

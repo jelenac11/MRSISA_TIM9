@@ -37,12 +37,17 @@ public class SifrarnikController {
 	}
 
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<SifrarnikDTO> kreirajSifrarnik(@RequestBody SifrarnikDTO sifrarnikDTO) {
+	public ResponseEntity<?> kreirajSifrarnik(@RequestBody SifrarnikDTO sifrarnikDTO) {
 		Sifrarnik sifrarnik = new Sifrarnik();
 		sifrarnik.setNaziv(sifrarnikDTO.getNaziv());
 		sifrarnik.setTipSifrarnika(sifrarnikDTO.getTipSifrarnika());
 
-		sifrarnik = sifrarnikService.save(sifrarnik);
+		try {
+			sifrarnik = sifrarnikService.save(sifrarnik);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new SifrarnikDTO(sifrarnik), HttpStatus.CREATED);
 	}
 }

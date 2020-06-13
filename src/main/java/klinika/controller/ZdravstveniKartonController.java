@@ -1,6 +1,7 @@
 package klinika.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,13 +30,18 @@ public class ZdravstveniKartonController {
 
 	@PreAuthorize("hasAnyRole('LEKAR', 'MED_SESTRA')")
 	@PutMapping(value = "/izmeniKarton", consumes = "application/json")
-	public ResponseEntity<Boolean> izmeniKarton(@RequestBody ZdravstveniKartonDTO zk) {
+	public ResponseEntity<?> izmeniKarton(@RequestBody ZdravstveniKartonDTO zk) {
 		ZdravstveniKarton z = zdravstveniKartonService.findOne(zk.getId());
 		z.setDioptrija(zk.getDioptrija());
 		z.setKrvnaGrupa(zk.getKrvnaGrupa());
 		z.setTezina(zk.getTezina());
 		z.setVisina(zk.getVisina());
-		zdravstveniKartonService.save(z);
+		try {
+			zdravstveniKartonService.save(z);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return ResponseEntity.ok(true);
 	}
 }

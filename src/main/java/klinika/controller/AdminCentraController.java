@@ -56,7 +56,7 @@ public class AdminCentraController {
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
-	public ResponseEntity<AdminCentraDTO> kreirajAdminaCentra(@RequestBody AdminCentraDTO adminCentraDTO) {
+	public ResponseEntity<?> kreirajAdminaCentra(@RequestBody AdminCentraDTO adminCentraDTO) {
 		AdminCentra adminCentra = new AdminCentra();
 		adminCentra.setAdresa(adminCentraDTO.getAdresa());
 		adminCentra.setDrzava(adminCentraDTO.getDrzava());
@@ -70,14 +70,18 @@ public class AdminCentraController {
 		adminCentra.setAktiviran(true);
 		adminCentra.setVerifikovan(true);
 		adminCentra.setPromenjenaLozinka(false);
-
-		adminCentra = adminCentraService.save(adminCentra);
+		try {
+			adminCentra = adminCentraService.save(adminCentra);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new AdminCentraDTO(adminCentra), HttpStatus.CREATED);
 	}
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
-	public ResponseEntity<AdminCentraDTO> promeniKorisnika(@RequestBody AdminCentraDTO adminDTO) {
+	public ResponseEntity<?> promeniKorisnika(@RequestBody AdminCentraDTO adminDTO) {
 		AdminCentra admin = adminCentraService.findOne(adminDTO.getId());
 		if (admin == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -86,14 +90,18 @@ public class AdminCentraController {
 		admin.setDrzava(adminDTO.getDrzava());
 		admin.setGrad(adminDTO.getGrad());
 		admin.setIme(adminDTO.getIme());
-		admin.setLozinka(korisnikService.encodePassword(adminDTO.getLozinka()));
 		admin.setPrezime(adminDTO.getPrezime());
 		admin.setBrojTelefona(adminDTO.getBrojTelefona());
 		admin.setAktiviran(adminDTO.isAktiviran());
 		admin.setPromenjenaLozinka(adminDTO.isPromenjenaLozinka());
 		admin.setVerifikovan(adminDTO.isVerifikovan());
 
-		admin = adminCentraService.save(admin);
+		try {
+			admin = adminCentraService.save(admin);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new AdminCentraDTO(admin), HttpStatus.OK);
 	}
 }

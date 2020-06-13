@@ -481,7 +481,7 @@ Vue.component("poslovanje", {
 								     <v-select
 								     v-model="odabraniMjesec"
 								     :items="mjeseci"
-								     label="Odabir mjeseca"
+								     label="Odabir meseca"
 								     ></v-select>
 								</v-col>
 								<v-spacer></v-spacer>

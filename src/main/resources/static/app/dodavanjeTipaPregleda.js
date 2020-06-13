@@ -39,7 +39,7 @@ Vue.component("dodavanje-tipaPregleda", {
 							<input type="text" v-model="noviTipPregleda.opis" class="form-control" id="opis" placeholder="Opis"></input>
 						</div>
 				  	</div>
-				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+				  	<button style="color:white" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Dodaj
 				  	</button>
 				</form>

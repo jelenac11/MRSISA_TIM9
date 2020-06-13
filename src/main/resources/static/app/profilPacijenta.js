@@ -82,7 +82,7 @@ Vue.component("profil-pacijenta", {
 				  	<div>
 				  		<button v-if="uloga == 'ROLE_LEKAR'" class="btn btn-lg btn-primary" v-on:click="zapocni">Započni pregled</button>
 						<button class="btn btn-lg btn-info" @click="dijalog = true" v-on:click="dobaviZdravstveniKarton" :disabled="!nijeObavioNikadPregled && this.uloga == 'ROLE_LEKAR'">Zdravstveni karton</button>
-						<button class="btn btn-lg btn-secondary" style="float: right;" v-on:click="nazad">Nazad</button>
+						<button class="btn btn-lg btn-secondary" style="float: right; color: white" v-on:click="nazad">Nazad</button>
 				  	</div>
 				</div>
 			</div>
@@ -147,7 +147,7 @@ Vue.component("profil-pacijenta", {
 											</div>
 								  		</li>
 									</ul>
-									<button v-if="uloga == 'ROLE_MED_SESTRA'" class="m-2 btn btn-lg btn-primary" data-toggle="modal" data-target="#izmenaKartona">Izmeni podatke</button>
+									<button v-if="uloga == 'ROLE_MED_SESTRA'" class="m-2 btn btn-lg btn-primary" @click="dijalog = false" data-toggle="modal" data-target="#izmenaKartona">Izmeni podatke</button>
 								</div>
 							</div>
 						</div>	
@@ -206,13 +206,13 @@ Vue.component("profil-pacijenta", {
 										<div class="invalid-feedback" id="izmenaInvalid">Unesite dioptriju.</div>
 									</div>
 							  	</div>
-							  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+							  	<button style="color:white" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 							  		Sačuvaj izmene
 							  	</button>
 							</form>
 			      		</div>
 			      		<div class="modal-footer">
-			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			        		<button style="color:white" type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
 			      		</div>
 			    	</div>
 				</div>
@@ -315,10 +315,10 @@ Vue.component("profil-pacijenta", {
 									<button class="btn btn-primary ml-2" style="float: left;" v-on:click="dodajRecept">Dodaj lek</button>
 							  	</div>
 							</div>
-					  		<button class="btn btn-lg btn-primary" type="submit" v-on:click="zavrsiIzvestaj">Sačuvaj izmene</button>
+					  		<button class="btn btn-lg btn-primary" type="submit" style="color:white" v-on:click="zavrsiIzvestaj">Sačuvaj izmene</button>
 			      		</div>
 			      		<div class="modal-footer">
-			        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+			        		<button type="button" class="btn btn-secondary mr-auto" style="color:white" data-dismiss="modal">Nazad</button>
 			      		</div>
 			    	</div>
 				</div>
@@ -357,10 +357,6 @@ Vue.component("profil-pacijenta", {
             	this.noviZdravstveniKarton = JSON.parse(JSON.stringify(this.zdravstveniKarton));
             	var nema = this.zdravstveniKarton.bolesti === undefined || this.zdravstveniKarton.bolesti.length == 0;
     			this.imaBolesti = !nema;
-    			if (this.uloga == "ROLE_MED_SESTRA") {
-    				this.dijalog = false;
-    				$("#izmenaKartona").modal("show");
-    			}
             })
             .catch(function (error) { console.log(error); });
 		},

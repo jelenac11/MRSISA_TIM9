@@ -29,7 +29,7 @@ public class StavkaSifrarnikaController {
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
-	public ResponseEntity<StavkaSifrarnika> kreirajStavku(@RequestBody StavkaSifrarnikaDTO stavkaDTO) {
+	public ResponseEntity<?> kreirajStavku(@RequestBody StavkaSifrarnikaDTO stavkaDTO) {
 		StavkaSifrarnika stavka = new StavkaSifrarnika();
 
 		stavka.setSifra(stavkaDTO.getSifra());
@@ -39,7 +39,12 @@ public class StavkaSifrarnikaController {
 		stavka.setSifrarnik(s);
 		s.getStavke().add(stavka);
 
-		sifrarnikService.save(s);
+		try {
+			sifrarnikService.save(s);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(stavka, HttpStatus.CREATED);
 	}
 

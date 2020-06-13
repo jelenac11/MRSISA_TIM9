@@ -27,9 +27,9 @@ Vue.component("tipoviPregleda", {
 			    	</tr>
 			  	</thead>
 			  	<tbody>
-			  		<tr v-for="tipPregleda in filtriraniTipovi" data-toggle="modal" data-target="#izmenaTipaPregledaModal"  v-on:click="izaberiTipPregleda(tipPregleda)">
-				      	<td width="30%">{{ tipPregleda.naziv }}</td>
-				      	<td width="50%">{{ tipPregleda.opis }}</td>
+			  		<tr v-for="tipPregleda in filtriraniTipovi">
+				      	<td width="30%" data-toggle="modal" data-target="#izmenaTipaPregledaModal"  v-on:click="izaberiTipPregleda(tipPregleda)">{{ tipPregleda.naziv }}</td>
+				      	<td width="50%" data-toggle="modal" data-target="#izmenaTipaPregledaModal"  v-on:click="izaberiTipPregleda(tipPregleda)">{{ tipPregleda.opis }}</td>
 				      	<td width="20%"><button class="btn btn-danger btn-sm" v-on:click="obrisiTipPregleda(tipPregleda)" id="brisanjeTipa">Ukloni</button></td>
 			    	</tr>
 			  	</tbody>
@@ -67,13 +67,13 @@ Vue.component("tipoviPregleda", {
 									<div class="invalid-feedback" id="izmenaInvalid">Unesite ispravnu cenu.</div>
 								</div>
 						  	</div>
-						  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="noviTipPregleda.naziv==izabraniTipPregleda.naziv && noviTipPregleda.opis==izabraniTipPregleda.opis && noviTipPregleda.cena==izabraniTipPregleda.cena">
+						  	<button style="color:white" class="btn btn-lg btn-primary btn-block mt-4" type="submit" v-bind:disabled="noviTipPregleda.naziv==izabraniTipPregleda.naziv && noviTipPregleda.opis==izabraniTipPregleda.opis && noviTipPregleda.cena==izabraniTipPregleda.cena">
 						  		Sačuvaj izmene
 						  	</button>
 						</form>
 		      		</div>
 		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+		        		<button style="color:white" type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
 		      		</div>
 		    	</div>
 			</div>
@@ -102,16 +102,13 @@ Vue.component("tipoviPregleda", {
 					if(response.data==true){
 						toast("Uspešno izbrisan tip pregleda "+tipPregleda.naziv+".");
 						this.dobaviSve();
-						this.$router.go();
 					}
 					else{
 						toast("Tip pregleda nije moguce izbrisati.");
 						this.dobaviSve();
-						this.$router.go();
 					}
 				})
 				.catch(function (error) { console.log(error); });
-				this.$router.go();
 			}
 
 		},
@@ -122,7 +119,6 @@ Vue.component("tipoviPregleda", {
             .catch(function (error) { console.log(error); });
 		},
 		izmenaTipaPregleda : function () {
-			this.submitovano = true;
 			if (document.getElementById('forma-izmena-tipaPregleda').checkValidity() === true) {
 				axios
 				.post('/tipoviPregleda/izmenaTipaPregleda', this.noviTipPregleda, { headers: { Authorization: 'Bearer ' + this.token }})
@@ -145,6 +141,7 @@ Vue.component("tipoviPregleda", {
 			} else {
 				this.uspesnaIzmena = true;
 			}
+			this.submitovano = true;
 		},
 		izaberiTipPregleda: function(tipPregleda){
 			this.noviTipPregleda=JSON.parse(JSON.stringify(tipPregleda));

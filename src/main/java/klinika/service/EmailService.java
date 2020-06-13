@@ -33,6 +33,7 @@ public class EmailService {
 	@Autowired
 	private TokenPotvrdePregledaService tokenPotvrdePregledaService;
 
+	// Univerzalna metoda za slanje mejlova
 	@Async
 	public void posaljiEmail(String to, String subject, String text) throws MailException, InterruptedException {
 		SimpleMailMessage message = new SimpleMailMessage();
@@ -43,6 +44,7 @@ public class EmailService {
 		javaMailSender.send(message);
 	}
 
+	// Šalje aktivacioni link za registraciju
 	@Async
 	public void posaljiAktivacioniLink(Pacijent pt) throws MailException, InterruptedException {
 		String token = UUID.randomUUID().toString();
@@ -62,6 +64,7 @@ public class EmailService {
 		javaMailSender.send(email);
 	}
 
+	// Šalje link pacijentu za potvrdu termina pregleda
 	@Async
 	public void posaljiLinkPotvrdePregleda(Pregled pregled, String prima) {
 		String token = UUID.randomUUID().toString();
@@ -81,6 +84,7 @@ public class EmailService {
 		javaMailSender.send(email);
 	}
 
+	// Šalje se mejl koji obaveštava pacijenta o zakazanoj operaciji
 	@Async
 	public void obavestiPacijentaZaOperaciju(Operacija operacija, String prima) {
 		String subject = "Zakazana operacija";
@@ -94,6 +98,7 @@ public class EmailService {
 		javaMailSender.send(email);
 	}
 	
+	// Šalje se mejl koji obaveštava lekara o zakazanoj operaciji
 	@Async
 	public void obavestiLekaraZaOperaciju(Operacija operacija, String prima) {
 		String subject = "Zakazana operacija";
@@ -107,6 +112,7 @@ public class EmailService {
 		javaMailSender.send(email);
 	}
 
+	// Šalje se mejl koji obaveštava lekara o novom zakazanom pregledu
 	@Async
 	public void obavijestiLekara(Pregled pregled, String mail) {
 		SimpleMailMessage email = new SimpleMailMessage();
@@ -119,6 +125,7 @@ public class EmailService {
 		javaMailSender.send(email);
 	}
 
+	// Pomoćna metoda koja ispisuje lekare koji prisustvuju operaciji
 	private String ispisiLekare(Set<Lekar> set) {
 		StringBuilder retVal = new StringBuilder();
 		for (Lekar lekar : set) {

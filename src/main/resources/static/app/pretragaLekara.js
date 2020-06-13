@@ -13,6 +13,7 @@ Vue.component('pretraga-lekara', {
 			vreme: "",
 			id: 0,
 			termini : [],
+			dijalogGreska: false,
 			predefinisani: [],
 			lekar: 0,
 			potvrda: {},
@@ -25,155 +26,168 @@ Vue.component('pretraga-lekara', {
 	template: `
 		<div> 
 		<navig-bar v-bind:token="this.token"></navig-bar>
-		<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
-			<div class="kartica mt-2 mx-2" style="width: 98.7%;">
-			  <div class="kartica-body">
-			    <div class="kartica-title">
-			    	<h4 class="alignleft">{{ klinika.naziv + ", Ocena: " + klinika.ocena }}</h4>
-			    	<p v-if="mozeDaOceniKliniku" class="alignright">
-						<i class="far fa-star unchecked" v-on:click="oceni('1z')" id="1z"></i> 
-						<i class="far fa-star unchecked" v-on:click="oceni('2z')" id="2z"></i>
-					   	<i class="far fa-star unchecked" v-on:click="oceni('3z')" id="3z"></i>
-					   	<i class="far fa-star unchecked" v-on:click="oceni('4z')" id="4z"></i>
-					   	<i class="far fa-star unchecked" v-on:click="oceni('5z')" id="5z"></i>
-					</p>
-			    	<div style="clear: both;"></div>
-			  	</div>
-			    <h6 class="kartica-subtitle mb-2 text-muted">{{ klinika.lokacija }}</h6>
-			    <p class="kartica-text">{{ klinika.opis }}</p>
-			  </div>
+		<v-app>
+			<div class="naviga tab-pane fade show active" id="pills-pk" role="tabpanel" >
+				<div class="kartica mt-2 mx-2" style="width: 98.7%;">
+				  <div class="kartica-body">
+				    <div class="kartica-title">
+				    	<h4 class="alignleft">{{ klinika.naziv + ", Ocena: " + klinika.ocena }}</h4>
+				    	<p v-if="mozeDaOceniKliniku" class="alignright">
+							<i class="far fa-star unchecked" v-on:click="oceni('1z')" id="1z"></i> 
+							<i class="far fa-star unchecked" v-on:click="oceni('2z')" id="2z"></i>
+						   	<i class="far fa-star unchecked" v-on:click="oceni('3z')" id="3z"></i>
+						   	<i class="far fa-star unchecked" v-on:click="oceni('4z')" id="4z"></i>
+						   	<i class="far fa-star unchecked" v-on:click="oceni('5z')" id="5z"></i>
+						</p>
+				    	<div style="clear: both;"></div>
+				  	</div>
+				    <h6 class="kartica-subtitle mb-2 text-muted">{{ klinika.lokacija }}</h6>
+				    <p class="kartica-text">{{ klinika.opis }}</p>
+				  </div>
+				</div>
+				<div class="input-group">
+					<span class="input-group-btn">
+				    	<a style="color:white" class="btn btn-primary my-2 mx-2" data-toggle="collapse" href="#predefinisaniTermini" role="button">
+					    	Brzo zakazivanje
+					  	</a>
+				  	</span>
+				  	<span class="input-group-btn">
+				    	<a style="color:white" class="btn btn-info my-2 mr-2" data-toggle="collapse" href="#filteriLekari" role="button">
+					    	Prikaži filtere
+					  	</a>
+				  	</span>
+					<input type="search" class="form-control col-4 my-2 mr-2" style="height:40px" v-model="imePrezime" placeholder="Ime i prezime..."/>
+					<span class="input-group-btn">
+						<button class="btn btn-danger mt-2 mr-2" v-on:click="ocisti">
+					    	Očisti
+					  	</button>
+					</span>
+				</div>
+				<div class="collapse" id="predefinisaniTermini">
+					<div class="kartica kartica-body m-2">
+			    		<form>
+						  	<div class="form-row"> 
+						  		<table class="table table-hover">
+								  	<thead class="thead-light">
+								    	<tr>
+									      	<th scope="col" width="20%">Vreme</th>
+									      	<th scope="col" width="7.5%">Sala</th>
+									      	<th scope="col" width="25%">Lekar</th>
+									      	<th scope="col" width="20%">Tip pregleda</th>
+									      	<th scope="col" width="10%">Cena</th>
+									      	<th scope="col" width="7.5%">Popust</th>
+									      	<th scope="col" width="10%"></th>
+								    	</tr>
+								  	</thead>
+								  	<tbody>
+								  		<tr v-for="(predef,indeks) in predefinisani">
+									      	<td width="20%">{{ urediDatum(predef.datum) }}</td>
+									      	<td width="7.5%">{{ predef.sala}}</td>
+									      	<td width="25%">{{ predef.lekar.ime }} {{predef.lekar.prezime}}</td>
+									      	<td width="20%">{{ predef.tip.naziv }}</td>
+									      	<td width="10%">{{ predef.cena }}</td>
+									      	<td width="7.5%">{{ predef.popust + "%" }}</td>
+									      	<td width="10%"><button type="button" class="btn btn-primary" style="color:white" v-on:click="zakazivanjePredefinisanog(indeks)">Zakaži</button></td>
+								    	</tr>
+								  	</tbody>
+								</table>
+							</div>
+						</form>
+			  		</div>
+				</div>
+				<div class="collapse" id="filteriLekari">
+			  		<div class="kartica kartica-body m-2">
+			    		<form>
+						  	<div class="form-row mb-4"> 
+						  		<div class="mt-5 mr-3 custom-control custom-checkbox">
+						  			<input type="checkbox" class="custom-control-input" id="ocenaFilter" v-model="ocenaFilter">
+						  			<label class="custom-control-label" for="ocenaFilter"><font size="4">Ocena</font></label>
+								</div>
+						  		<div class="col-2 mt-1 mx-3">
+						    	 	<label for="odocena">Od</label>
+									<input type="number" v-model="ocenaDonja" class="form-control" id="odocena" placeholder="Od">
+								</div>
+								<div class="col-2 mt-1 mx-3">
+						    	 	<label for="doocena">Do</label>
+									<input type="number" v-model="ocenaGornja" class="form-control" id="doocena" placeholder="Do">
+								</div>
+							</div>
+						</form>
+			  		</div>
+				</div>
+				<table class="table table-hover table-striped">
+				  	<thead class="thead-light">
+				    	<tr>
+					      	<th scope="col" width="36%">Ime</th>
+					      	<th scope="col" width="36%">Prezime</th>
+					      	<th scope="col" width="10%">Ocena</th>
+					      	<th scope="col" width="18%"></th>
+				    	</tr>
+				  	</thead>
+				  	<tbody>
+				  		<tr v-for="le in filtriraniLekari" v-on:click="izaberiLekara(le)">
+					      	<td width="36%">{{ le.ime }}</td>
+					      	<td width="36%">{{ le.prezime }}</td>
+					      	<td width="10%">{{ le.prosecnaOcena }}</td>
+					      	<td width="18%" style="text-align:left">
+								
+					      	</td>
+				    	</tr>
+				  	</tbody>
+				</table>
 			</div>
-			<div class="input-group">
-				<span class="input-group-btn">
-			    	<a class="btn btn-primary my-2 mx-2" data-toggle="collapse" href="#predefinisaniTermini" role="button">
-				    	Brzo zakazivanje
-				  	</a>
-			  	</span>
-			  	<span class="input-group-btn">
-			    	<a class="btn btn-info my-2 mr-2" data-toggle="collapse" href="#filteriLekari" role="button">
-				    	Prikaži filtere
-				  	</a>
-			  	</span>
-				<input type="search" class="form-control col-4 my-2 mr-2" style="height:40px" v-model="imePrezime" placeholder="Ime i prezime..."/>
-				<span class="input-group-btn">
-					<button class="btn btn-danger mt-2 mr-2" v-on:click="ocisti">
-				    	Očisti
-				  	</button>
-				</span>
-			</div>
-			<div class="collapse" id="predefinisaniTermini">
-				<div class="kartica kartica-body m-2">
-		    		<form>
-					  	<div class="form-row"> 
-					  		<table class="table table-hover">
+			
+			<div class="modal fade" id="prikazSlobodnihTermina" tabindex="-1" role="dialog">
+				<div class="modal-dialog modal-lg" role="document">
+			    	<div class="modal-content">
+			      		<div class="modal-header">
+			        		<div class="modal-title">
+			        			<h4 class="alignleft">Slobodni termini, {{ izabraniLekar.ime + " " + izabraniLekar.prezime }}:&nbsp</h4>
+						    	<p v-if="mozeDaOceniLekara" class="alignright">
+									<i class="far fa-star unchecked" v-on:click="oceniLekara('1zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'1zl' + izabraniLekar.id"></i> 
+									<i class="far fa-star unchecked" v-on:click="oceniLekara('2zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'2zl' + izabraniLekar.id"></i>
+								   	<i class="far fa-star unchecked" v-on:click="oceniLekara('3zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'3zl' + izabraniLekar.id"></i>
+								   	<i class="far fa-star unchecked" v-on:click="oceniLekara('4zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'4zl' + izabraniLekar.id"></i>
+									<i class="far fa-star unchecked" v-on:click="oceniLekara('5zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'5zl' + izabraniLekar.id"></i>
+								</p>
+						    	<div style="clear: both;"></div>
+			        		</div>
+			        		<button type="button" class="close" id = "iksic" data-dismiss="modal"><span>&times;</span></button>
+			      		</div>
+			      		<div class="modal-body">
+				        	<table class="table table-hover">
 							  	<thead class="thead-light">
 							    	<tr>
-								      	<th scope="col" width="20%">Vreme</th>
-								      	<th scope="col" width="7.5%">Sala</th>
-								      	<th scope="col" width="25%">Lekar</th>
-								      	<th scope="col" width="20%">Tip pregleda</th>
-								      	<th scope="col" width="10%">Cena</th>
-								      	<th scope="col" width="7.5%">Popust</th>
-								      	<th scope="col" width="10%"></th>
+								      	<th scope="col" width="70%">Termin</th>
+								      	<th scope="col" width="30%"></th>
 							    	</tr>
 							  	</thead>
 							  	<tbody>
-							  		<tr v-for="(predef,indeks) in predefinisani">
-								      	<td width="20%">{{ urediDatum(predef.datum) }}</td>
-								      	<td width="7.5%">{{ predef.sala}}</td>
-								      	<td width="25%">{{ predef.lekar.ime }} {{predef.lekar.prezime}}</td>
-								      	<td width="20%">{{ predef.tip.naziv }}</td>
-								      	<td width="10%">{{ predef.cena }}</td>
-								      	<td width="7.5%">{{ predef.popust + "%" }}</td>
-								      	<td width="10%"><button type="button" class="btn btn-primary" v-on:click="zakazivanjePredefinisanog(indeks)">Zakaži</button></td>
+							  		<tr v-for="te in termini">
+								      	<td width="70%">{{ urediDatum(te) }}</td>
+								      	<td width="20%"><button type="button" style="color:white" class="btn btn-primary" v-on:click="zakazivanjeSlobodnog(te)">Zakaži</button></td>
 							    	</tr>
 							  	</tbody>
 							</table>
-						</div>
-					</form>
-		  		</div>
+				      	</div>
+			      		<div class="modal-footer">
+			        		<button type="button" class="btn btn-secondary mr-auto" style="color:white" data-dismiss="modal">Nazad</button>
+			      		</div>
+			    	</div>
+				</div>
 			</div>
-			<div class="collapse" id="filteriLekari">
-		  		<div class="kartica kartica-body m-2">
-		    		<form>
-					  	<div class="form-row mb-4"> 
-					  		<div class="mt-5 mr-3 custom-control custom-checkbox">
-					  			<input type="checkbox" class="custom-control-input" id="ocenaFilter" v-model="ocenaFilter">
-					  			<label class="custom-control-label" for="ocenaFilter"><font size="4">Ocena</font></label>
-							</div>
-					  		<div class="col-2 mt-1 mx-3">
-					    	 	<label for="odocena">Od</label>
-								<input type="number" v-model="ocenaDonja" class="form-control" id="odocena" placeholder="Od">
-							</div>
-							<div class="col-2 mt-1 mx-3">
-					    	 	<label for="doocena">Do</label>
-								<input type="number" v-model="ocenaGornja" class="form-control" id="doocena" placeholder="Do">
-							</div>
-						</div>
-					</form>
-		  		</div>
-			</div>
-			<table class="table table-hover table-striped">
-			  	<thead class="thead-light">
-			    	<tr>
-				      	<th scope="col" width="36%">Ime</th>
-				      	<th scope="col" width="36%">Prezime</th>
-				      	<th scope="col" width="10%">Ocena</th>
-				      	<th scope="col" width="18%"></th>
-			    	</tr>
-			  	</thead>
-			  	<tbody>
-			  		<tr v-for="le in filtriraniLekari" v-on:click="izaberiLekara(le)">
-				      	<td width="36%">{{ le.ime }}</td>
-				      	<td width="36%">{{ le.prezime }}</td>
-				      	<td width="10%">{{ le.prosecnaOcena }}</td>
-				      	<td width="18%" style="text-align:left">
-							
-				      	</td>
-			    	</tr>
-			  	</tbody>
-			</table>
-		</div>
-		
-		<div class="modal fade" id="prikazSlobodnihTermina" tabindex="-1" role="dialog">
-			<div class="modal-dialog modal-lg" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
-		        		<div class="modal-title">
-		        			<h4 class="alignleft">Slobodni termini, {{ izabraniLekar.ime + " " + izabraniLekar.prezime }}:&nbsp</h4>
-					    	<p v-if="mozeDaOceniLekara" class="alignright">
-								<i class="far fa-star unchecked" v-on:click="oceniLekara('1zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'1zl' + izabraniLekar.id"></i> 
-								<i class="far fa-star unchecked" v-on:click="oceniLekara('2zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'2zl' + izabraniLekar.id"></i>
-							   	<i class="far fa-star unchecked" v-on:click="oceniLekara('3zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'3zl' + izabraniLekar.id"></i>
-							   	<i class="far fa-star unchecked" v-on:click="oceniLekara('4zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'4zl' + izabraniLekar.id"></i>
-								<i class="far fa-star unchecked" v-on:click="oceniLekara('5zl' + izabraniLekar.id, izabraniLekar)" v-bind:id="'5zl' + izabraniLekar.id"></i>
-							</p>
-					    	<div style="clear: both;"></div>
-		        		</div>
-		        		<button type="button" class="close" id = "iksic" data-dismiss="modal"><span>&times;</span></button>
-		      		</div>
-		      		<div class="modal-body">
-			        	<table class="table table-hover">
-						  	<thead class="thead-light">
-						    	<tr>
-							      	<th scope="col" width="70%">Termin</th>
-							      	<th scope="col" width="30%"></th>
-						    	</tr>
-						  	</thead>
-						  	<tbody>
-						  		<tr v-for="te in termini">
-							      	<td width="70%">{{ urediDatum(te) }}</td>
-							      	<td width="20%"><button type="button" class="btn btn-primary" v-on:click="zakazivanjeSlobodnog(te)">Zakaži</button></td>
-						    	</tr>
-						  	</tbody>
-						</table>
-			      	</div>
-		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
-		      		</div>
-		    	</div>
-			</div>
-		</div>
+			
+			<v-dialog v-model="dijalogGreska" max-width="300">
+		      <v-card>
+		        <v-card-title class="headline">Greška</v-card-title>
+		        <v-card-text>Neko drugi je upravo zakazao ovaj termin pre vas.</v-card-text>
+		        <v-card-actions>
+		          <v-spacer></v-spacer>
+		          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+		        </v-card-actions>
+		      </v-card>
+		    </v-dialog>
+		</v-app>
 		
 	</div>
 	`
@@ -247,7 +261,13 @@ Vue.component('pretraga-lekara', {
 			this.predefinisani[indeks].lokacija = this.klinika;
 			axios
 			.put("/pregledi/zakaziPredefinisani", this.predefinisani[indeks], { headers: { Authorization: 'Bearer ' + this.token }})
-			.then(response => (this.dobaviPredefinisane()))
+			.then(response => {
+				console.log(response.data);
+				if (!response.data) {
+					this.dijalogGreska = true;
+				}
+				this.dobaviPredefinisane()
+			})
 		    .catch(function (error) { console.log(error); });
 		},
 		dobaviPredefinisane: function(){
@@ -368,9 +388,9 @@ Vue.component('pretraga-lekara', {
 	},
 	created() {
 		this.token = localStorage.getItem("token");
-		this.tip = this.$route.params.tip;
-		this.vreme = this.$route.params.vreme;
-		this.id = this.$route.params.id;
+		this.tip = localStorage.getItem("tip");
+		this.vreme = localStorage.getItem("vreme");
+		this.id = localStorage.getItem("idKlinike");
 	},
 	mounted() {
 		var list = [ '1z', '2z', '3z', '4z', '5z' ];

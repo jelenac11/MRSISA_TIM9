@@ -47,6 +47,7 @@ public class IzvestajService {
 		izvestajRepository.deleteById(id);
 	}
 
+	// Dodaje novi izveštaj u bazu podataka
 	public Boolean dodajIzvestaj(IzvestajDTO izvestajDTO) {
 		Pregled p = pregledService.findOne(izvestajDTO.getPregled().getId());
 		Izvestaj i = new Izvestaj();
@@ -75,6 +76,7 @@ public class IzvestajService {
 		return true;
 	}
 
+	// Menja već postojeći izveštaj
 	public Boolean izmeniIzvestaj(IzvestajDTO izvestajDTO) {
 		Optional<Izvestaj> i = izvestajRepository.findById(izvestajDTO.getId());
 		if (i.isPresent()) {

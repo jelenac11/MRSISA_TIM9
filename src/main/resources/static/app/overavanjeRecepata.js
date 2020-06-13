@@ -29,7 +29,7 @@ Vue.component("overavanje-recepata",{
                     <td width="20%">{{ urediDatum(recept.datum) }}</td>
                     <td width="15%">{{ recept.lek.sifra }}</td>
                     <td width="15%">{{ recept.lek.naziv }}</td>
-                    <td width="10%"><button type="button" class="btn btn-success" v-on:click="overiRecept(recept)">Overi</button></td>
+                    <td width="10%"><button style="color:white" type="button" class="btn btn-success" v-on:click="overiRecept(recept)">Overi</button></td>
                 </tr>
             </tbody>
         </table>

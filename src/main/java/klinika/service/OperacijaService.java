@@ -74,6 +74,7 @@ public class OperacijaService {
 		operacijaRepository.deleteById(id);
 	}
 
+	// Metoda koja vraća radni kalendar za operacije
 	public List<RadniKalendarDTO> kreirajRadniKalendar(Long id, long time) {
 		List<Operacija> operacije = operacijaRepository.findBySalaIdAndVremeAfterAndOtkazana(id, time, false);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
@@ -88,6 +89,7 @@ public class OperacijaService {
 		return kalendar;
 	}
 
+	// Metoda koja vraća radni kalendar radnika
 	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id) {
 		List<Operacija> operacije = operacijaRepository.findByLekar(id);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
@@ -108,6 +110,7 @@ public class OperacijaService {
 		return operacijaRepository.findByKlinikaIdAndSalaIdIsNullAndVremeAfterAndOtkazana(id, time, false);
 	}
 
+	// Metoda koja dodeljuje salu operaciji za dati termin
 	@Transactional(readOnly = false)
 	public Operacija dodijeliSalu(SlobodanTerminOperacijaDTO slobodanTerminDTO) {
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
@@ -162,6 +165,7 @@ public class OperacijaService {
 		return operacijaRepository.findByOtkazanaAndKlinikaIdAndVremeAfterAndSalaIdIsNotNull(b, id, time);
 	}
 
+	// Metoda koja vraća operacije za izabranog pacijenta
 	public List<OperacijaDTO> vratiOperacijePacijenta(long id) {
 		List<Operacija> operacije = operacijaRepository.findByPacijentIdAndOtkazanaFalseAndSalaIsNotNull(id);
 		List<OperacijaDTO> operacijeDTO = new ArrayList<>();
@@ -173,6 +177,7 @@ public class OperacijaService {
 		return operacijeDTO;
 	}
 
+	// Pomoćna metoda za ispis lekara koji prisustvuju operaciji
 	private String ispisiLekare(Set<Lekar> set) {
 		StringBuilder retVal = new StringBuilder();
 		for (Lekar lekar : set) {
@@ -181,6 +186,7 @@ public class OperacijaService {
 		return retVal.toString().substring(0, retVal.toString().length() - 2);
 	}
 
+	// Metoda koja otkazuje operaciju od strane lekara
 	public Boolean otkaziOperacijuLekara(PretragaLekaraDTO pldto) throws MailException, InterruptedException {
 		Operacija op = operacijaRepository.findByVremeAndLekarId(pldto.getDatum(), pldto.getId());
 		if (op != null) {
@@ -214,6 +220,8 @@ public class OperacijaService {
 		return operacijaRepository.dobaviSveOperacijeBezSale();
 	}
 
+	// Metoda koja zakazuje termin operacije od strane lekara
+	@Transactional(readOnly = false)
 	public Boolean zakaziTerminLekar(ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException {
 		Klinika klinika = lekarService.findOne(ztlDTO.getLekar()).getKlinika();
 		Pacijent pacijent = pacijentService.findOne(ztlDTO.getPacijent());

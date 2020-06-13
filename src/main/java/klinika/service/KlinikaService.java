@@ -69,6 +69,7 @@ public class KlinikaService {
 		klinikaRepository.deleteById(id);
 	}
 
+	// Metoda koja proverava da li klinika ima lekare specijalizovane za traženi tip pregleda
 	public Boolean proveriTip(PretragaKlinikeDTO pretragaKlinikeDTO) {
 		TipPregleda tp = tipPregledaRepository.findByIdAndNazivAndAktivan(pretragaKlinikeDTO.getId(),
 				pretragaKlinikeDTO.getTipPregleda());
@@ -100,6 +101,7 @@ public class KlinikaService {
 		return false;
 	}
 
+	// Menja podatke o klinici
 	public boolean update(KlinikaDTO klinikaDTO) {
 		Klinika klinika = findOne(klinikaDTO.getId());
 		Klinika postojiKlinika = null;
@@ -121,10 +123,13 @@ public class KlinikaService {
 		return true;
 	}
 
+	// Metoda koja vraća slobodne lekare za traženi datum i tip pregleda
 	public List<LekarDTO> vratiSlobodneLekare(PretragaKlinikeDTO pkdto) {
 		ArrayList<LekarDTO> lekariDTO = new ArrayList<>();
 		TipPregleda tp = tipPregledaRepository.findByIdAndNazivAndAktivan(pkdto.getId(), pkdto.getTipPregleda());
 		if (tp != null) {
+			System.out.println(pkdto.getId());
+			System.out.println(tp.getNaziv());
 			ArrayList<Lekar> lekari = (ArrayList<Lekar>) lekarRepository.findBySearchParams(pkdto.getId(), tp.getId(),
 					pkdto.getDatum());
 			for (Lekar l : lekari) {
@@ -137,8 +142,10 @@ public class KlinikaService {
 							pkdto.getDatum() + 86400000);
 					int sati = (int) (krajRadnog - pocetakRadnog) / 3600000;
 					for (int i = 0; i <= pregledi.size() - 1; i++) {
-						pregledi.remove(i);
-						i--;
+						if (pregledi.get(i).getPacijent() == null) {
+							pregledi.remove(i);
+							i--;
+						}
 					}
 					if ((operacije.size() + pregledi.size()) < sati) {
 						lekariDTO.add(new LekarDTO(l));
@@ -149,6 +156,7 @@ public class KlinikaService {
 		return lekariDTO;
 	}
 
+	// Računa prosečnu ocenu klinike
 	public void izracunajProsek(Long id) {
 		Klinika k = findOne(id);
 		long suma = 0;
@@ -159,11 +167,13 @@ public class KlinikaService {
 		save(k);
 	}
 
+	// Dodaje novu ocenu
 	public void dodajOcenu(OcenaKlinike ocena) {
 		Klinika k = findOne(ocena.getKlinika().getId());
 		k.getOcene().add(ocena);
 	}
 
+	// Pomoćna metoda
 	public static double round(double value, int places) {
 		long factor = (long) Math.pow(10, places);
 		value = value * factor;
@@ -171,6 +181,7 @@ public class KlinikaService {
 		return (double) tmp / factor;
 	}
 
+	// Metoda koja radi nedeljni izveštaj o poslovanju klinike
 	public List<ArrayList<Long>> sedmicniIzvjestaj(long id, long start, long end) {
 		List<Pregled> pregledi = pregledRepository.sedmicniIzvjestaj(id, start, end, new Date().getTime());
 		long dana = (end - start) / 86400000;
@@ -190,6 +201,7 @@ public class KlinikaService {
 		return izvjestaj;
 	}
 
+	// Metoda koja radi dnevni izveštaj o poslovanju klinike
 	public DnevniIzvjestajDTO dnevniIzvjestaj(long id, long start) {
 		List<Pregled> pregledi = pregledRepository.sedmicniIzvjestaj(id, start, start + 86400000, new Date().getTime());
 		List<TipPregleda> tipovi = tipPregledaRepository.findByKlinikaIdAndAktivan(id, true);
@@ -209,6 +221,7 @@ public class KlinikaService {
 		return dnevniIzvjestaj;
 	}
 
+	// Metoda koja radi mjesečni izveštaj o poslovanju klinike
 	public List<ArrayList<Long>> mjesecniIzvjestaj(long id, String mjesec) {
 		Date time = new Date();
 		Calendar cal = Calendar.getInstance();
@@ -286,6 +299,7 @@ public class KlinikaService {
 		return izvjestaj;
 	}
 
+	// Metoda koja radi izveštaj o poslovanju
 	public IzvjestajPoslovanjaDTO izvjestajPoslovanja(long id, long start, long end) {
 		IzvjestajPoslovanjaDTO izvjestaj = new IzvjestajPoslovanjaDTO();
 		izvjestaj.setStart(start);

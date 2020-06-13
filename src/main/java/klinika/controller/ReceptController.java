@@ -43,7 +43,6 @@ public class ReceptController {
 			return new ResponseEntity<>(receptService.overi(receptDTO), HttpStatus.OK);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 	}

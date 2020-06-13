@@ -58,18 +58,28 @@ public class OcenaController {
 
 	@PostMapping(value = "/oceniKliniku", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<Boolean> oceniKliniku(@RequestBody OcenaKlinikeDTO ocenaDTO) {
+	public ResponseEntity<?> oceniKliniku(@RequestBody OcenaKlinikeDTO ocenaDTO) {
 		OcenaKlinike ocena = ocenaService.ucitajOcenuPacijentaKlinike(ocenaDTO.getKlinika().getId());
 		if (ocena != null) {
 			ocena.setVrednost(ocenaDTO.getVrednost());
-			ocenaService.save(ocena);
+			try {
+				ocenaService.save(ocena);
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+			}
 			klinikaService.izracunajProsek(ocenaDTO.getKlinika().getId());
 		} else {
 			ocena = new OcenaKlinike();
 			ocena.setKlinika(klinikaService.findOne(ocenaDTO.getKlinika().getId()));
 			ocena.setOcenjivac(pacijentService.findOne(ocenaDTO.getOcenjivac().getId()));
 			ocena.setVrednost(ocenaDTO.getVrednost());
-			ocenaService.save(ocena);
+			try {
+				ocenaService.save(ocena);
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+			}
 			klinikaService.dodajOcenu(ocena);
 			klinikaService.izracunajProsek(ocenaDTO.getKlinika().getId());
 		}
@@ -78,18 +88,28 @@ public class OcenaController {
 
 	@PostMapping(value = "/oceniLekara", consumes = "application/json")
 	@PreAuthorize("hasRole('PACIJENT')")
-	public ResponseEntity<Boolean> oceniLekara(@RequestBody OcenaLekaraDTO ocenaDTO) {
+	public ResponseEntity<?> oceniLekara(@RequestBody OcenaLekaraDTO ocenaDTO) {
 		OcenaLekara ocena = ocenaService.ucitajOcenuPacijentaLekara(ocenaDTO.getLekar().getId());
 		if (ocena != null) {
 			ocena.setVrednost(ocenaDTO.getVrednost());
-			ocenaService.save(ocena);
+			try {
+				ocenaService.save(ocena);
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+			}
 			lekarService.izracunajProsek(ocenaDTO.getLekar().getId());
 		} else {
 			ocena = new OcenaLekara();
 			ocena.setLekar(lekarService.findOne(ocenaDTO.getLekar().getId()));
 			ocena.setOcenjivac(pacijentService.findOne(ocenaDTO.getOcenjivac().getId()));
 			ocena.setVrednost(ocenaDTO.getVrednost());
-			ocenaService.save(ocena);
+			try {
+				ocenaService.save(ocena);
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+			}
 			lekarService.dodajOcenu(ocena);
 			lekarService.izracunajProsek(ocenaDTO.getLekar().getId());
 		}

@@ -65,7 +65,7 @@ Vue.component("radni-kalendar", {
 		      		</v-sheet>
 		      	</div>
 		      	
-		      	<v-dialog width="400" v-model="dialog">
+		      	<v-dialog width="500" v-model="dialog">
 					<v-card>
 						<v-card-title>
 		        			{{ dogadjaj.name }}
@@ -79,8 +79,11 @@ Vue.component("radni-kalendar", {
 		        		<v-btn class="m-3" v-if="dogadjaj.name == 'Pregled'" v-on:click="zapocniPregled" :disabled="!mozeZapoceti">
 							Započni pregled
 						</v-btn>
-						<v-btn class="m-3" v-if="dogadjaj.name == 'Pregled' || dogadjaj.name == 'Operacija'" v-on:click="otkazi" :disabled="!mozeOtkazati">
-							Otkaži
+						<v-btn class="m-3" v-if="dogadjaj.name == 'Pregled'" v-on:click="otkazi" :disabled="!mozeOtkazati">
+							Otkaži pregled
+						</v-btn>
+						<v-btn class="m-3" v-if="dogadjaj.name == 'Operacija'" v-on:click="otkazi" :disabled="!mozeOtkazati">
+							Otkaži operaciju
 						</v-btn>
 					</v-card>
 				</v-dialog>
@@ -120,9 +123,9 @@ Vue.component("radni-kalendar", {
 		showEvent : function ({ nativeEvent, event }) {
 			if (event.name == "Pregled" || event.name == "Operacija") {
 				this.dogadjaj = event;
-				this.dialog = true;
 				this.daLiMozeZapoceti();
 				this.daLiMozeOtkazati();
+				this.dialog = true;
 			}
 		},
 		daLiMozeZapoceti : function () {
@@ -139,6 +142,8 @@ Vue.component("radni-kalendar", {
 			let sada = new Date().getTime();
 			if (this.dogadjaj.pocetak - 86400000 > sada) {
 				this.mozeOtkazati = true;
+			} else {
+				this.mozeOtkazati = false;
 			}
 		},
 		otkazi : function() {

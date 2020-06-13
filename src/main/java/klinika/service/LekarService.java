@@ -87,6 +87,7 @@ public class LekarService {
 		return lekarRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, (datumiVreme + 7200000) % 86400000);
 	}
 
+	// Metoda koja vraća slobodne termine izabranog lekara za traženi datum
 	public List<Long> vratiSlobodneTermine(PretragaLekaraDTO pldto) {
 		List<Operacija> operacije = operacijaRepository.findByLekarIdAndVreme(pldto.getId(), pldto.getDatum(),
 				pldto.getDatum() + 86400000);
@@ -113,6 +114,7 @@ public class LekarService {
 		return vremena;
 	}
 
+	// Metoda koja vraća radne sate lekara
 	private ArrayList<Long> vratiRadneSate(long pocetak, long kraj, long datum) {
 		ArrayList<Long> vremena = new ArrayList<>();
 		if (kraj < pocetak) {
@@ -145,20 +147,30 @@ public class LekarService {
 		return lekaridto;
 	}
 
+	// Pomoćna metoda koja proverava da li je lekar slobodan za traženi datum i specijalozovan za traženi pregled
 	public Boolean proveriTipIVreme(PretragaLekaraDTO pldto) {
 		Optional<Lekar> le = lekarRepository.findById(pldto.getId());
-		boolean zadovoljava = false;
+		boolean zadovoljava = true;
+		boolean postoji = false;
 		if (le.isPresent()) {
 			if (le.get().getSpecijalnosti() != null) {
 				for (TipPregleda tp : le.get().getSpecijalnosti()) {
 					if (tp.getNaziv().equals(pldto.getTipPregleda())) {
+						postoji = true;
+						List<Odsustvo> odsustva = odsustvoRepository.findByPodnosilacAndVreme(le.get().getId(), pldto.getDatum());
+						if (!odsustva.isEmpty()) {
+							zadovoljava = false;
+						}
 						List<Long> termini = vratiSlobodneTermine(pldto);
 						if (termini.isEmpty()) {
-							zadovoljava = true;
+							zadovoljava = false;
 						}
 					}
 				}
 			}
+		}
+		if (!postoji) {
+			zadovoljava = false;
 		}
 		return zadovoljava;
 	}

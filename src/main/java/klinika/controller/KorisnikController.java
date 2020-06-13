@@ -27,7 +27,7 @@ public class KorisnikController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'PACIJENT', 'ADMIN_KLINIKE', 'LEKAR', 'MED_SESTRA')")
-	public ResponseEntity<KorisnikDTO> promeniKorisnika(@RequestBody KorisnikDTO korisnikDTO) {
+	public ResponseEntity<?> promeniKorisnika(@RequestBody KorisnikDTO korisnikDTO) {
 
 		Korisnik korisnik = korisnikService.findOne(korisnikDTO.getId());
 		if (korisnik == null) {
@@ -37,14 +37,18 @@ public class KorisnikController {
 		korisnik.setDrzava(korisnikDTO.getDrzava());
 		korisnik.setGrad(korisnikDTO.getGrad());
 		korisnik.setIme(korisnikDTO.getIme());
-		korisnik.setLozinka(korisnikService.encodePassword(korisnikDTO.getLozinka()));
 		korisnik.setPrezime(korisnikDTO.getPrezime());
 		korisnik.setBrojTelefona(korisnikDTO.getBrojTelefona());
 		korisnik.setAktiviran(korisnikDTO.isAktiviran());
 		korisnik.setPromenjenaLozinka(korisnikDTO.isPromenjenaLozinka());
 		korisnik.setVerifikovan(korisnikDTO.isVerifikovan());
 
-		korisnik = korisnikService.save(korisnik);
+		try {
+			korisnik = korisnikService.save(korisnik);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new KorisnikDTO(korisnik), HttpStatus.OK);
 	}
 
@@ -60,13 +64,18 @@ public class KorisnikController {
 
 	@PutMapping(value = "promeniLozinku", consumes = "application/json")
 	@PreAuthorize("hasAnyRole('ADMIN_KLINICKOG_CENTRA', 'PACIJENT', 'ADMIN_KLINIKE', 'LEKAR', 'MED_SESTRA')")
-	public ResponseEntity<Boolean> promeniLozinku(@RequestBody PromenaLozinke novaLozinka) {
+	public ResponseEntity<?> promeniLozinku(@RequestBody PromenaLozinke novaLozinka) {
 
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
 		Korisnik ulogovan = korisnikService.findByEmail(trenutniKorisnik.getName());
 
 		ulogovan.setLozinka(korisnikService.encodePassword(novaLozinka.lozinka));
-		korisnikService.save(ulogovan);
+		try {
+			korisnikService.save(ulogovan);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 
 		return ResponseEntity.ok(true);
 	}

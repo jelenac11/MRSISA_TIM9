@@ -1,6 +1,7 @@
 package klinika.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class OdsustvoController {
 	public ResponseEntity<List<OdsustvoDTO>> ucitajSvaNeodgovorenaOdsustva(@PathVariable("id") long id) {
 		AdminKlinike kor = adminKlinikeService.findOne(id);
 		Klinika k = kor.getKlinika();
-		ArrayList<Odsustvo> odsustva = (ArrayList<Odsustvo>) service.findByOdgovorenoFalseAndKlinikaID(k.getId());
+		ArrayList<Odsustvo> odsustva = (ArrayList<Odsustvo>) service.findByOdgovorenoFalseAndKlinikaIDAndPocetakAfter(k.getId(), new Date().getTime());
 		ArrayList<OdsustvoDTO> odsustvaDTO = new ArrayList<>();
 		for (Odsustvo odsustvo : odsustva) {
 			OdsustvoDTO ods = new OdsustvoDTO();

@@ -33,6 +33,7 @@ import klinika.repository.AutoritetRepository;
 import klinika.security.TokenUtils;
 import klinika.security.auth.JwtAuthenticationRequest;
 
+// Deo koda je preuzet sa vežbi spring-security
 @Service
 public class AutoritetService {
 

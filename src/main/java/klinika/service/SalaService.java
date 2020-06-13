@@ -20,6 +20,10 @@ public class SalaService {
 	public Sala findByBroj(int broj) {
 		return salaRepository.findByBrojAndAktivan(broj, true);
 	}
+	
+	public Sala findByNaziv(String naziv) {
+		return salaRepository.findByNaziv(naziv);
+	}
 
 	public Sala findOne(Long id) {
 		return salaRepository.findByIdAndAktivan(id, true);
@@ -33,6 +37,7 @@ public class SalaService {
 		return salaRepository.save(sala);
 	}
 
+	// Metoda za uklanjanje sale
 	@Transactional(readOnly = false)
 	public boolean remove(Long id) {
 		Sala s = findOne(id);
@@ -52,6 +57,7 @@ public class SalaService {
 		return salaRepository.findByIdKlinikaAndVreme(klinikaId, datumiVreme, 3600000);
 	}
 
+	// Metoda za izmenu sale
 	@Transactional(readOnly = false)
 	public boolean update(SalaDTO salaDTO, Sala sala) {
 		Sala s = salaRepository.findById(salaDTO.getId()).orElseGet(null);
@@ -68,5 +74,9 @@ public class SalaService {
 			}
 		}
 		return false;
+	}
+
+	public Sala findByBrojZaSve(int broj, boolean b) {
+		return salaRepository.findByBroj(broj);
 	}
 }

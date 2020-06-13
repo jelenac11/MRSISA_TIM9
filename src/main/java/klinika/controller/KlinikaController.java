@@ -55,7 +55,7 @@ public class KlinikaController {
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
-	public ResponseEntity<KlinikaDTO> kreirajKliniku(@RequestBody KlinikaDTO klinikaDTO) {
+	public ResponseEntity<?> kreirajKliniku(@RequestBody KlinikaDTO klinikaDTO) {
 		Klinika klinika = new Klinika();
 
 		klinika.setNaziv(klinikaDTO.getNaziv());
@@ -64,7 +64,12 @@ public class KlinikaController {
 		klinika.setCenovnik(new Cenovnik());
 		klinika.setLat(klinikaDTO.getLat());
 		klinika.setLng(klinikaDTO.getLng());
-		klinika = klinikaService.save(klinika);
+		try {
+			klinika = klinikaService.save(klinika);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new KlinikaDTO(klinika), HttpStatus.CREATED);
 	}
 

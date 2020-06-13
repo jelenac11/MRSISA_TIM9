@@ -55,7 +55,7 @@ public class TipPregledaController {
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<TipPregledaDTO> kreirajTipPregleda(@RequestBody TipPregledaDTO tipPregledaDTO) {
+	public ResponseEntity<?> kreirajTipPregleda(@RequestBody TipPregledaDTO tipPregledaDTO) {
 		TipPregleda pregled = tipPregledaService.findOneByNaziv(tipPregledaDTO.getNaziv());
 		if (pregled != null) {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -76,7 +76,12 @@ public class TipPregledaController {
 
 		tipPregleda.setStavkaCenovnika(stavka);
 
-		tipPregleda = tipPregledaService.save(tipPregleda);
+		try {
+			tipPregleda = tipPregledaService.save(tipPregleda);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 
 		return new ResponseEntity<>(new TipPregledaDTO(tipPregleda), HttpStatus.CREATED);
 	}
@@ -105,7 +110,6 @@ public class TipPregledaController {
 		return new ResponseEntity<>(uspesno, HttpStatus.OK);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 	}
@@ -122,7 +126,6 @@ public class TipPregledaController {
 		return new ResponseEntity<>(uspesno, HttpStatus.OK);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 	}

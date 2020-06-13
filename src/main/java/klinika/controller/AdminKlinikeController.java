@@ -70,7 +70,7 @@ public class AdminKlinikeController {
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINICKOG_CENTRA')")
-	public ResponseEntity<AdminKlinikeDTO> kreirajAdminaKlinike(@RequestBody AdminKlinikeDTO adminKlinikeDTO) {
+	public ResponseEntity<?> kreirajAdminaKlinike(@RequestBody AdminKlinikeDTO adminKlinikeDTO) {
 		AdminKlinike adminKlinike = new AdminKlinike();
 		adminKlinike.setAdresa(adminKlinikeDTO.getAdresa());
 		adminKlinike.setDrzava(adminKlinikeDTO.getDrzava());
@@ -87,14 +87,18 @@ public class AdminKlinikeController {
 
 		Klinika klinika = klinikaService.findByNaziv(adminKlinikeDTO.getKlinika());
 		adminKlinike.setKlinika(klinika);
-
-		adminKlinike = adminKlinikeService.save(adminKlinike);
+		try {
+			adminKlinike = adminKlinikeService.save(adminKlinike);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new AdminKlinikeDTO(adminKlinike), HttpStatus.CREATED);
 	}
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<AdminKlinikeDTO> promeniKorisnika(@RequestBody AdminKlinikeDTO akDTO) {
+	public ResponseEntity<?> promeniKorisnika(@RequestBody AdminKlinikeDTO akDTO) {
 		AdminKlinike ak = adminKlinikeService.findOne(akDTO.getId());
 		if (ak == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -103,7 +107,6 @@ public class AdminKlinikeController {
 		ak.setDrzava(akDTO.getDrzava());
 		ak.setGrad(akDTO.getGrad());
 		ak.setIme(akDTO.getIme());
-		ak.setLozinka(korisnikService.encodePassword(akDTO.getLozinka()));
 		ak.setPrezime(akDTO.getPrezime());
 		ak.setBrojTelefona(akDTO.getBrojTelefona());
 		ak.setAktiviran(akDTO.isAktiviran());
@@ -111,7 +114,12 @@ public class AdminKlinikeController {
 		ak.setVerifikovan(akDTO.isVerifikovan());
 		ak.setKlinika(klinikaService.findByNaziv(akDTO.getKlinika()));
 
-		ak = adminKlinikeService.save(ak);
+		try {
+			ak = adminKlinikeService.save(ak);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new AdminKlinikeDTO(ak), HttpStatus.OK);
 	}
 }

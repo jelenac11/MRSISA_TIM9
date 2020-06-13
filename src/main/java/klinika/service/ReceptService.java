@@ -42,6 +42,7 @@ public class ReceptService {
 		return receptRepository.findByMedSestraIdIsNull();
 	}
 	
+	// Metoda kojom medicinska sestra overava recepte
 	@Transactional(readOnly = false)
 	public boolean overi(ReceptDTO receptDTO) {
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();

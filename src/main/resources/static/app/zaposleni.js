@@ -9,6 +9,7 @@ Vue.component('zaposleni', {
 			ocenaDonja: 0,
 			ocenaGornja: 0,
 			imePrezime: "",
+			dijalogGreska : false,
 			tip: "",
 			vreme: null,
 			id: 0,
@@ -112,7 +113,7 @@ Vue.component('zaposleni', {
 										      	<td width="20%">{{ predef.tip.naziv }}</td>
 										      	<td width="10%">{{ predef.cena }}</td>
 										      	<td width="7.5%">{{ predef.popust + "%" }}</td>
-										      	<td width="10%"><button type="button" class="btn btn-primary" v-on:click="zakazivanjePredefinisanog(indeks)">Zakaži</button></td>
+										      	<td width="10%"><button type="button" class="btn btn-primary" style="color:white" v-on:click="zakazivanjePredefinisanog(indeks)">Zakaži</button></td>
 									    	</tr>
 									  	</tbody>
 									</table>
@@ -188,13 +189,13 @@ Vue.component('zaposleni', {
 								  	<tbody>
 								  		<tr v-for="te in termini">
 									      	<td width="70%">{{ urediDatum(te) }}</td>
-									      	<td width="20%"><button type="button" class="btn btn-primary" v-on:click="zakazivanjeSlobodnog(te)">Zakaži</button></td>
+									      	<td width="20%"><button style="color:white" type="button" class="btn btn-primary" v-on:click="zakazivanjeSlobodnog(te)">Zakaži</button></td>
 								    	</tr>
 								  	</tbody>
 								</table>
 					      	</div>
 				      		<div class="modal-footer">
-				        		<button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Nazad</button>
+				        		<button type="button" class="btn btn-secondary mr-auto" style="color:white" data-dismiss="modal">Nazad</button>
 				      		</div>
 				    	</div>
 					</div>
@@ -218,6 +219,17 @@ Vue.component('zaposleni', {
 		        		</v-list-item-subtitle>
 					</v-card>
 				</v-dialog>
+				
+				<v-dialog v-model="dijalogGreska" max-width="300">
+			      <v-card>
+			        <v-card-title class="headline">Greška</v-card-title>
+			        <v-card-text>Neko drugi je upravo zakazao ovaj termin pre vas.</v-card-text>
+			        <v-card-actions>
+			          <v-spacer></v-spacer>
+			          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+			        </v-card-actions>
+			      </v-card>
+			    </v-dialog>
 			</div>
 		</v-app>
 	</div>
@@ -321,7 +333,12 @@ Vue.component('zaposleni', {
 			this.predefinisani[indeks].lokacija = this.klinika;
 			axios
 			.put("/pregledi/zakaziPredefinisani", this.predefinisani[indeks], { headers: { Authorization: 'Bearer ' + this.token }})
-			.then(response => (this.dobaviPredefinisane()))
+			.then(response => {
+				if (!response.data) {
+					this.dijalogGreska = true
+				}
+				this.dobaviPredefinisane()
+			})
 		    .catch(function (error) { console.log(error); });
 		},
 		dobaviPredefinisane: function(){
@@ -464,7 +481,7 @@ Vue.component('zaposleni', {
 	},
 	created() {
 		this.token = localStorage.getItem("token");
-		this.id = this.$route.params.id;
+		this.id = localStorage.getItem("idKlinike");
 	},
 	mounted() {
 		var list = [ '1z', '2z', '3z', '4z', '5z' ];

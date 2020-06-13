@@ -46,6 +46,7 @@ public class OcenaService {
 		ocenaRepository.deleteById(id);
 	}
 
+	// Metoda koja vraća ocenu za izabranu kliniku od strane pacijenta
 	public OcenaKlinike ucitajOcenuPacijentaKlinike(long klinikaId) {
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
 
@@ -54,6 +55,7 @@ public class OcenaService {
 		return ocenaKlinikeRepository.findByOcenjivacIdAndKlinikaId(pacijent.getId(), klinikaId);
 	}
 
+	// Metoda koja vraća ocenu za izabranog lekara od strane pacijenta
 	public OcenaLekara ucitajOcenuPacijentaLekara(long lekarId) {
 		Authentication trenutniKorisnik = SecurityContextHolder.getContext().getAuthentication();
 

@@ -65,7 +65,7 @@ public class AuthenticationController {
 	}
 
 	@PutMapping(value = "promeniLozinku", consumes = "application/json")
-	public ResponseEntity<KorisnikDTO> promeniLozinku(@RequestBody KorisnikDTO korisnikDTO) {
+	public ResponseEntity<?> promeniLozinku(@RequestBody KorisnikDTO korisnikDTO) {
 
 		Korisnik korisnik = userDetailsService.findOne(korisnikDTO.getId());
 		if (korisnik == null) {
@@ -73,7 +73,12 @@ public class AuthenticationController {
 		}
 		korisnik.setLozinka(userDetailsService.encodePassword(korisnikDTO.getLozinka()));
 
-		korisnik = userDetailsService.save(korisnik);
+		try {
+			korisnik = userDetailsService.save(korisnik);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new KorisnikDTO(korisnik), HttpStatus.OK);
 	}
 

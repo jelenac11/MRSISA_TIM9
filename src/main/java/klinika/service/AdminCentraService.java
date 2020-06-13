@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import klinika.model.AdminCentra;
+import klinika.model.Korisnik;
 import klinika.repository.AdminCentraRepository;
 
 @Service
@@ -29,4 +30,5 @@ public class AdminCentraService {
 	public void remove(Long id) {
 		adminCentraRepository.deleteById(id);
 	}
+
 }

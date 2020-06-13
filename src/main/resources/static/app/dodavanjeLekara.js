@@ -137,7 +137,7 @@ Vue.component("dodavanje-lekara", {
 					<div v-if=zauzetEmail class="alert alert-danger" role="alert">
 						<p class="mb-0"><b>Greška!</b> Već postoji korisnik sa unetim Email-om. Pokušajte ponovo.</p>
 					</div>
-				  	<button class="btn btn-lg btn-primary btn-block mt-4" type="submit">
+				  	<button style="color:white" class="btn btn-lg btn-primary btn-block mt-4" type="submit">
 				  		Dodaj
 				  	</button>
 				</form>

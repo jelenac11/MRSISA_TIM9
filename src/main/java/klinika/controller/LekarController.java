@@ -97,7 +97,7 @@ public class LekarController {
 
 	@PostMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<LekarDTO> kreirajLekara(@RequestBody LekarDTO lekarDTO) {
+	public ResponseEntity<?> kreirajLekara(@RequestBody LekarDTO lekarDTO) {
 		Lekar lekar = new Lekar();
 		lekar.setAdresa(lekarDTO.getAdresa());
 		lekar.setDrzava(lekarDTO.getDrzava());
@@ -116,7 +116,12 @@ public class LekarController {
 		lekar.setPromenjenaLozinka(false);
 		Klinika k = klinikaService.findByNaziv(lekarDTO.getKlinika());
 		lekar.setKlinika(k);
-		lekar = lekarService.save(lekar);
+		try {
+			lekar = lekarService.save(lekar);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		lekar.setSpecijalnosti(new HashSet<>());
 		for (TipPregledaDTO tpDTO : lekarDTO.getSpecijalnosti()) {
 			lekar.getSpecijalnosti().add(tipPregledaService.findOneByNaziv(tpDTO.getNaziv()));
@@ -126,7 +131,7 @@ public class LekarController {
 
 	@PutMapping(consumes = "application/json")
 	@PreAuthorize("hasRole('LEKAR')")
-	public ResponseEntity<LekarDTO> promeniKorisnika(@RequestBody LekarDTO lDTO) {
+	public ResponseEntity<?> promeniKorisnika(@RequestBody LekarDTO lDTO) {
 		Lekar l = lekarService.findOne(lDTO.getId());
 		if (l == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -143,8 +148,13 @@ public class LekarController {
 		l.setKlinika(klinikaService.findByNaziv(lDTO.getKlinika()));
 		l.setPocetakRadnogVremena(lDTO.getPocetakRadnogVremena());
 		l.setKrajRadnogVremena(lDTO.getKrajRadnogVremena());
-
-		l = lekarService.save(l);
+		
+		try {
+			l = lekarService.save(l);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(new LekarDTO(l), HttpStatus.OK);
 	}
 

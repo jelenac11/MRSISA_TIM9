@@ -45,10 +45,11 @@ public class OdsustvoService {
 		odsustvoRepository.deleteById(id);
 	}
 
-	public List<Odsustvo> findByOdgovorenoFalseAndKlinikaID(long id) {
-		return odsustvoRepository.findByOdgovorenoFalseAndKlinikaId(id);
+	public List<Odsustvo> findByOdgovorenoFalseAndKlinikaIDAndPocetakAfter(long id, long sad) {
+		return odsustvoRepository.findByOdgovorenoFalseAndKlinikaIdAndPocetakAfter(id, sad);
 	}
 
+	// Metoda koja vraća radni kalendar radnika
 	public List<RadniKalendarDTO> kreirajRadniKalendarRadnika(Long id) {
 		List<Odsustvo> odsustva = odsustvoRepository.findByPodnosilacIdAndOdobreno(id, true);
 		List<RadniKalendarDTO> kalendar = new ArrayList<>();
@@ -59,6 +60,7 @@ public class OdsustvoService {
 		return kalendar;
 	}
 
+	// Metoda koja obaveštava podnosioca o zahtevu za odsustvo
 	public Odsustvo updateOdsustvo(Odsustvo odsustvo) {
 		Odsustvo ods = odsustvoRepository.save(odsustvo);
 		try {
@@ -70,6 +72,7 @@ public class OdsustvoService {
 		return ods;
 	}
 	
+	// Metoda koja ažurira odsustvo (prihvata ili odbija)
 	@Transactional(readOnly = false)
 	public Odsustvo azurirajOdsustvo(OdsustvoDTO odsustvoDTO) {
 		Odsustvo odsustvo = findOne(odsustvoDTO.getId());

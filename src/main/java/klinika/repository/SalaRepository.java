@@ -30,4 +30,8 @@ public interface SalaRepository extends JpaRepository<Sala, Long> {
 	List<Sala> findAllByAktivan(boolean b);
 
 	List<Sala> findAllByKlinikaIdAndAktivan(Long id,boolean aktivan);
+
+	Sala findByNaziv(String naziv);
+
+	Sala findByBroj(int broj);
 }

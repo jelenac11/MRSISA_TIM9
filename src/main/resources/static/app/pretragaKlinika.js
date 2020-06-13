@@ -25,7 +25,7 @@ Vue.component("pretraga-klinika", {
 			<p class="m-1 ml-3 mt-2 font-weight-normal">*Za pretragu klinika je neophodno uneti tip pregleda i datum.</p>
 			<div class="input-group">
 			  	<span class="input-group-btn">
-			    	<a class="btn btn-info m-2" data-toggle="collapse" href="#filteriKlinike" role="button">
+			    	<a style="color:white" class="btn btn-info m-2" data-toggle="collapse" href="#filteriKlinike" role="button">
 				    	Prikaži filtere
 				  	</a>
 			  	</span>
@@ -104,8 +104,12 @@ Vue.component("pretraga-klinika", {
 			if (this.tip != "" && this.datum != null) {
 				datum = new Date(this.datum+"");
 		    	timestamp = datum.getTime() - 7200000;
+		    	localStorage.setItem("idKlinike", klinika.id);
+		    	localStorage.setItem("tip", this.tip);
+		    	localStorage.setItem("vreme", timestamp);
 		    	this.$router.push({ name: 'pretragaLekara', params: {id: klinika.id, vreme : timestamp, tip : this.tip }})
 			} else {
+				localStorage.setItem("idKlinike", klinika.id);
 				this.$router.push({ name: 'zaposleni', params: {id: klinika.id }})
 			}
 		},

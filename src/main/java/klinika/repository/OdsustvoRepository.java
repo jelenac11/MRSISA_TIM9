@@ -9,7 +9,7 @@ import klinika.model.Odsustvo;
 
 public interface OdsustvoRepository extends JpaRepository<Odsustvo, Long> {
 
-	List<Odsustvo> findByOdgovorenoFalseAndKlinikaId(long id);
+	List<Odsustvo> findByOdgovorenoFalseAndKlinikaIdAndPocetakAfter(long id, long sad);
 
 	public List<Odsustvo> findByPodnosilacIdAndOdobreno(Long id, boolean odob);
 
@@ -18,4 +18,5 @@ public interface OdsustvoRepository extends JpaRepository<Odsustvo, Long> {
 
 	@Query(value = "SELECT * FROM odsustvo o WHERE o.podnosilac_id = ?1 and ((o.odgovoreno=true and o.odobreno=true) or (o.odgovoreno=false and o.odobreno=false)) and ((o.pocetak<=?2 and ?2<=o.kraj) or (o.pocetak between ?2 and (?2+86400000)))", nativeQuery = true)
 	public List<Odsustvo> findByPodnosilacAndVreme(long id, long vreme);
+
 }

@@ -29,11 +29,16 @@ public class StavkaCenovnikaController {
 
 	@PutMapping(value = "/izmeni", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
-	public ResponseEntity<Boolean> izmeni(@RequestBody StavkaCenovnikaDTO stavkaCenovnikaDTO) {
+	public ResponseEntity<?> izmeni(@RequestBody StavkaCenovnikaDTO stavkaCenovnikaDTO) {
 		StavkaCenovnika stavka = stavkaCenovnikaService.findOne(stavkaCenovnikaDTO.getId());
 		stavka.setCena(stavkaCenovnikaDTO.getCena());
 
-		stavkaCenovnikaService.save(stavka);
+		try {
+			stavkaCenovnikaService.save(stavka);
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(true, HttpStatus.OK);
 	}
 }

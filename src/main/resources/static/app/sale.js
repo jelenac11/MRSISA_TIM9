@@ -7,6 +7,7 @@ Vue.component("sale", {
 			izabranaSala: {},
 			submitovano: false,
 	    	uspesnaIzmena: true,
+	    	zauzetoIme: false,
 			token: "",
 			search: "",
 		} 
@@ -50,7 +51,7 @@ Vue.component("sale", {
 							<div class="form-row mb-3">
 						  		<div class="col">
 						    	 	<label for="brsale">Broj sale</label>
-									<input type="number" v-model="novaSala.broj" min="1" class="form-control" id="brsale" placeholder="Broj sale" required>
+									<input type="number" disabled v-model="novaSala.broj" min="1" class="form-control" id="brsale" placeholder="Broj sale" required>
 									<div class="invalid-feedback" id="dodavanjeInvalid">Unesite ispravan broj sale.</div>
 								</div>
 							</div>
@@ -101,21 +102,38 @@ Vue.component("sale", {
 			this.submitovano = true;
 			if (document.getElementById('forma-izmena-sale').checkValidity() === true) {
 				axios
-				.post('/sale/izmenaSale', this.novaSala, { headers: { Authorization: 'Bearer ' + this.token }})
+				.post('/sale/proveriIme', this.novaSala, { headers: { Authorization: 'Bearer ' + this.token }})
 				.then(response => {
 					this.submitovano = false;
-					this.uspesnaIzmena = response.data;
-					if (this.uspesnaIzmena) {
-						toast("Uspešno izmenjena sala " + this.novaSala.naziv + ".");
-						this.izabranaSala = JSON.parse(JSON.stringify(this.novaSala));
-						this.dobaviSve();
+					this.zauzetoIme = response.data;
+					if (this.zauzetoIme) {
+						this.uspesnaIzmena = true;
+						toast("Greška. Ime je zauzeto.");
 					} else {
-						toast("Salu nije moguće izmeniti.");
+						axios
+						.post('/sale/izmenaSale', this.novaSala, { headers: { Authorization: 'Bearer ' + this.token }})
+						.then(response => {
+							this.submitovano = false;
+							this.uspesnaIzmena = response.data;
+							if (this.uspesnaIzmena) {
+								toast("Uspešno izmenjena sala " + this.novaSala.naziv + ".");
+								this.izabranaSala = JSON.parse(JSON.stringify(this.novaSala));
+								this.dobaviSve();
+							} else {
+								toast("Salu nije moguće izmeniti.");
+							}
+						})
+						.catch(error => {
+							console.log(error);
+							this.uspesnaIzmena = false;
+						});
 					}
 				})
 				.catch(error => {
 					console.log(error);
-					this.uspesnaIzmena = false;
+					this.zauzetoIme = true;
+					this.uspesnaIzmena = true;
+					toast("Greška. Ime je zauzeto.");
 				});
 			} else {
 				this.uspesnaIzmena = true;
