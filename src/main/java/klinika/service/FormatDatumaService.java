@@ -12,7 +12,7 @@ public class FormatDatumaService {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(datum);
 
-		return getMinuteULong(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE));
+		return (long) getMinuteULong(cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE));
 	}
 
 	// Pomoćna metoda

@@ -78,7 +78,7 @@ public class OcenaController {
 				ocenaService.save(ocena);
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
-				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Database error!!", HttpStatus.BAD_REQUEST);
 			}
 			klinikaService.dodajOcenu(ocena);
 			klinikaService.izracunajProsek(ocenaDTO.getKlinika().getId());
@@ -96,7 +96,7 @@ public class OcenaController {
 				ocenaService.save(ocena);
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
-				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Database error!!!", HttpStatus.BAD_REQUEST);
 			}
 			lekarService.izracunajProsek(ocenaDTO.getLekar().getId());
 		} else {
@@ -108,7 +108,7 @@ public class OcenaController {
 				ocenaService.save(ocena);
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
-				return new ResponseEntity<>("Database error!", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>("Database Error!", HttpStatus.BAD_REQUEST);
 			}
 			lekarService.dodajOcenu(ocena);
 			lekarService.izracunajProsek(ocenaDTO.getLekar().getId());
