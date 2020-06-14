@@ -181,7 +181,7 @@ public class PregledService {
 
 	// Metoda koja dodeljuje salu za određeni termin pregleda
 	@Transactional(readOnly = false)
-	public Pregled dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO) {
+	public boolean dodijeliSalu(SlobodanTerminDTO slobodanTerminDTO) {
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
 		List<Sala> sale = salaService.findByIdKlinikaAndVreme(sala.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme());
 		boolean zauzeta=true;
@@ -192,12 +192,12 @@ public class PregledService {
 		}
 		if(zauzeta) {
 			System.out.println("Sala je zauzeta.");
-			return null;
+			return false;
 		}
 		Pregled pregled = pregledRepository.findById(slobodanTerminDTO.getPregledId()).orElseGet(null);
 		if(pregled.getSala()!=null) {
 			System.out.println("Vec zauzeta sala.");
-			return null;
+			return false;
 		}
 		pregled.setSala(sala);
 		AdminKlinike ak = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
@@ -209,9 +209,8 @@ public class PregledService {
 		
 		salaRepository.save(sala);
 		
-		Pregled p=pregledRepository.save(pregled);
-		emailService.posaljiLinkPotvrdePregleda(pregled, "aleksa.goljovic4@gmail.com");
-		return p;
+		pregledRepository.save(pregled);
+		return true;
 	}
 
 	// Metoda koja vraća predefinisane preglede
@@ -256,12 +255,6 @@ public class PregledService {
 			p.setZauzet(true);
 			p.setPotvrdjen(true);
 			pregledRepository.save(p);
-			String text = "Poštovani, \nUspešno ste zakazali pregled.\nPodaci o pregledu: \nKlinika: "
-					+ predef.getLekar().getKlinika() + "\nLokacija: " + predef.getLokacija().getLokacija() + "\nVreme: "
-					+ new Date(predef.getDatum()).toString() + "\nLekar: " + predef.getLekar().getIme() + " "
-					+ predef.getLekar().getPrezime() + "\nTip pregleda: " + predef.getTip().getNaziv() + "\nBroj sale: "
-					+ predef.getSala() + "\nCena: " + (predef.getCena() / 100.00) * (100 - predef.getPopust());
-			emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Potvrda o zakazanom pregledu", text);
 		}
 		else {
 			System.out.println("Ne postoji pacijent sa id: "+predef.getPacijent().getId());
@@ -346,18 +339,8 @@ public class PregledService {
 		
 		pregledRepository.insertZakazaniPregled(predef.getLekar().getId(), predef.getPacijent().getId(),
 				predef.getTip().getId(), predef.getDatum(), predef.getLokacija().getId());
-		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(predef.getLokacija().getId());
 		lekar.setLastChange(new Date().getTime());
 		lekarRepository.save(lekar);
-		if (admini != null) {
-			for (AdminKlinike ak : admini) {
-				String text = "Poštovani, \nPristigao je zahtev za zakazivanje pregleda.\nPodaci o pregledu:\nPacijent: "
-						+ predef.getPacijent().getEmail() + "\nVreme: " + new Date(predef.getDatum()).toString()
-						+ "\nLekar: " + predef.getLekar().getIme() + " " + predef.getLekar().getPrezime()
-						+ "\nTip pregleda: " + predef.getTip().getNaziv();
-				emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Zahtev za zakazivanje pregleda", text);
-			}
-		}
 		return true;
 	}
 
@@ -405,7 +388,6 @@ public class PregledService {
 	@Transactional(readOnly = false)
 	public Boolean zakaziTerminLekar(ZakaziTerminLekarDTO ztlDTO) throws MailException, InterruptedException {
 		Klinika klinika = lekarService.findOne(ztlDTO.getLekar()).getKlinika();
-		Pacijent pacijent = pacijentRepository.getOne(ztlDTO.getPacijent());
 		Lekar l = lekarRepository.getOne(ztlDTO.getLekar());
 		List<Lekar> dostupniLekari=lekarRepository.findByIdKlinikaAndVreme(klinika.getId(), ztlDTO.getDatumiVreme(), (ztlDTO.getDatumiVreme() + 7200000) % 86400000);
 		boolean postoji=false;
@@ -416,16 +398,6 @@ public class PregledService {
 		}
 		if(!postoji) {
 			return false;
-		}
-		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(klinika.getId());
-		if (admini != null) {
-			for (AdminKlinike ak : admini) {
-				String text = "Poštovani, \nPristigao je zahtev za zakazivanje pregleda.\nPodaci o pregledu:\nPacijent: "
-						+ pacijent.getIme() + " " + pacijent.getPrezime() + "\nVreme: "
-						+ new Date(ztlDTO.getDatumiVreme()).toString() + "\nLekar: " + l.getIme() + " " + l.getPrezime()
-						+ "\nTip pregleda: " + ztlDTO.getTipPregleda().getNaziv();
-				emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje pregleda", text);
-			}
 		}
 		l.setLastChange(new Date().getTime());
 		pregledRepository.insertZakazaniPregled(ztlDTO.getLekar(), ztlDTO.getPacijent(),

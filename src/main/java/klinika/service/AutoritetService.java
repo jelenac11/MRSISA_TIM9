@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.view.RedirectView;
 import klinika.dto.KorisnikTokenDTO;
@@ -115,10 +116,13 @@ public class AutoritetService {
 		this.userDetailsService.save(pacijent);
 		return new ResponseEntity<>(true, HttpStatus.CREATED);
 	}
-
+	@Transactional(readOnly = false)
 	public boolean updateRegZahtev(PacijentDTO pacijentDTO) throws MailException, InterruptedException {
 		Pacijent p = (Pacijent) userDetailsService.findByEmail(pacijentDTO.getEmail());
 		if(p==null) {
+			return false;
+		}
+		if(p.isAktiviran()) {
 			return false;
 		}
 		if (pacijentDTO.isAktiviran()) {

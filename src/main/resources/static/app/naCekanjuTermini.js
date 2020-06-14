@@ -329,8 +329,13 @@ Vue.component("na-cekanju-termini", {
 		            .then(response => (this.naCekanjuTermini = response.data))
 		            .catch(function (error) { console.log(error); });
 					this.dialog=false;
+					this.dijalogGreska = false;
 				}
 				else{
+					axios
+		            .get('/pregledi/ucitajSvePregledeNaCekanju/'+this.ulogovan.id ,{ headers: { Authorization: 'Bearer ' + this.token }} )
+		            .then(response => (this.naCekanjuTermini = response.data))
+		            .catch(function (error) { console.log(error); });
 					this.dialog=false;
 					this.dijalogGreska = true;
 				}

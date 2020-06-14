@@ -61,30 +61,26 @@ public class OdsustvoService {
 	// Metoda koja obaveštava podnosioca o zahtevu za odsustvo
 	public Odsustvo updateOdsustvo(Odsustvo odsustvo) {
 		Odsustvo ods = odsustvoRepository.save(odsustvo);
-		try {
-			mailService.posaljiEmail(odsustvo.getPodnosilac().getEmail(), naslov,
-					odsustvo.isOdobreno() ? potvrdaZahtjeva : odbijanjeZahtjeva + odsustvo.getObrazlozenje());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		return ods;
 	}
 	
 	// Metoda koja ažurira odsustvo (prihvata ili odbija)
 	@Transactional(readOnly = false)
-	public Odsustvo azurirajOdsustvo(OdsustvoDTO odsustvoDTO) {
+	public Boolean azurirajOdsustvo(OdsustvoDTO odsustvoDTO) {
 		Odsustvo odsustvo = findOne(odsustvoDTO.getId());
 		if (odsustvo == null) {
-			return null;
+			return false;
 		}
-
+		if(odsustvo.isOdgovoreno()) {
+			return false;
+		}
 		odsustvo.setObrazlozenje(odsustvoDTO.getObrazlozenje());
 		odsustvo.setOdgovoreno(odsustvoDTO.isOdgovoreno());
 		odsustvo.setOdobreno(odsustvoDTO.isOdobreno());
 
 		odsustvo = odsustvoRepository.save(odsustvo);
 		
-		return odsustvo;
+		return true;
 		
 	}
 

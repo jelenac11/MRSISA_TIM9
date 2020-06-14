@@ -242,13 +242,13 @@ Vue.component("definisanje-slobodnog-termina", {
 			            .then(response => {
 			            	this.slobodniPregledi = response.data;
 			            	this.dijalog=false;
+			            	this.dijalogGreska = false;
 			            })
 			            .catch(function (error) { console.log(error); });
 				  }
 				  else{
 					  this.dijalog=false;
 					  this.dijalogGreska = true;
-					  
 				  }
 			  })
 			  .catch(error => {

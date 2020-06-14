@@ -7,6 +7,7 @@ Vue.component("zahtevi-registracija",{
             submitovano: false,
             token: "",
             dijalog: false,
+            dijalogGreska: false,
 		}
 	},
 	
@@ -64,6 +65,16 @@ Vue.component("zahtevi-registracija",{
 					</div>	
 				</v-card>		
 			</v-dialog>
+			<v-dialog v-model="dijalogGreska" max-width="300">
+			      <v-card>
+			        <v-card-title class="headline">Greška</v-card-title>
+			        <v-card-text>Neko drugi je upravo odgovorio na taj zahtjev.</v-card-text>
+			        <v-card-actions>
+			          <v-spacer></v-spacer>
+			          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>
+			        </v-card-actions>
+			      </v-card>
+			</v-dialog>
 		</v-app>
     </div>
 	`
@@ -94,7 +105,16 @@ Vue.component("zahtevi-registracija",{
         updateZahtev: function(indeks) {
             axios
             .put('/auth/updateRegZahtev', this.zahtevi[indeks], { headers: { Authorization: 'Bearer ' + this.token }} )
-            .then(response => { this.dobaviZahteve() })
+            .then(response => { 
+            	if(response.data){
+            		toast("Uspesno ste odgovorili na zahtev.");
+            	}
+            	else{
+            		this.dijalogGreska = true;
+            	}
+            	this.dobaviZahteve();
+            	
+            })
             .catch(function (error) { console.log(error); });
         },
         dobaviZahteve: function() {

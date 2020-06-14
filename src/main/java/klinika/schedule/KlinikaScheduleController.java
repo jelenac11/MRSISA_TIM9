@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
+import klinika.dto.OperacijaDTO;
+import klinika.dto.PregledDTO;
 import klinika.dto.PretragaLekaraDTO;
 import klinika.model.Lekar;
 import klinika.model.Operacija;
@@ -74,7 +76,7 @@ public class KlinikaScheduleController {
 					}
 					dani++;
 				}
-				emailService.posaljiLinkPotvrdePregleda(p, "aleksa.goljovic4@gmail.com");
+				emailService.posaljiLinkPotvrdePregleda(new PregledDTO(p), "aleksa.goljovic4@gmail.com");
 			}
 		}
 		
@@ -116,10 +118,11 @@ public class KlinikaScheduleController {
 					}
 					dani++;
 				}
+				OperacijaDTO op=new OperacijaDTO(o);
 				for (Lekar lekar: o.getLekari()) {
-					emailService.obavestiLekaraZaOperaciju(o, "aleksa.goljovic4@gmail.com");
+					emailService.obavestiLekaraZaOperaciju(op, "aleksa.goljovic4@gmail.com");
 				}
-				emailService.obavestiPacijentaZaOperaciju(o, "aleksa.goljovic4@gmail.com");
+				emailService.obavestiPacijentaZaOperaciju(op, "aleksa.goljovic4@gmail.com");
 			}
 		}
 	}

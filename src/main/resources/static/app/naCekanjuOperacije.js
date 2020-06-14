@@ -386,6 +386,10 @@ Vue.component("na-cekanju-operacije", {
 					this.dialog=false;
 				}
 				else{
+					axios
+		            .get('/operacije/ucitajSveOperacijeNaCekanju/'+this.ulogovan.id ,{ headers: { Authorization: 'Bearer ' + this.token }} )
+		            .then(response => (this.naCekanjuOperacije = response.data))
+		            .catch(function (error) { console.log(error); });
 					this.dialog=false;
 					this.dijalogGreska = true;
 				}

@@ -21,6 +21,7 @@ insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, 
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, aktivan, prosecna_ocena, version, last_change) values('LE', 'Narodnog fronta 23', 'Republika Srbija', 'jelena@gmail.com', 'Novi Sad', 'Jelena', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Marković', true, true, true, '064-123-1212', 0, 28800000, 46800000, 2, true, 0, 0, 0);
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, pocetak_radnog_vremena, kraj_radnog_vremena, klinika_id, version) values('MS', '16. oktobra 23', 'Republika Srbija', 'medicinskasestra@gmail.com', 'Beograd', 'Milan', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Milanović', true, true, false, '064-123-1213', 0, 28800000, 46800000, 1, 0);
 insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, jbo, version) values('PA', 'Dositeja Obradovica 2', 'Republika Srbija', 'zikazikic@gmail.com', 'Sombor', 'Zika', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Zikić', true, true, true, '064-123-1235', 0, '99824366780', 0);
+insert into korisnici (tip, adresa, drzava, email, grad, ime, lozinka, prezime, verifikovan, aktiviran, promenjena_lozinka, broj_telefona, poslednja_promena_lozinke, version) values('AC', 'Narodnog fronta 23d', 'Republika Srbija', 'a@gmail.com', 'Novi Sad', 'Admin', '$2a$10$Vp90ZLx.EC./rr77SHecxeRsCeH2YdXoUBAilxpozUx9ywunntfLm', 'Centrić', true, true, true, '064-123-1236', 0, 0);
 
 insert into autoritet (name) values ('ROLE_PACIJENT');
 insert into autoritet (name) values ('ROLE_LEKAR');
@@ -39,6 +40,7 @@ insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (8, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (9, 2);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (10, 5);
 insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (11, 1);
+insert into autoriteti_korisnika (korisnik_id, autoritet_id) values (12, 4);
 
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (1, 180, 72, 0.5, 'A+');
 insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_grupa) values (2, 177, 75, 0.2, 'AB');
@@ -46,9 +48,6 @@ insert into zdravstveni_karton (pacijent_id, visina, tezina, dioptrija, krvna_gr
 
 insert into sala (broj, naziv, klinika_id,aktivan, version, izmjena) values(1, 'Sala 1', 1, true, 0, 0);
 insert into sala (broj, naziv, klinika_id,aktivan, version, izmjena) values(2, 'Sala 2', 1, true, 0, 0);
-insert into sala (broj, naziv, klinika_id,aktivan, version, izmjena) values(3, 'Sala 3', 1, false, 0, 0);
-insert into sala (broj, naziv, klinika_id,aktivan, version, izmjena) values(4, 'Sala 4', 1, false, 0, 0);
-insert into sala (broj, naziv, klinika_id,aktivan, version, izmjena) values(5, 'Sala 5', 1, false, 0, 0);
 
 insert into sifrarnik (naziv, tip_sifrarnika) values('Šifrarnik lekova', 'LEKOVI');
 insert into sifrarnik (naziv, tip_sifrarnika) values('Šifrarnik dijagnoza', 'DIJAGNOZE');
@@ -92,10 +91,6 @@ insert into specijalizovan (lekar_id, tip_pregleda_id) values (9, 6);
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1591689600000, 3600000, 1, false, true, true, 1, 0);
 -- Thu Jun 10 2020 10:00:00
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 1, 1, 1591776000000, 3600000, 1, false, true, true, 1, 0);
--- Sat Jun 13 2020 21:00:00 - danas
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1592074800000, 3600000, 1, false, true, true, 1, 0);
--- Sun Jun 13 2020 17:00:00 - danas
-insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (7, 1, 1, 1592060400000, 3600000, 1, false, true, true, 2, 0);
 -- Sun Jun 21 2020 08:00:00
 insert into pregled (lekar_id, pacijent_id, tip_pregleda_id, vreme, trajanje, klinika_id, otkazan, potvrdjen, zauzet, sala_id, version) values (6, 2, 1, 1592719200000, 3600000, 1, false, true, true, 1, 0);
 -- Sun Jun 22 2020 10:00:00
@@ -125,7 +120,7 @@ insert into operacija (pacijent_id, vreme, klinika_id, otkazana) values (1, 1593
 -- Tue Jul 02 2020 10:00:00
 insert into operacija (pacijent_id, vreme, klinika_id, otkazana) values (2, 1593676800000, 1, false);
 -- Tue Jul 02 2020 10:00:00
-insert into operacija (pacijent_id, vreme, klinika_id, otkazana) values (11, 1593676800000, 1, false);
+--insert into operacija (pacijent_id, vreme, klinika_id, otkazana) values (11, 1593676800000, 1, false);
 
 insert into operisali (lekar_id, operacija_id) values (7, 1);
 insert into operisali (lekar_id, operacija_id) values (6, 2);

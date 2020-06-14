@@ -135,7 +135,6 @@ public class AuthenticationController {
 			return new ResponseEntity<>(autoritetService.updateRegZahtev(pacijentDTO), HttpStatus.OK);
 		}
 		catch (Exception e) {
-			System.out.println("Zahtev je vec prihvacen/odbijen.");
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 	}

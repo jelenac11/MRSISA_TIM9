@@ -22,8 +22,15 @@ import klinika.dto.PretragaLekaraDTO;
 import klinika.dto.SlobodanTerminOperacijaDTO;
 import klinika.dto.ZakaziTerminLekarDTO;
 import klinika.model.AdminKlinike;
+import klinika.model.Lekar;
 import klinika.model.Operacija;
+import klinika.model.Pacijent;
+import klinika.repository.AdminKlinikeRepository;
+import klinika.repository.LekarRepository;
+import klinika.repository.OperacijaRepository;
+import klinika.repository.PacijentRepository;
 import klinika.service.AdminKlinikeService;
+import klinika.service.EmailService;
 import klinika.service.OperacijaService;
 
 @RestController
@@ -32,9 +39,24 @@ public class OperacijaController {
 
 	@Autowired
 	private OperacijaService operacijaService;
+	
+	@Autowired
+	private OperacijaRepository operacijaRepository;
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
+	
+	@Autowired
+	private AdminKlinikeRepository adminKlinikeRepository;
+	
+	@Autowired
+	private PacijentRepository pacijentRepository;
+	
+	@Autowired
+	private LekarRepository lekarRepository;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@GetMapping(value = "ucitajSveOperacijeNaCekanju/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
@@ -73,13 +95,33 @@ public class OperacijaController {
 	@PostMapping(value = "dodijeliSaluOperaciji", consumes = "application/json")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<Boolean> dodijeliSaluOperaciji(@RequestBody SlobodanTerminOperacijaDTO slobodanTerminDTO) {
+		boolean ispravno = false;
 		try {
-			operacijaService.dodijeliSalu(slobodanTerminDTO);
+			ispravno = operacijaService.dodijeliSalu(slobodanTerminDTO);
+			if(ispravno) {
+				Operacija operacija = operacijaRepository.findById(slobodanTerminDTO.getOperacijaId()).orElseGet(null);
+				OperacijaDTO operacijaDTO= new OperacijaDTO(operacija);
+				for(Lekar lekar:operacija.getLekari()) {
+					try{
+						emailService.obavestiLekaraZaOperaciju(operacijaDTO, "milan_marinkovic98@hotmail.com");
+					}
+					catch (Exception e) {
+						// TODO: handle exception
+					}
+				}
+				try{
+					emailService.obavestiPacijentaZaOperaciju(operacijaDTO, "milan_marinkovic98@hotmail.com");
+				}
+				catch (Exception e) {
+					// TODO: handle exception
+				}
+				
+			}
 		}
 		catch (Exception e) {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
-		return new ResponseEntity<>(true, HttpStatus.OK);
+		return new ResponseEntity<>(ispravno, HttpStatus.OK);
 	}
 
 	@PutMapping(value = "otkaziOperacijuLekara")
@@ -94,7 +136,27 @@ public class OperacijaController {
 	public ResponseEntity<Boolean> zakaziNoviTerminLekar(@RequestBody ZakaziTerminLekarDTO ztlDTO)
 			throws MailException, InterruptedException {
 		try{
-			return new ResponseEntity<>(operacijaService.zakaziTerminLekar(ztlDTO), HttpStatus.OK);
+			Boolean odgovor = operacijaService.zakaziTerminLekar(ztlDTO);
+			if(odgovor) {
+				Pacijent pacijent= pacijentRepository.findById(ztlDTO.getPacijent()).orElseGet(null);
+				Lekar l = lekarRepository.findById(ztlDTO.getLekar()).orElseGet(null);
+				ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(l.getKlinika().getId());
+				if (admini != null) {
+					for (AdminKlinike ak : admini) {
+						String text = "Poštovani, \nPristigao je zahtev za zakazivanje operacije.\nPodaci o operaciji:\nPacijent: "
+								+ pacijent.getIme() + " " + pacijent.getPrezime() + "\nVreme: "
+								+ new Date(ztlDTO.getDatumiVreme()).toString() + "\nLekar: " + l.getIme() + " "
+								+ l.getPrezime();
+						try{
+							emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje operacije", text);
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+					}
+				}
+			}
+			return new ResponseEntity<>(odgovor, HttpStatus.OK);
+			
 		}
 		catch (Exception e) {
 			// TODO: handle exception

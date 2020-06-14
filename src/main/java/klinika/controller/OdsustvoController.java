@@ -21,6 +21,7 @@ import klinika.model.AdminKlinike;
 import klinika.model.Klinika;
 import klinika.model.Odsustvo;
 import klinika.service.AdminKlinikeService;
+import klinika.service.EmailService;
 import klinika.service.OdsustvoService;
 
 @RestController
@@ -32,6 +33,14 @@ public class OdsustvoController {
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
+	
+	@Autowired
+	private EmailService mailService;
+	
+	private static String potvrdaZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je prihvacen.";
+	private static String odbijanjeZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je odbijen. Razlog odbijanja je sljedeci: \n";
+	private static String naslov = "Odgovor na zahtjev za odsustvom";
+
 
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	@GetMapping(value = "/ucitajSvaNeodgovorenaOdsustva/{id}")
@@ -57,27 +66,25 @@ public class OdsustvoController {
 
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	@PutMapping(value = "/updateOdsustvo", consumes = "application/json")
-	public ResponseEntity<OdsustvoDTO> updateOdsustvo(@RequestBody OdsustvoDTO odsustvoDTO) {
-		Odsustvo odsustvo=null;
-		try {
-			odsustvo = service.azurirajOdsustvo(odsustvoDTO);
+	public ResponseEntity<Boolean> updateOdsustvo(@RequestBody OdsustvoDTO odsustvoDTO) {
+		try{
+			boolean odgovor = service.azurirajOdsustvo(odsustvoDTO);
+			if(odgovor) {
+				Odsustvo odsustvo =service.findOne(odsustvoDTO.getId());
+				try {
+				mailService.posaljiEmail(odsustvo.getPodnosilac().getEmail(), naslov,
+						odsustvo.isOdobreno() ? potvrdaZahtjeva : odbijanjeZahtjeva + odsustvo.getObrazlozenje());
+				}
+				catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+			return new ResponseEntity<>(odgovor, HttpStatus.OK);
 		}
 		catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
-		if(odsustvo==null) {
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		}
-		odsustvoDTO.setId(odsustvo.getId());
-		odsustvoDTO.setKraj(odsustvo.getKraj());
-		odsustvoDTO.setObrazlozenje(odsustvo.getObrazlozenje());
-		odsustvoDTO.setOdgovoreno(odsustvo.isOdgovoreno());
-		odsustvoDTO.setOdobreno(odsustvo.isOdobreno());
-		odsustvoDTO.setPocetak(odsustvo.getPocetak());
-		odsustvoDTO.setPodnosilac(new MedicinskoOsobljeDTO(odsustvoDTO.getPodnosilac().getId(),
-				odsustvoDTO.getPodnosilac().getIme(), odsustvoDTO.getPodnosilac().getPrezime()));
 
-		return new ResponseEntity<>(odsustvoDTO, HttpStatus.OK);
 	}
 
 }

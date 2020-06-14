@@ -24,8 +24,11 @@ Postupak pokretanja aplikacije:
 	2. način:
 		- Importovati projekat u Eclipse IDE
 		- Pokrenuti aplikaciju komandom Run as -> Spring Boot Application ili Run as -> Java Application
-		
+	*Napomena: za prva dva načina pokretanja potrebno je napraviti bazu podataka pod nazivom KlinikaDB na
+	svom postgres nalogu, zatim podesiti šifru i username u application.properties. Za url baze potrebno je otkomentarisati
+	liniju broj 12 u application.properties, a zakomentarisati liniju broj 13.
 	3. načina:
 		- Kako je urađen deployment, aplikaciju možete pokrenuti unošenjem sledećeg linka u pretraživač browser-a
 		- link: https://mrsisa09.herokuapp.com/
 			
+*Napomena: Analiza Sonara ne prolazi jer Sonar zahteva da 80% koda bude pokriveno testovima.

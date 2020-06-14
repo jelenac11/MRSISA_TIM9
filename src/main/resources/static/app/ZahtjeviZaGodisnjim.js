@@ -38,7 +38,7 @@ Vue.component("zahtjevGodisnji",{
 		            </tr>
 		        </tbody>
 		    </table>
-			<v-dialog v-model="dijalog">
+			<v-dialog width="400" v-model="dijalog">
 				<v-card>
 					<div class="naviga">
 						<form class="needs-validation mb-4"  id="forma-obrazlozenje-odbijanja">
@@ -51,7 +51,7 @@ Vue.component("zahtjevGodisnji",{
 				      			<div class="invalid-feedback" id="dodavanjeInvalid">Unesite razlog odbijanja zahteva za odsustvom.</div>
 				      		</div>
 				      		<div class="modal-footer">
-				        		<button type="button" class="btn btn-secondary mr-auto" @click="dijalog = false">Nazad</button>
+				        		<button type="button" style="color:white" class="btn btn-secondary mr-auto" @click="dijalog = false">Nazad</button>
 				        		<button class="btn btn-primary" v-on:click="odbijanjeZahtjeva">Odbij zahtev</button>
 				      		</div>
 				    	</div>
@@ -63,7 +63,7 @@ Vue.component("zahtjevGodisnji",{
 			<v-dialog v-model="dijalogGreska" max-width="300">
 			      <v-card>
 			        <v-card-title class="headline">Greška</v-card-title>
-			        <v-card-text>Neko drugi je upravo zauzeo tu salu u istom terminu.</v-card-text>
+			        <v-card-text>Neko drugi je upravo odgovorio na taj zahtev.</v-card-text>
 			        <v-card-actions>
 			          <v-spacer></v-spacer>
 			          <v-btn color="green darken-1" text @click="dijalogGreska = false">u redu</v-btn>

@@ -11,7 +11,6 @@ import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import klinika.dto.LekarDTO;
 import klinika.dto.OperacijaDTO;
 import klinika.dto.PretragaLekaraDTO;
 import klinika.dto.RadniKalendarDTO;
@@ -23,7 +22,6 @@ import klinika.model.Lekar;
 import klinika.model.Operacija;
 import klinika.model.Pacijent;
 import klinika.model.Sala;
-import klinika.repository.AdminKlinikeRepository;
 import klinika.repository.LekarRepository;
 import klinika.repository.OperacijaRepository;
 import klinika.repository.SalaRepository;
@@ -48,9 +46,6 @@ public class OperacijaService {
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-
-	@Autowired
-	private AdminKlinikeRepository adminKlinikeRepository;
 
 	@Autowired
 	private EmailService emailService;
@@ -112,7 +107,16 @@ public class OperacijaService {
 
 	// Metoda koja dodeljuje salu operaciji za dati termin
 	@Transactional(readOnly = false)
-	public Operacija dodijeliSalu(SlobodanTerminOperacijaDTO slobodanTerminDTO) {
+	public boolean dodijeliSalu(SlobodanTerminOperacijaDTO slobodanTerminDTO) {
+		AdminKlinike ak = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
+		
+		Operacija operacija = operacijaRepository.findById(slobodanTerminDTO.getOperacijaId()).orElseGet(null);
+		if(operacija.getSala()!=null) {
+			System.out.println("Vec zauzeta sala.");
+			return false;
+		}
+		
+		
 		Sala sala = salaService.findOne(slobodanTerminDTO.getSala().getId());
 		List<Sala> sale = salaService.findByIdKlinikaAndVreme(sala.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme());
 		boolean zauzeta=true;
@@ -123,42 +127,39 @@ public class OperacijaService {
 		}
 		if(zauzeta) {
 			System.out.println("Sala je zauzeta.");
-			return null;
+			return false;
 		}
-		Operacija operacija = operacijaRepository.findById(slobodanTerminDTO.getOperacijaId()).orElseGet(null);
-		if(operacija.getSala()!=null) {
-			System.out.println("Vec zauzeta sala.");
-			return null;
+		List<Lekar>zauzetiLekari = new ArrayList<Lekar>();
+		List<Operacija> operacije=operacijaRepository.findByIdKlinikaAndVreme(ak.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme(),slobodanTerminDTO.getOperacijaId());
+		for(Operacija o:operacije) {
+			for(Lekar l:o.getLekari()) {
+				zauzetiLekari.add(l);
+			}
+			
 		}
+		
+		for (int i = 0; i < slobodanTerminDTO.getLekari().size(); i++) {
+			for(Lekar l:zauzetiLekari) {	
+				if(l.getId()==slobodanTerminDTO.getLekari().get(i).getId()) {
+					return false;
+				}
+			}
+		}
+		Set<Lekar> zaOperaciju=new HashSet<Lekar>();
+		for (int i = 0; i < slobodanTerminDTO.getLekari().size(); i++) {
+			Lekar lekar= lekarRepository.findById(slobodanTerminDTO.getLekari().get(i).getId()).orElseGet(null);
+			lekar.setLastChange(new Date().getTime());
+			zaOperaciju.add(lekar);
+			lekarRepository.save(lekar);
+		}
+		operacija.setLekari(zaOperaciju);
 		operacija.setSala(sala);
-		AdminKlinike ak = adminKlinikeService.findOne(slobodanTerminDTO.getIdAdmina());
 		operacija.setKlinika(ak.getKlinika());
 		operacija.setVreme(slobodanTerminDTO.getDatumiVreme());
 		sala.setIzmjena(new Date().getTime());
 		salaRepository.save(sala);
-		List<Lekar> dostupniLekari=lekarRepository.findByIdKlinikaAndVreme(ak.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme(), (slobodanTerminDTO.getDatumiVreme() + 7200000) % 86400000);
-		for (LekarDTO lekarDTO : slobodanTerminDTO.getLekari()) {
-			Lekar lekar = lekarService.findOne(lekarDTO.getId());
-			boolean postoji=false;
-			for(Lekar l:dostupniLekari) {
-				if(l.getId()==lekar.getId()) {
-					postoji=true;
-				}
-			}
-			if(!postoji) {
-				return null;
-			}
-			operacija.getLekari().add(lekar);
-		}
-		for(Lekar lekar:operacija.getLekari()) {
-			lekar.setLastChange(new Date().getTime());
-			lekarRepository.save(lekar);
-			emailService.obavestiLekaraZaOperaciju(operacija, "milan_marinkovic98@hotmail.com");
-		}
-		emailService.obavestiPacijentaZaOperaciju(operacija, "milan_marinkovic98@hotmail.com");
-
 		operacijaRepository.save(operacija);
-		return operacija;
+		return true;
 	}
 
 	public List<Operacija> findByOtkazanaAndKlinikaIdAndVremeAfter(boolean b, Long id, long time) {
@@ -246,16 +247,6 @@ public class OperacijaService {
 		op.setVreme(ztlDTO.getDatumiVreme());
 		l.setLastChange(new Date().getTime());
 		lekarRepository.save(l);
-		ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(klinika.getId());
-		if (admini != null) {
-			for (AdminKlinike ak : admini) {
-				String text = "Poštovani, \nPristigao je zahtev za zakazivanje operacije.\nPodaci o operaciji:\nPacijent: "
-						+ pacijent.getIme() + " " + pacijent.getPrezime() + "\nVreme: "
-						+ new Date(ztlDTO.getDatumiVreme()).toString() + "\nLekar: " + l.getIme() + " "
-						+ l.getPrezime();
-				emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje operacije", text);
-			}
-		}
 		operacijaRepository.save(op);
 		return true;
 	}
