@@ -134,7 +134,7 @@ public class PregledController {
 					emailService.posaljiLinkPotvrdePregleda(new PregledDTO(p), "aleksa.goljovic4@gmail.com");
 				}
 				catch (Exception e) {
-					// TODO: handle exception
+					System.err.println(e.getMessage());
 				}
 			}
 		}
@@ -160,7 +160,7 @@ public class PregledController {
 					emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Potvrda o zakazanom pregledu", text);
 				}
 				catch (Exception e) {
-					// TODO: handle exception
+					System.err.println(e.getMessage());
 				}
 			
 			}
@@ -196,7 +196,7 @@ public class PregledController {
 							emailService.posaljiEmail("aleksa.goljovic4@gmail.com", "Zahtev za zakazivanje pregleda", text);
 						}
 						catch (Exception e) {
-							// TODO: handle exception
+							System.err.println(e.getMessage());
 						}
 					}
 				}
@@ -334,7 +334,7 @@ public class PregledController {
 							emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje pregleda", text);
 						}
 						catch (Exception e) {
-							// TODO: handle exception
+							System.err.println(e.getMessage());
 						}
 					}
 				}
@@ -342,9 +342,7 @@ public class PregledController {
 			return new ResponseEntity<>(odgovor, HttpStatus.OK);
 		}
 		catch (Exception e) {
-			// TODO: handle exception
 			return new ResponseEntity<>(false, HttpStatus.OK);
-			
 		}
 
 	}

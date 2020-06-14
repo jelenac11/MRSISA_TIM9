@@ -129,7 +129,7 @@ public class OperacijaService {
 			System.out.println("Sala je zauzeta.");
 			return false;
 		}
-		List<Lekar>zauzetiLekari = new ArrayList<Lekar>();
+		List<Lekar>zauzetiLekari = new ArrayList<>();
 		List<Operacija> operacije=operacijaRepository.findByIdKlinikaAndVreme(ak.getKlinika().getId(), slobodanTerminDTO.getDatumiVreme(),slobodanTerminDTO.getOperacijaId());
 		for(Operacija o:operacije) {
 			for(Lekar l:o.getLekari()) {
@@ -145,7 +145,7 @@ public class OperacijaService {
 				}
 			}
 		}
-		Set<Lekar> zaOperaciju=new HashSet<Lekar>();
+		Set<Lekar> zaOperaciju=new HashSet<>();
 		for (int i = 0; i < slobodanTerminDTO.getLekari().size(); i++) {
 			Lekar lekar= lekarRepository.findById(slobodanTerminDTO.getLekari().get(i).getId()).orElseGet(null);
 			lekar.setLastChange(new Date().getTime());

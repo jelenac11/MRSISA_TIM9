@@ -39,25 +39,25 @@ public class OperacijaController {
 
 	@Autowired
 	private OperacijaService operacijaService;
-	
+
 	@Autowired
 	private OperacijaRepository operacijaRepository;
 
 	@Autowired
 	private AdminKlinikeService adminKlinikeService;
-	
+
 	@Autowired
 	private AdminKlinikeRepository adminKlinikeRepository;
-	
+
 	@Autowired
 	private PacijentRepository pacijentRepository;
-	
+
 	@Autowired
 	private LekarRepository lekarRepository;
-	
+
 	@Autowired
 	private EmailService emailService;
-	
+
 	@GetMapping(value = "ucitajSveOperacijeNaCekanju/{id}")
 	@PreAuthorize("hasRole('ADMIN_KLINIKE')")
 	public ResponseEntity<List<OperacijaDTO>> ucitajSveOperacijeNaCekanju(@PathVariable("id") long id) {
@@ -98,27 +98,24 @@ public class OperacijaController {
 		boolean ispravno = false;
 		try {
 			ispravno = operacijaService.dodijeliSalu(slobodanTerminDTO);
-			if(ispravno) {
+			if (ispravno) {
 				Operacija operacija = operacijaRepository.findById(slobodanTerminDTO.getOperacijaId()).orElseGet(null);
-				OperacijaDTO operacijaDTO= new OperacijaDTO(operacija);
-				for(Lekar lekar:operacija.getLekari()) {
-					try{
+				OperacijaDTO operacijaDTO = new OperacijaDTO(operacija);
+				for (Lekar lekar : operacija.getLekari()) {
+					try {
 						emailService.obavestiLekaraZaOperaciju(operacijaDTO, "milan_marinkovic98@hotmail.com");
-					}
-					catch (Exception e) {
-						// TODO: handle exception
+					} catch (Exception e) {
+						System.err.println(e.getMessage());
 					}
 				}
-				try{
+				try {
 					emailService.obavestiPacijentaZaOperaciju(operacijaDTO, "milan_marinkovic98@hotmail.com");
+				} catch (Exception e) {
+					System.err.println(e.getMessage());
 				}
-				catch (Exception e) {
-					// TODO: handle exception
-				}
-				
+
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(ispravno, HttpStatus.OK);
@@ -135,10 +132,10 @@ public class OperacijaController {
 	@PreAuthorize("hasRole('LEKAR')")
 	public ResponseEntity<Boolean> zakaziNoviTerminLekar(@RequestBody ZakaziTerminLekarDTO ztlDTO)
 			throws MailException, InterruptedException {
-		try{
-			Boolean odgovor = operacijaService.zakaziTerminLekar(ztlDTO);
-			if(odgovor) {
-				Pacijent pacijent= pacijentRepository.findById(ztlDTO.getPacijent()).orElseGet(null);
+		try {
+			boolean odgovor = operacijaService.zakaziTerminLekar(ztlDTO);
+			if (odgovor) {
+				Pacijent pacijent = pacijentRepository.findById(ztlDTO.getPacijent()).orElseGet(null);
 				Lekar l = lekarRepository.findById(ztlDTO.getLekar()).orElseGet(null);
 				ArrayList<AdminKlinike> admini = adminKlinikeRepository.findAdminByKlinikaId(l.getKlinika().getId());
 				if (admini != null) {
@@ -147,19 +144,17 @@ public class OperacijaController {
 								+ pacijent.getIme() + " " + pacijent.getPrezime() + "\nVreme: "
 								+ new Date(ztlDTO.getDatumiVreme()).toString() + "\nLekar: " + l.getIme() + " "
 								+ l.getPrezime();
-						try{
+						try {
 							emailService.posaljiEmail(ak.getEmail(), "Zahtev za zakazivanje operacije", text);
-						}catch (Exception e) {
-							// TODO: handle exception
+						} catch (Exception e) {
+							System.err.println(e.getMessage());
 						}
 					}
 				}
 			}
 			return new ResponseEntity<>(odgovor, HttpStatus.OK);
-			
-		}
-		catch (Exception e) {
-			// TODO: handle exception
+
+		} catch (Exception e) {
 			return new ResponseEntity<>(false, HttpStatus.OK);
 		}
 

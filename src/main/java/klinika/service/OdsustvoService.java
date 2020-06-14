@@ -15,10 +15,6 @@ import klinika.repository.OdsustvoRepository;
 @Service
 public class OdsustvoService {
 
-	private static String potvrdaZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je prihvacen.";
-	private static String odbijanjeZahtjeva = "Postovani/a, \n Vas zahtev za odsustvom je odbijen. Razlog odbijanja je sljedeci: \n";
-	private static String naslov = "Odgovor na zahtjev za odsustvom";
-
 	@Autowired
 	private OdsustvoRepository odsustvoRepository;
 
@@ -60,8 +56,7 @@ public class OdsustvoService {
 
 	// Metoda koja obaveštava podnosioca o zahtevu za odsustvo
 	public Odsustvo updateOdsustvo(Odsustvo odsustvo) {
-		Odsustvo ods = odsustvoRepository.save(odsustvo);
-		return ods;
+		return odsustvoRepository.save(odsustvo);
 	}
 	
 	// Metoda koja ažurira odsustvo (prihvata ili odbija)
@@ -78,7 +73,7 @@ public class OdsustvoService {
 		odsustvo.setOdgovoreno(odsustvoDTO.isOdgovoreno());
 		odsustvo.setOdobreno(odsustvoDTO.isOdobreno());
 
-		odsustvo = odsustvoRepository.save(odsustvo);
+		odsustvoRepository.save(odsustvo);
 		
 		return true;
 		

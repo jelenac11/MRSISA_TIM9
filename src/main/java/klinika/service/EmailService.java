@@ -2,7 +2,6 @@ package klinika.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.cfg.Environment;
@@ -17,13 +16,10 @@ import org.springframework.stereotype.Service;
 import klinika.dto.LekarDTO;
 import klinika.dto.OperacijaDTO;
 import klinika.dto.PregledDTO;
-import klinika.model.Lekar;
-import klinika.model.Operacija;
 import klinika.model.Pacijent;
 import klinika.model.Pregled;
 import klinika.model.TokenPotvrdePregleda;
 import klinika.model.VerifikacioniToken;
-import klinika.repository.PregledRepository;
 
 @EnableAsync
 @Service
